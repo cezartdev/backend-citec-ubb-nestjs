@@ -11,7 +11,7 @@ import {
     EliminarUsuariosDto,
     IniciarSesionDto,
 } from '../dtos/usuarios.dto';
-import { BaseServices } from '../../base/base-services.class';
+import { BaseServices } from '../../common/base/base-services.class';
 import { ESTADOS } from 'src/common/constants/estados.constants';
 
 @Injectable()

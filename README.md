@@ -71,6 +71,6 @@ $ npm run test:cov
 ### Contacto 💼
 
 - Autores - [Cesar Salazar](https://github.com/cezartdev) y [Joaquín Ávila](https://github.com/JoaquinIAD)
-- LinkedIn - César: [LinkedIn](https://www.linkedin.com/in/cezartdev)
-- Correo - César: cesar.salazar2201@alumnos.ubiobio.cl
+- LinkedIn - [Cesar Salazar](https://www.linkedin.com/in/cezartdev)
+- Correo - [César Salazar](cesar.salazar2201@alumnos.ubiobio.cl)
 

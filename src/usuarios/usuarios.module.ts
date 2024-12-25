@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { UsuariosController } from './controllers/usuarios.controller';
 import { UsuariosService } from './services/usuarios.service';
 
-import {EncriptarContraseñaMiddleware} from '../common/middlewares/encriptar-contraseña.middleware';
+import { EncriptarContraseñaMiddleware } from '../common/middlewares/encriptar-contraseña.middleware';
 
 @Module({
     imports: [],
@@ -11,8 +11,8 @@ import {EncriptarContraseñaMiddleware} from '../common/middlewares/encriptar-co
 })
 export class UsuariosModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
-      consumer
-        .apply(EncriptarContraseñaMiddleware)
-        .forRoutes('/usuarios/crear'); // Aplica el middleware solo para las rutas de "usuarios"
+        consumer
+            .apply(EncriptarContraseñaMiddleware)
+            .forRoutes('/usuarios/crear'); // Aplica el middleware solo para las rutas de "usuarios"
     }
-  }
+}

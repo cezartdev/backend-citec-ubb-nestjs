@@ -7,7 +7,8 @@ import {
     BelongsTo,
     ForeignKey,
     CreatedAt,
-    UpdatedAt
+    UpdatedAt,
+    Default,
 } from 'sequelize-typescript';
 
 import { Tipos } from './tipos.model';
@@ -21,7 +22,7 @@ import { TIPOS_DE_USUARIO } from 'src/common/constants/tipos-usuarios.constants'
     timestamps: true,
 })
 export class Usuarios extends Model<Usuarios> {
-    @ApiProperty({type: 'string', format: 'email'})
+    @ApiProperty({ type: 'string', format: 'email' })
     @PrimaryKey
     @Column({
         type: DataType.STRING(70),
@@ -29,35 +30,40 @@ export class Usuarios extends Model<Usuarios> {
     })
     declare email: string;
 
-    @ApiProperty({type: 'string', default: 'Juan'})
+    @ApiProperty({ type: 'string', default: 'Juan' })
     @Column({
         type: DataType.STRING(50),
         allowNull: false,
     })
     declare nombre: string;
 
-    @ApiProperty({type: 'string', default: 'Perez'})
+    @ApiProperty({ type: 'string', default: 'Perez' })
     @Column({
         type: DataType.STRING(50),
         allowNull: false,
     })
     declare apellido: string;
 
-    @ApiProperty({type: 'string', format: 'password', default: '$_i;3%z2hpNJM!C4X'})
+    @ApiProperty({
+        type: 'string',
+        format: 'password',
+        default: '$_i;3%z2hpNJM!C4X',
+    })
     @Column({
         type: DataType.STRING(250),
         allowNull: false,
     })
     declare contraseña: string;
 
-    @ApiProperty({type: 'string', default: ESTADOS.OPCION_1})
+    @ApiProperty({ type: 'string', default: ESTADOS.OPCION_1 })
     @Column({
-        type: DataType.ENUM(ESTADOS.OPCION_1,ESTADOS.OPCION_2),
+        type: DataType.ENUM(ESTADOS.OPCION_1, ESTADOS.OPCION_2),
         allowNull: false,
+        defaultValue: ESTADOS.OPCION_1,
     })
     declare estado: string;
 
-    @ApiProperty({type: 'string', default: TIPOS_DE_USUARIO.OPCION_1})
+    @ApiProperty({ type: 'string', default: TIPOS_DE_USUARIO.OPCION_1 })
     @ForeignKey(() => Tipos)
     @Column({
         type: DataType.STRING(30),

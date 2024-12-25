@@ -25,7 +25,7 @@ async function bootstrap() {
         origin: (origin, callback) => {
             const whitelist = [process.env.FRONTEND_URL];
             console.log(origin);
-            if(!origin){
+            if (!origin) {
                 callback(null, true);
                 return;
             }
@@ -50,9 +50,16 @@ async function bootstrap() {
      * Titulo de la API
      * Descripcion de la API
      */
+    const titulo = '(REST API) Documentacion backend para proyecto Citec UBB';
+    const descripcion =
+        'Se usan las siguientes tecnologias:\n' +
+        '- NestJS\n\n' +
+        '- TypeScript\n\n' +
+        '- NodeJS\n\n' +
+        '- Sequelize ORM (Mysql)';
     const config = new DocumentBuilder()
-        .setTitle('Rest Api Backend')
-        .setDescription('Esta es la documentacionb de la API')
+        .setTitle(titulo)
+        .setDescription(descripcion)
         .setVersion('1.0')
         .build();
     const document = SwaggerModule.createDocument(app, config);

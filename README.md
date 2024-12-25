@@ -17,7 +17,6 @@
 <a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
 <a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
 <a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
 </p>
@@ -68,9 +67,30 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+### Comandos basicos de nest
+
+- "--skip-git" Se salta git al momento de crear un proyecto
+
+- "--flat" Para que no cree una carpeta adicional solo la que indicamos 
+
+- "--no-spec" Para no crear los test
+
+```bash
+# Crear proyecto (Si el proyecto ya esta creado no es necesario)
+$ nest new . --skip-git
+
+# Crear controladores
+$ nest g co nombre_del_controlador carpeta/subcarpeta --flat --no-spec
+
+# Crear servicios
+$ nest g s nombre_del_servicio carpeta/subcarpeta --flat --no-spec
+
+# Crear modulos 
+$ nest g mo nombre_del_modulo carpeta/subcarpeta --flat --no-spec
+```
+
 ### Contacto 💼
 
 - Autores - [Cesar Salazar](https://github.com/cezartdev) y [Joaquín Ávila](https://github.com/JoaquinIAD)
-- LinkedIn - [Cesar Salazar](https://www.linkedin.com/in/cezartdev)
-- Correo - Cesar: cesar.salazar2201@alumnos.ubiobio.cl
+- Correos - Cesar: cesar.salazar2201@alumnos.ubiobio.cl Joaquin: joaquin.avila2201@alumnos.ubiobio.cl
 

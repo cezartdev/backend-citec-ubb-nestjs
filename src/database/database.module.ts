@@ -17,11 +17,7 @@ const databaseProviders = [
             await sequelize.sync();
             return sequelize;
         },
-    },
-    {
-        provide: 'CLAVES_API_REPOSITORY', // Proveedor para ClavesApis
-        useValue: ClavesApis,
-    },
+    }
 ];
 
 @Global()

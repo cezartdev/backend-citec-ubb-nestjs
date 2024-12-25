@@ -6,7 +6,8 @@ import { AppService } from './app.service';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { DatabaseModule } from './database/database.module';
 import { enviroments } from './enviroments';
-import { ValidadorClaveMiddleware } from './common/middlewares/validador-clave.middleware';
+import { AutenticacionModule } from './auth/autenticacion.module';
+
 import config from './config';
 
 //En imports se insertan los modulos o carpetas que se van a utilizar
@@ -24,14 +25,9 @@ import config from './config';
         }),
         DatabaseModule,
         UsuariosModule,
+        AutenticacionModule,
     ],
     controllers: [AppController],
     providers: [AppService],
 })
-export class AppModule implements NestModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(ValidadorClaveMiddleware) // Aplica el middleware
-            .forRoutes('*'); // Aplica el middleware a las rutas que empiezan con /api/:clave
-    }
-}
+export class AppModule {}

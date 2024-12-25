@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory,Reflector } from '@nestjs/core';
 import {
     ForbiddenException,
     ValidationPipe,
@@ -7,6 +7,10 @@ import {
 } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+
+import { JwtAuthGuard } from './auth/guards/jwt/jwt.guard';  // Asegúrate de importar el guard
+
+
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.useGlobalPipes(
@@ -29,14 +33,14 @@ async function bootstrap() {
             transform: true,
         }),
     );
-
-
+    
+    app.useGlobalGuards(new JwtAuthGuard(new Reflector()));
     /**
      * Indicar el prefijo de la API
      * Todas las rutas comienzan con /api/:clave
      * Y tienen clave de acceso
      */
-    app.setGlobalPrefix('api/:clave');
+    app.setGlobalPrefix('api');
 
     /**
      * Manejo de problemas de CORS
@@ -83,7 +87,7 @@ async function bootstrap() {
         .setVersion('1.0')
         .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/:clave/docs', app, document);
+    SwaggerModule.setup('api/docs', app, document);
     await app.listen(4000);
 }
 bootstrap();

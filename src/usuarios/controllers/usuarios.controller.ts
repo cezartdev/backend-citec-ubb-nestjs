@@ -57,10 +57,10 @@ export class UsuariosController {
         return this.usuariosService.eliminar(email);
     }
 
-    @ApiOperation({ summary: 'Para Iniciar Sesion' })
-    @Post('iniciar-sesion')
-    @HttpCode(200)
-    iniciarSesion(@Body() datos: IniciarSesionDto) {
-        return this.usuariosService.iniciarSesion(datos);
-    }
+    // @ApiOperation({ summary: 'Para Iniciar Sesion' })
+    // @Post('iniciar-sesion')
+    // @HttpCode(200)
+    // iniciarSesion(@Body() datos: IniciarSesionDto) {
+    //     return this.usuariosService.iniciarSesion(datos);
+    // }
 }

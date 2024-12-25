@@ -2,6 +2,7 @@ import {
     Injectable,
     NotFoundException,
     ConflictException,
+    ForbiddenException,
 } from '@nestjs/common';
 import { Usuarios } from 'src/database/models/usuarios.model';
 import {
@@ -13,6 +14,8 @@ import {
 } from '../dtos/usuarios.dto';
 import { BaseServices } from '../../common/base/base-services.class';
 import { ESTADOS } from 'src/common/constants/estados.constants';
+
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuariosService extends BaseServices {
@@ -28,7 +31,6 @@ export class UsuariosService extends BaseServices {
         if (existeUsuario) {
             throw new ConflictException('Ya existe un usuario con ese email');
         }
-
 
         const usuarioCreado = await Usuarios.create({
             ...usuario,
@@ -86,16 +88,36 @@ export class UsuariosService extends BaseServices {
             );
         }
 
-        const filasAfectadas = await Usuarios.update({ estado: ESTADOS.OPCION_2 }, { where: { email: clavePrimaria.email } });
+        const filasAfectadas = await Usuarios.update(
+            { estado: ESTADOS.OPCION_2 },
+            { where: { email: clavePrimaria.email } },
+        );
 
         const usuarioEliminado = await Usuarios.findByPk(clavePrimaria.email);
 
         return usuarioEliminado;
     }
 
-    async iniciarSesion(
-        datos: IniciarSesionDto,
-    ): Promise<{ message: string; statusCode: number }> {
-        return { message: 'Inicio de sesion exitoso', statusCode: 200 };
+    async iniciarSesion(datos: IniciarSesionDto): Promise<Usuarios> {
+
+        const usuario = await Usuarios.findOne({
+            where: { email: datos.email},
+        });
+
+        //Si el usuario no existe
+        if (!usuario){
+            throw new ForbiddenException('Credenciales invalidas');
+        }
+
+        const contraseñaEncriptada = usuario.contraseña;
+
+        //Comparar contraseñas
+        const contraseñaValida = await bcrypt.compare(datos.contraseña, contraseñaEncriptada);
+
+        if (!contraseñaValida){
+            throw new ForbiddenException('Credenciales invalidas');
+        }
+
+        return usuario;
     }
 }

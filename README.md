@@ -1,3 +1,5 @@
+# Backend CITEC UBB 🖥️
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -5,7 +7,7 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+  <p align="center">Un solido framework de <a href="http://nodejs.org" target="_blank">Node.js</a> para construir eficientes y escalables aplicaciones del lado del servidor.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
@@ -22,10 +24,8 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-# Backend CITEC UBB
 
-
-## Descripcion del proyecto
+## Descripcion del proyecto ⚙️
 
 Las tecnologias usadas son:
 
@@ -36,7 +36,7 @@ Las tecnologias usadas son:
 - Sequelize ORM
 
 
-### Inicializar el Proyecto
+### Inicializar el Proyecto ⌨️
 
 ```bash
 $ npm install
@@ -55,21 +55,22 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-### Run tests
+### Correr Los Test
 
 ```bash
-# test unitarios
+# Test unitarios
 $ npm run test
 
-# test end to end (punto a punto)
+# Test end to end (punto a punto)
 $ npm run test:e2e
 
-# test de cobertura
+# Test de cobertura
 $ npm run test:cov
 ```
 
-### Contacto
+### Contacto 💼
 
-- Autor - [Cesar Salazar](https://github.com/cezartdev)
-- LinkedIn - [LinkedIn](https://www.linkedin.com/in/cezartdev)
+- Autores - [Cesar Salazar](https://github.com/cezartdev) y [Joaquín Ávila](https://github.com/JoaquinIAD)
+- LinkedIn - César: [LinkedIn](https://www.linkedin.com/in/cezartdev)
+- Correo - César: cesar.salazar2201@alumnos.ubiobio.cl
 

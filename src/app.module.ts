@@ -32,6 +32,6 @@ export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(ValidadorClaveMiddleware) // Aplica el middleware
-            .forRoutes('*'); // Aplica el middleware a las rutas que empiezan con /api/:key
+            .forRoutes('*'); // Aplica el middleware a las rutas que empiezan con /api/:clave
     }
 }

@@ -33,10 +33,10 @@ async function bootstrap() {
 
     /**
      * Indicar el prefijo de la API
-     * Todas las rutas comienzan con /api/:key
+     * Todas las rutas comienzan con /api/:clave
      * Y tienen clave de acceso
      */
-    app.setGlobalPrefix('api/:key');
+    app.setGlobalPrefix('api/:clave');
 
     /**
      * Manejo de problemas de CORS
@@ -83,7 +83,7 @@ async function bootstrap() {
         .setVersion('1.0')
         .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/:key/docs', app, document);
+    SwaggerModule.setup('api/:clave/docs', app, document);
     await app.listen(4000);
 }
 bootstrap();

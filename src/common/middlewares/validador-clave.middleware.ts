@@ -10,16 +10,16 @@ export class ValidadorClaveMiddleware implements NestMiddleware {
     ) {}
 
     async use(req: Request, res: Response, next: NextFunction) {
-        const key = req.params.key;
+        const clave = req.params.clave;
 
-        console.log(`clave: ${key}`);
+        console.log(`clave: ${clave}`);
         // Verifica que la clave esté presente
-        if (!key) {
+        if (!clave) {
             throw new ForbiddenException('La clave no está incluida en la URL');
         }
 
         // Verifica que la clave exista en la base de datos
-        if(key === '1234'){
+        if(clave === '1234'){
             console.log('Clave correcta');
         }else{
             throw new ForbiddenException('Clave no válida');

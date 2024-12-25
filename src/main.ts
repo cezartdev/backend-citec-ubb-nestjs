@@ -1,5 +1,10 @@
 import { NestFactory } from '@nestjs/core';
-import { ForbiddenException, ValidationPipe } from '@nestjs/common';
+import {
+    ForbiddenException,
+    ValidationPipe,
+    BadRequestException,
+    ValidationError,
+} from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 async function bootstrap() {
@@ -7,9 +12,24 @@ async function bootstrap() {
     app.useGlobalPipes(
         new ValidationPipe({
             whitelist: true,
-            // forbidNonWhitelisted: true,
+            forbidNonWhitelisted: true,
+            exceptionFactory: (errors: ValidationError[]) => {
+                const messages = errors.flatMap((err) => {
+                    const constraints = Object.values(err.constraints || {});
+                    const customMessages = constraints.map((constraint) => {
+                        if (constraint.includes('should not exist')) {
+                            return `La propiedad '${err.property}' no debería existir`;
+                        }
+                        return constraint.replace('property', `La propiedad '${err.property}'`);
+                    });
+                    return customMessages;
+                });
+                return new BadRequestException(messages);
+            },
+            transform: true,
         }),
     );
+
 
     /**
      * Indicar el prefijo de la API

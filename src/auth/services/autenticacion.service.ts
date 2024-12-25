@@ -11,7 +11,7 @@ export class AutenticacionService {
     async generateToken(usuario: Usuarios) {
         const datos = { email: usuario.email, nombre: usuario.nombre };
         return {
-            access_token: this.jwtService.sign(datos),
+            token: this.jwtService.sign(datos),
         };
     }
 }

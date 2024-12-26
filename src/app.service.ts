@@ -13,19 +13,4 @@ export class AppService {
         return `Hello World!<br/> API_KEY: ${apiKey}<br/> DATABASE_URL: ${url}`;
     }
 
-    /**
-     * Este metodo se encarga de guardar los logs de la aplicacion
-     */
-    logs(){
-
-    }
-
-    /**
-     * 
-     */
-    obtenerClave(){
-        
-    }
-
-
 }

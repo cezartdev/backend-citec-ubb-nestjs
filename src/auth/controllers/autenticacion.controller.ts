@@ -1,8 +1,9 @@
-import { Controller, Post, Body, ForbiddenException } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { AutenticacionService } from '../services/autenticacion.service';
 import { UsuariosService } from 'src/usuarios/services/usuarios.service';
 import { IniciarSesionDto } from 'src/usuarios/dtos/usuarios.dto';
 import { Public } from 'src/common/utils/decorators';
+import { AutenticacionUsuariosRespuestaDto } from '../dto/autenticacion-respuesta.dto';
 
 @Controller('autenticacion')
 export class AutenticacionController {
@@ -13,13 +14,15 @@ export class AutenticacionController {
 
     //Inicio de sesion del usuario
     @Public()
+    @HttpCode(200)
     @Post('iniciar-sesion')
-    async login(@Body() iniciarSesion: IniciarSesionDto) {
-        const usuario = await this.usuarioServicio.iniciarSesion(iniciarSesion);
-        if (!usuario) {
-            throw new ForbiddenException('Usuario o contraseña incorrecta');
-        }
-       
-        return this.autenticacionService.generateToken(usuario);
+    async iniciarSesion(@Body() iniciarSesion: IniciarSesionDto): Promise<AutenticacionUsuariosRespuestaDto> {
+        const usuario = (await this.usuarioServicio.iniciarSesion(iniciarSesion)).dataValues;
+
+        const token = await this.autenticacionService.generateToken(usuario);
+
+        const autenticacion: AutenticacionUsuariosRespuestaDto = {...usuario, token};
+
+        return autenticacion;
     }
 }

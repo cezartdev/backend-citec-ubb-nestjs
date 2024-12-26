@@ -2,7 +2,6 @@ import { Module, Global, OnApplicationBootstrap } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { SeederService } from './seeders/services/seeder.service';
 
-
 @Global()
 @Module({
     providers: [
@@ -27,7 +26,7 @@ export class DatabaseModule implements OnApplicationBootstrap {
 
     // Descomentar para ejecutar los seeders al iniciar la aplicación
     async onApplicationBootstrap() {
-        // console.log('Ejecutando seeders...');
-        // await this.seederService.run();
+        console.log('Ejecutando seeders...');
+        await this.seederService.run();
     }
 }

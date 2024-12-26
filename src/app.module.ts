@@ -9,7 +9,8 @@ import { enviroments } from './enviroments';
 import { AutenticacionModule } from './auth/autenticacion.module';
 import { APP_GUARD } from '@nestjs/core';
 import config from './config';
-import { TiposGuard } from './auth/guards/tipos.guard';
+import { TiposGuard } from './auth/guards/tipos/tipos.guard';
+
 
 //En imports se insertan los modulos o carpetas que se van a utilizar
 @Module({
@@ -23,6 +24,7 @@ import { TiposGuard } from './auth/guards/tipos.guard';
                 DATABASE_URL: Joi.string().required(),
                 FRONTEND_URL: Joi.string().required(),
                 JWT_SECRET: Joi.string().required(),
+                DESARROLLADOR_PASS: Joi.string().required(),
             }),
         }),
         DatabaseModule,

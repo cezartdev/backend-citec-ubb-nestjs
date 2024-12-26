@@ -29,7 +29,7 @@ export class UsuariosService extends BaseServices {
             where: { email: usuario.email },
         });
         if (existeUsuario) {
-            throw new ConflictException('Ya existe un usuario con ese email');
+            throw new ConflictException(['Ya existe un usuario con ese email']);
         }
 
         const usuarioCreado = await Usuarios.create({
@@ -53,7 +53,7 @@ export class UsuariosService extends BaseServices {
 
         if (!usuario) {
             throw new NotFoundException(
-                `Usuario con email ${clavePrimaria.email} no encontrado`,
+                [`Usuario con email ${clavePrimaria.email} no encontrado`],
             );
         }
 
@@ -72,7 +72,7 @@ export class UsuariosService extends BaseServices {
 
         if (!usuarioExistente) {
             throw new NotFoundException(
-                `Usuario con email ${usuario.email} no encontrado`,
+                [`Usuario con email ${usuario.email} no encontrado`,]
             );
         }
 
@@ -84,7 +84,7 @@ export class UsuariosService extends BaseServices {
 
         if (!usuario) {
             throw new NotFoundException(
-                `No existe un usuario con el email ${clavePrimaria.email}`,
+                [`No existe un usuario con el email ${clavePrimaria.email}`],
             );
         }
 
@@ -105,7 +105,7 @@ export class UsuariosService extends BaseServices {
 
         //Si el usuario no existe
         if (!usuario){
-            throw new ForbiddenException('Correo o contraseña incorrectas');
+            throw new ForbiddenException(['Correo o contraseña incorrectas']);
         }
 
         const contraseñaEncriptada = usuario.contraseña;
@@ -114,7 +114,7 @@ export class UsuariosService extends BaseServices {
         const contraseñaValida = await bcrypt.compare(datos.contraseña, contraseñaEncriptada);
 
         if (!contraseñaValida){
-            throw new ForbiddenException('Correo o contraseña incorrectas');
+            throw new ForbiddenException(['Correo o contraseña incorrectas']);
         }
 
         return usuario;

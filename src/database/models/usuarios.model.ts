@@ -92,3 +92,5 @@ export class Usuarios extends Model<Usuarios> {
     })
     declare updatedAt: Date;
 }
+
+export default Usuarios;

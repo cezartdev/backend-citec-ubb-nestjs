@@ -20,7 +20,6 @@ import {
     ObtenerPorIdUsuariosDto,
 } from '../dtos/usuarios.dto';
 
-import { Usuarios } from '../../database/models/usuarios.model';
 
 @ApiTags('Usuarios')
 @Controller('usuarios')
@@ -56,11 +55,4 @@ export class UsuariosController {
     eliminar(@Param() email: EliminarUsuariosDto) {
         return this.usuariosService.eliminar(email);
     }
-
-    // @ApiOperation({ summary: 'Para Iniciar Sesion' })
-    // @Post('iniciar-sesion')
-    // @HttpCode(200)
-    // iniciarSesion(@Body() datos: IniciarSesionDto) {
-    //     return this.usuariosService.iniciarSesion(datos);
-    // }
 }

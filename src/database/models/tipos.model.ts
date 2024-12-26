@@ -23,3 +23,5 @@ export class Tipos extends Model<Tipos> {
     @HasOne(() => Usuarios)
     declare usuario: Usuarios; // Relación uno a uno
 }
+
+export default Tipos;

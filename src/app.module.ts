@@ -10,6 +10,7 @@ import { AutenticacionModule } from './auth/autenticacion.module';
 import { APP_GUARD } from '@nestjs/core';
 import config from './config';
 import { TiposGuard } from './auth/guards/tipos/tipos.guard';
+import { EmpresasModule } from './empresas/empresas.module';
 
 
 //En imports se insertan los modulos o carpetas que se van a utilizar
@@ -30,6 +31,7 @@ import { TiposGuard } from './auth/guards/tipos/tipos.guard';
         DatabaseModule,
         UsuariosModule,
         AutenticacionModule,
+        EmpresasModule,
     ],
     controllers: [AppController],
     providers: [

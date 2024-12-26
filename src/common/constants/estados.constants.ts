@@ -9,4 +9,3 @@ export const ADJUDICADO= {
 } as const;
 
 export type Estados = typeof ESTADOS[keyof typeof ESTADOS]; 
-

@@ -1,4 +1,3 @@
-
 /**
  * Estos son los roles de usuario o 
  * tipos de usuario que se pueden tener en la aplicación.

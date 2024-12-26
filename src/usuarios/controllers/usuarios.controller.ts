@@ -6,8 +6,6 @@ import {
     Body,
     Put,
     Delete,
-    HttpCode,
-    ConflictException,
 } from '@nestjs/common';
 
 import { UsuariosService } from '../services/usuarios.service';
@@ -16,10 +14,10 @@ import {
     ActualizarUsuariosDto,
     CrearUsuariosDto,
     EliminarUsuariosDto,
-    IniciarSesionDto,
     ObtenerPorIdUsuariosDto,
 } from '../dtos/usuarios.dto';
-
+import { Tipo } from 'src/common/utils/decorators';
+import { TIPOS_DE_USUARIO } from 'src/common/constants/tipos-usuarios.constants';
 
 @ApiTags('Usuarios')
 @Controller('usuarios')
@@ -27,6 +25,7 @@ export class UsuariosController {
     constructor(private usuariosService: UsuariosService) {}
 
     @ApiOperation({ summary: 'Obtener a todos los Usuarios' })
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1)
     @Get('obtener-todos')
     obtenerTodos() {
         return this.usuariosService.obtenerTodos();

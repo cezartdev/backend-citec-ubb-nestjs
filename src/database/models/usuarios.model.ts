@@ -66,7 +66,7 @@ export class Usuarios extends Model<Usuarios> {
     @ApiProperty({ type: 'string', default: TIPOS_DE_USUARIO.OPCION_1 })
     @ForeignKey(() => Tipos)
     @Column({
-        type: DataType.STRING(30),
+        type: DataType.ENUM(...Object.values(TIPOS_DE_USUARIO)),
         allowNull: false,
     })
     declare nombre_tipos: string;
@@ -79,7 +79,6 @@ export class Usuarios extends Model<Usuarios> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     })
     declare createdAt: Date;
 
@@ -88,7 +87,6 @@ export class Usuarios extends Model<Usuarios> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
     })
     declare updatedAt: Date;
 }

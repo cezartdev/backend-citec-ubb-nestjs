@@ -23,7 +23,7 @@ export class Tipos extends Model<Tipos> {
     @ApiProperty({ type: 'string', default: TIPOS_DE_USUARIO.OPCION_1 })
     @PrimaryKey
     @Column({
-        type: DataType.STRING(30),
+        type: DataType.ENUM(...Object.values(TIPOS_DE_USUARIO)),
         allowNull: false,
     })
     declare nombre: string;
@@ -35,8 +35,7 @@ export class Tipos extends Model<Tipos> {
     @CreatedAt
     @Column({
         type: DataType.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
     })
     declare createdAt: Date;
 
@@ -44,8 +43,7 @@ export class Tipos extends Model<Tipos> {
     @UpdatedAt
     @Column({
         type: DataType.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+        allowNull: false
     })
     declare updatedAt: Date;
 }

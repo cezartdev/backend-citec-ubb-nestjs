@@ -7,8 +7,9 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 import { DatabaseModule } from './database/database.module';
 import { enviroments } from './enviroments';
 import { AutenticacionModule } from './auth/autenticacion.module';
-
+import { APP_GUARD } from '@nestjs/core';
 import config from './config';
+import { TiposGuard } from './auth/guards/tipos.guard';
 
 //En imports se insertan los modulos o carpetas que se van a utilizar
 @Module({
@@ -21,7 +22,7 @@ import config from './config';
                 //Aqui se validan las variables de entorno
                 DATABASE_URL: Joi.string().required(),
                 FRONTEND_URL: Joi.string().required(),
-                JWT_SECRET: Joi.string().required(), 
+                JWT_SECRET: Joi.string().required(),
             }),
         }),
         DatabaseModule,
@@ -29,6 +30,12 @@ import config from './config';
         AutenticacionModule,
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [
+        AppService,
+        {
+            provide: APP_GUARD,
+            useClass: TiposGuard,
+        },
+    ],
 })
 export class AppModule {}

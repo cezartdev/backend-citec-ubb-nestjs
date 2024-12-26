@@ -9,6 +9,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 import { JwtAuthGuard } from './auth/guards/jwt/jwt.guard'; // Asegúrate de importar el guard
+import { JwtService } from '@nestjs/jwt';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -36,7 +37,7 @@ async function bootstrap() {
         }),
     );
 
-    app.useGlobalGuards(new JwtAuthGuard(new Reflector()));
+    app.useGlobalGuards(new JwtAuthGuard(app.get(JwtService), app.get(Reflector)));
 
     
     /**

@@ -99,7 +99,6 @@ export class UsuariosService extends BaseServices {
     }
 
     async iniciarSesion(datos: IniciarSesionDto): Promise<Usuarios> {
-
         const usuario = await Usuarios.findOne({
             where: { email: datos.email},
         });

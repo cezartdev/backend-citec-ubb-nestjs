@@ -10,8 +10,8 @@ export class AutenticacionService {
     // Método para generar el JWT
     async generateToken(usuario: Usuarios) {
         const datos = { email: usuario.email, nombre: usuario.nombre };
-        return {
-            token: this.jwtService.sign(datos),
-        };
+
+        const token = await this.jwtService.signAsync(datos);
+        return { token };
     }
 }

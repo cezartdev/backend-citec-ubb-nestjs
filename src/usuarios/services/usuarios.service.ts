@@ -105,7 +105,7 @@ export class UsuariosService extends BaseServices {
 
         //Si el usuario no existe
         if (!usuario){
-            throw new ForbiddenException('Credenciales invalidas');
+            throw new ForbiddenException('Correo o contraseña incorrectas');
         }
 
         const contraseñaEncriptada = usuario.contraseña;
@@ -114,7 +114,7 @@ export class UsuariosService extends BaseServices {
         const contraseñaValida = await bcrypt.compare(datos.contraseña, contraseñaEncriptada);
 
         if (!contraseñaValida){
-            throw new ForbiddenException('Credenciales invalidas');
+            throw new ForbiddenException('Correo o contraseña incorrectas');
         }
 
         return usuario;

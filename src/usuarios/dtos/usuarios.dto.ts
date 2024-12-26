@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEmail, Length, IsIn } from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, Length, IsIn, IsAlphanumeric } from 'class-validator';
 import { PartialType, ApiProperty, PickType } from '@nestjs/swagger';
 import { ESTADOS, Estados } from 'src/common/constants/estados.constants';
 import { Transform } from 'class-transformer';
@@ -6,16 +6,18 @@ import { toCapitalizeCase } from 'src/common/utils/capitalize';
 import { TIPOS_DE_USUARIO, TiposDeUsuario } from 'src/common/constants/tipos-usuarios.constants';
 
 export class IniciarSesionDto {
-    @IsEmail()
-    @IsString()
-    @IsNotEmpty()
+    @IsEmail({}, { message: 'El email debe ser un email valido' })
+    @IsString({ message: 'El email debe ser texto' })
+    @IsNotEmpty({ message: 'El email está vacio' })
     @ApiProperty({ description: 'Este es el email del usuario' })
     readonly email: string;
 
-    @Length(1, 250)
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty({ description: 'Este es la contraseña del usuario' })
+    @Length(1, 250, {
+        message: 'La longitud de la contraseña debe ser entre 1 y 250 caracteres',
+    })
+    @IsString({ message: 'La contraseña debe ser alfanumerica' })
+    @IsNotEmpty({ message: 'La contraseña está vacia' })
+    @ApiProperty({ description: 'Esta es la contraseña del usuario' })
     readonly contraseña: string;
 }
 

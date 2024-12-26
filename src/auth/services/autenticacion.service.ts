@@ -12,6 +12,7 @@ export class AutenticacionService {
         const datos = { email: usuario.email, nombre: usuario.nombre };
 
         const token = await this.jwtService.signAsync(datos);
+        //Devolver datos del usuario y el token
         return { token };
     }
 }

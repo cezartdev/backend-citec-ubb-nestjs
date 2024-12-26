@@ -8,7 +8,7 @@ import {
     ForeignKey,
     CreatedAt,
     UpdatedAt,
-    Default,
+    Sequelize
 } from 'sequelize-typescript';
 
 import { Tipos } from './tipos.model';
@@ -79,7 +79,7 @@ export class Usuarios extends Model<Usuarios> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: DataType.NOW,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     })
     declare createdAt: Date;
 
@@ -88,7 +88,7 @@ export class Usuarios extends Model<Usuarios> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: DataType.NOW,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
     })
     declare updatedAt: Date;
 }

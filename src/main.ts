@@ -37,6 +37,8 @@ async function bootstrap() {
         }),
     );
 
+    console.log(process.env.DATABASE_URL);
+
     app.useGlobalGuards(new JwtAuthGuard(app.get(JwtService), app.get(Reflector)));
 
     

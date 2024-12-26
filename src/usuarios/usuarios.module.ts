@@ -16,3 +16,4 @@ export class UsuariosModule implements NestModule {
             .forRoutes('/usuarios/crear'); // Aplica el middleware solo para las rutas de "usuarios"
     }
 }
+//

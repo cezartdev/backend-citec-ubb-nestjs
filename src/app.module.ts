@@ -14,13 +14,14 @@ import config from './config';
 @Module({
     imports: [
         ConfigModule.forRoot({
-            envFilePath: enviroments[process.env.NODE_ENV] || '.dev.env',
+            envFilePath: enviroments.dev,
             load: [config],
             isGlobal: true,
             validationSchema: Joi.object({
                 //Aqui se validan las variables de entorno
-                API_KEY: Joi.string().required(), //Valida que la variable de entorno API_KEY sea un string y sea requerida
-                DATABASE_URL: Joi.string().required(), // Valida que la variable de entorno DATABASE_URL sea un string y sea requerida
+                DATABASE_URL: Joi.string().required(),
+                FRONTEND_URL: Joi.string().required(),
+                JWT_SECRET: Joi.string().required(), 
             }),
         }),
         DatabaseModule,

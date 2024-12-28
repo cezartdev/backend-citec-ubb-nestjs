@@ -35,27 +35,7 @@ export class UsuariosController {
     constructor(private usuariosService: UsuariosService) {}
 
     @ApiOperation({ summary: 'Obtener a todos los Usuarios' })
-    @ApiResponse({
-        status: 200,
-        description: 'Usuarios encontrados',
-        schema: {
-            allOf: [
-                { $ref: getSchemaPath(OkRespuestaDto) },
-                {
-                    properties: {
-                        message: {
-                            type: 'string',
-                            example: 'Mensaje de Exito',
-                        },
-                        response: {
-                            type: 'array',
-                            items: { $ref: getSchemaPath(Usuarios) },
-                        },
-                    },
-                },
-            ],
-        },
-    })
+
     @ApiResponse({
         status: 404,
         description: 'No encontrado',
@@ -63,10 +43,8 @@ export class UsuariosController {
     })
     // @Tipo(TIPOS_DE_USUARIO.OPCION_1)
     @Get('obtener-todos')
-    async obtenerTodos(): Promise<OkRespuestaDto<string, Usuarios[]>> {
-        const response: Usuarios[] = await this.usuariosService.obtenerTodos();
-        const message = 'Usuarios encontrados';
-        return { message, response };
+    obtenerTodos(): Promise<Usuarios[]> {
+        return this.usuariosService.obtenerTodos();
     }
 
     @ApiOperation({ summary: 'Obtener a usuarios segun su clave primaria' })

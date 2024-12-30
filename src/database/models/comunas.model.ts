@@ -45,7 +45,7 @@ export class Comunas extends Model<Comunas> {
     declare id_provincias: number;
 
     @BelongsTo(() => Provincias)
-    declare provincia: Provincias; // Relación uno a uno
+    declare provincia: Provincias;
 
     @ApiProperty()
     @CreatedAt

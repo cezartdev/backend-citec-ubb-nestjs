@@ -4,13 +4,10 @@ import {
     Model,
     DataType,
     PrimaryKey,
-    BelongsTo,
-    ForeignKey,
     CreatedAt,
     UpdatedAt,
-    Sequelize,
-    AutoIncrement,
-    HasOne
+
+    HasMany
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
@@ -60,8 +57,8 @@ export class Regiones extends Model<Regiones> {
     })
     declare updatedAt: Date;
 
-    @HasOne(() => Provincias)
-    declare provincia: Provincias; // Relación uno a uno
+    @HasMany(() => Provincias)
+    declare provincia: Provincias[]; // Relación uno a muchos
 }
 
 export default Regiones;

@@ -11,7 +11,8 @@ import {
     Sequelize,
     AutoIncrement,
     HasOne,
-    HasMany
+    HasMany,
+    BelongsToMany
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
@@ -19,6 +20,7 @@ import { ESTADOS } from 'src/common/constants/estados.constants';
 import { ADJUDICADO } from 'src/common/constants/adjudicados.constants';   
 import {Empresas} from './empresas.model';
 import {PropuestaDeServicioServicios} from './propuesta-de-servicio-servicios.model';
+import GruposDeServicios from './grupos-de-servicios.model';
 
 
 @Table({
@@ -98,8 +100,8 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
     })
     declare updatedAt: Date;
 
-    @HasMany(() => PropuestaDeServicioServicios)
-    declare servicios: PropuestaDeServicioServicios;
+    @BelongsToMany(() => GruposDeServicios, () => PropuestaDeServicioServicios)
+    declare grupoDeServicios: GruposDeServicios[];
 
 }
 

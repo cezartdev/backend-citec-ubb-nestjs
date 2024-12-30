@@ -3,6 +3,7 @@ import { PropuestasDeServiciosService } from './services/propuestas-de-servicios
 import { PropuestasDeServiciosController } from './controllers/propuestas-de-servicios.controller';
 
 @Module({
+  imports: [],
   providers: [PropuestasDeServiciosService],
   controllers: [PropuestasDeServiciosController]
 })

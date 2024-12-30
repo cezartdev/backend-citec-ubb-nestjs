@@ -69,14 +69,21 @@ export class UsuariosService extends BaseServices {
 
     async actualizar(usuario: ActualizarUsuariosDto): Promise<Usuarios> {
         const usuarioExistente = await Usuarios.findByPk(usuario.email);
-
+        
         if (!usuarioExistente) {
             throw new NotFoundException(
-                [`Usuario con email ${usuario.email} no encontrado`,]
+                [`Usuario con el email ${usuario.email} no encontrado`,]
             );
         }
 
-        return usuarioExistente;
+        const filasAfectadas = await Usuarios.update(
+            { ...usuario },
+            { where: { email: usuario.email } },
+        );
+
+        const usuarioActualizado = await Usuarios.findByPk(usuario.email);
+
+        return usuarioActualizado;
     }
 
     async eliminar(clavePrimaria: EliminarUsuariosDto): Promise<Usuarios> {
@@ -84,7 +91,7 @@ export class UsuariosService extends BaseServices {
 
         if (!usuario) {
             throw new NotFoundException(
-                [`No existe un usuario con el email ${clavePrimaria.email}`],
+                [`Usuario con email ${clavePrimaria.email} no encontrado`],
             );
         }
 

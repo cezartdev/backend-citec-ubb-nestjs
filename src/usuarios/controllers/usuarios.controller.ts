@@ -9,38 +9,27 @@ import {
 } from '@nestjs/common';
 
 import { UsuariosService } from '../services/usuarios.service';
-import {
-    ApiOperation,
-    ApiResponse,
-    ApiTags,
-    ApiExtraModels,
-    getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
     ActualizarUsuariosDto,
     CrearUsuariosDto,
     EliminarUsuariosDto,
     ObtenerPorIdUsuariosDto,
 } from '../dtos/usuarios.dto';
-import { Tipo } from 'src/common/utils/decorators';
-import { TIPOS_DE_USUARIO } from 'src/common/constants/tipos-usuarios.constants';
-import { ErrorRespuestaDto } from 'src/common/dto/error-respuesta.dto';
-import { OkRespuestaDto } from 'src/common/dto/ok-respuesta.dto';
 import Usuarios from 'src/database/models/usuarios.model';
 
+import { ApiRespuestaError } from 'src/common/utils/decorators';
+import { BaseControllers } from 'src/common/base/base-controllers.class';
+
 @ApiTags('Usuarios')
-@ApiExtraModels(OkRespuestaDto)
 @Controller('usuarios')
-export class UsuariosController {
-    constructor(private usuariosService: UsuariosService) {}
+export class UsuariosController extends BaseControllers {
+    constructor(private usuariosService: UsuariosService) {
+        super();
+    }
 
-    @ApiOperation({ summary: 'Obtener a todos los Usuarios' })
-
-    @ApiResponse({
-        status: 404,
-        description: 'No encontrado',
-        type: ErrorRespuestaDto,
-    })
+    @ApiOperation({ summary: 'Obtener a todos los usuarios' })
+    @ApiRespuestaError()
     // @Tipo(TIPOS_DE_USUARIO.OPCION_1)
     @Get('obtener-todos')
     obtenerTodos(): Promise<Usuarios[]> {

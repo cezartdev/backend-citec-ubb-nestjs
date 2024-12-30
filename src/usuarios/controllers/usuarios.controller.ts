@@ -8,7 +8,6 @@ import {
     Delete,
 } from '@nestjs/common';
 
-import { UsuariosService } from '../services/usuarios.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
     ActualizarUsuariosDto,
@@ -18,6 +17,7 @@ import {
 } from '../dtos/usuarios.dto';
 import Usuarios from 'src/database/models/usuarios.model';
 
+import { UsuariosService } from '../services/usuarios.service';
 import { ApiRespuestaError } from 'src/common/utils/decorators';
 import { BaseControllers } from 'src/common/base/base-controllers.class';
 
@@ -28,6 +28,12 @@ export class UsuariosController extends BaseControllers {
         super();
     }
 
+    @ApiOperation({ summary: 'Crear usuarios' })
+    @Post('crear')
+    crear(@Body() usuario: CrearUsuariosDto) {
+        return this.usuariosService.crear(usuario);
+    }
+    
     @ApiOperation({ summary: 'Obtener a todos los usuarios' })
     @ApiRespuestaError()
     // @Tipo(TIPOS_DE_USUARIO.OPCION_1)
@@ -42,15 +48,9 @@ export class UsuariosController extends BaseControllers {
         return this.usuariosService.obtenerPorId(email);
     }
 
-    @ApiOperation({ summary: 'Crear usuarios' })
-    @Post('crear')
-    crear(@Body() usuario: CrearUsuariosDto) {
-        return this.usuariosService.crear(usuario);
-    }
-
     @ApiOperation({ summary: 'Actualizar usuarios' })
     @Put('actualizar/:email')
-    update(@Body() usuario: ActualizarUsuariosDto) {
+    actualizar(@Body() usuario: ActualizarUsuariosDto) {
         return this.usuariosService.actualizar(usuario);
     }
 

@@ -7,12 +7,13 @@ import {
 import { Reflector } from '@nestjs/core';
 import { TIPOS_DE_USUARIO_KEY } from 'src/common/utils/decorators';
 import {
-    TIPOS_DE_USUARIO,
     TiposDeUsuario,
 } from 'src/common/constants/tipos-usuarios.constants';
 import { JwtService } from '@nestjs/jwt';
 import { Usuarios } from 'src/database/models/usuarios.model';
 import { ESTADOS } from 'src/common/constants/estados.constants';
+
+
 @Injectable()
 export class TiposGuard implements CanActivate {
     constructor(
@@ -28,7 +29,7 @@ export class TiposGuard implements CanActivate {
         if (!requiredRoles) {
             return true;
         }
-        console.log(requiredRoles);
+
 
         const request = context.switchToHttp().getRequest();
         const authHeader = request.headers['authorization'];
@@ -43,7 +44,7 @@ export class TiposGuard implements CanActivate {
 
         try {
             const usuarioToken: Usuarios = this.jwtService.verify(token);
-            
+
             const usuario = await Usuarios.findOne({
                 where: { email: usuarioToken.email },
             });

@@ -31,6 +31,7 @@ export class UsuariosController extends BaseControllers {
     }
 
     @ApiOperation({ summary: 'Crear usuarios' })
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Post('crear')
     crear(@Body() usuario: CrearUsuariosDto) {
         return this.usuariosService.crear(usuario);
@@ -38,25 +39,28 @@ export class UsuariosController extends BaseControllers {
 
     @ApiOperation({ summary: 'Obtener a todos los usuarios' })
     @ApiRespuestaError()
-    @Tipo(TIPOS_DE_USUARIO.OPCION_1)
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Get('obtener-todos')
     obtenerTodos(): Promise<Usuarios[]> {
         return this.usuariosService.obtenerTodos();
     }
 
     @ApiOperation({ summary: 'Obtener a usuarios segun su clave primaria' })
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Get('obtener-por-id/:email')
     obtenerPorId(@Param() email: ObtenerPorIdUsuariosDto) {
         return this.usuariosService.obtenerPorId(email);
     }
 
     @ApiOperation({ summary: 'Actualizar usuarios' })
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Put('actualizar/:email')
     actualizar(@Body() usuario: ActualizarUsuariosDto) {
         return this.usuariosService.actualizar(usuario);
     }
 
     @ApiOperation({ summary: 'Eliminar usuario' })
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Delete('eliminar/:email')
     eliminar(@Param() email: EliminarUsuariosDto) {
         return this.usuariosService.eliminar(email);

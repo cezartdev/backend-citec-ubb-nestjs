@@ -54,7 +54,7 @@ export class UsuariosController extends BaseControllers {
 
     @ApiOperation({ summary: 'Actualizar usuarios' })
     @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
-    @Put('actualizar/:email')
+    @Put('actualizar')
     actualizar(@Body() usuario: ActualizarUsuariosDto) {
         return this.usuariosService.actualizar(usuario);
     }

@@ -11,7 +11,7 @@ import { JwtStrategy } from './guards/jwt/jwt.strategy';
         JwtModule.registerAsync({
             useFactory: async (configService: ConfigService) => ({
                 secret: configService.get<string>('config.jwt.secret'), // Accede a JWT_SECRET desde la configuración
-                signOptions: { expiresIn: '1h' },
+                signOptions: { expiresIn: '7d' },
             }),
             inject: [ConfigService],
         }),

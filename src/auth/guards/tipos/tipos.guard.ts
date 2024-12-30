@@ -44,7 +44,7 @@ export class TiposGuard implements CanActivate {
 
         try {
             const usuarioToken: Usuarios = this.jwtService.verify(token);
-
+            
             const usuario = await Usuarios.findOne({
                 where: { email: usuarioToken.email },
             });
@@ -56,7 +56,8 @@ export class TiposGuard implements CanActivate {
             if (usuario.estado !== ESTADOS.OPCION_1) {
                 throw new ForbiddenException('Acceso denegado');
             }
-
+            console.log(usuario.nombre_tipos);
+            
             return requiredRoles.includes(
                 usuario.nombre_tipos as TiposDeUsuario,
             );

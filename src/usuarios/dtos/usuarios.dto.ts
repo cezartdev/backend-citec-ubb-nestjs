@@ -1,9 +1,19 @@
-import { IsString, IsNotEmpty, IsEmail, Length, IsIn, IsAlphanumeric } from 'class-validator';
+import {
+    IsString,
+    IsNotEmpty,
+    IsEmail,
+    Length,
+    IsIn,
+    IsAlphanumeric,
+} from 'class-validator';
 import { PartialType, ApiProperty, PickType } from '@nestjs/swagger';
 import { ESTADOS, Estados } from 'src/common/constants/estados.constants';
 import { Transform } from 'class-transformer';
 import { toCapitalizeCase } from 'src/common/utils/capitalize';
-import { TIPOS_DE_USUARIO, TiposDeUsuario } from 'src/common/constants/tipos-usuarios.constants';
+import {
+    TIPOS_DE_USUARIO,
+    TiposDeUsuario,
+} from 'src/common/constants/tipos-usuarios.constants';
 
 export class IniciarSesionDto {
     @IsEmail({}, { message: 'El email debe ser un email valido' })
@@ -13,7 +23,8 @@ export class IniciarSesionDto {
     readonly email: string;
 
     @Length(1, 250, {
-        message: 'La longitud de la contraseña debe ser entre 1 y 250 caracteres',
+        message:
+            'La longitud de la contraseña debe ser entre 1 y 250 caracteres',
     })
     @IsString({ message: 'La contraseña debe ser alfanumerica' })
     @IsNotEmpty({ message: 'La contraseña está vacia' })
@@ -86,7 +97,7 @@ export class CrearUsuariosDto {
 export class ObtenerPorIdUsuariosDto extends PickType(CrearUsuariosDto, [
     'email',
 ]) {}
-export class ActualizarUsuariosDto extends PartialType(CrearUsuariosDto) {}
+export class ActualizarUsuariosDto extends CrearUsuariosDto {}
 
 export class EliminarUsuariosDto extends PickType(CrearUsuariosDto, [
     'email',

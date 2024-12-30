@@ -37,11 +37,10 @@ async function bootstrap() {
         }),
     );
 
-    console.log(process.env.DATABASE_URL);
+    app.useGlobalGuards(
+        new JwtAuthGuard(app.get(JwtService), app.get(Reflector)),
+    );
 
-    app.useGlobalGuards(new JwtAuthGuard(app.get(JwtService), app.get(Reflector)));
-
-    
     /**
      * Indicar el prefijo de la API
      * Todas las rutas comienzan con /api/:clave
@@ -55,7 +54,7 @@ async function bootstrap() {
     app.enableCors({
         origin: (origin, callback) => {
             const whitelist = [process.env.FRONTEND_URL];
-            console.log(origin);
+            console.log(`Origen: ${origin}`);
             if (!origin) {
                 callback(null, true);
                 return;
@@ -94,18 +93,18 @@ async function bootstrap() {
         .setVersion('1.0')
         .addBearerAuth(
             {
-              type: 'http', // Define el tipo de autenticación
-              scheme: 'bearer', // Especifica que es un token Bearer
-              bearerFormat: 'JWT', // Define el formato como JWT
-              description: 'Ingresa el token JWT', // Descripción del campo
+                type: 'http', // Define el tipo de autenticación
+                scheme: 'bearer', // Especifica que es un token Bearer
+                bearerFormat: 'JWT', // Define el formato como JWT
+                description: 'Ingresa el token JWT', // Descripción del campo
             },
             'bearer', // Este es el nombre del esquema de seguridad
-          )
+        )
         .addSecurityRequirements('bearer')
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/docs', app, document);
 
-    await app.listen(4000);
+    await app.listen(process.env.PORT || 4000);
 }
 bootstrap();

@@ -1,21 +1,66 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+    CanActivate,
+    ExecutionContext,
+    Injectable,
+    ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { TIPOS_DE_USUARIO_KEY } from 'src/common/utils/decorators';
-import { TiposDeUsuario } from 'src/common/constants/tipos-usuarios.constants';
-
+import {
+    TIPOS_DE_USUARIO,
+    TiposDeUsuario,
+} from 'src/common/constants/tipos-usuarios.constants';
+import { JwtService } from '@nestjs/jwt';
+import { Usuarios } from 'src/database/models/usuarios.model';
+import { ESTADOS } from 'src/common/constants/estados.constants';
 @Injectable()
 export class TiposGuard implements CanActivate {
-    constructor(private reflector: Reflector) {}
+    constructor(
+        private readonly jwtService: JwtService,
+        private reflector: Reflector,
+    ) {}
 
-    canActivate(context: ExecutionContext): boolean {
+    async canActivate(context: ExecutionContext): Promise<boolean> {
         const requiredRoles = this.reflector.getAllAndOverride<
             TiposDeUsuario[]
         >(TIPOS_DE_USUARIO_KEY, [context.getHandler(), context.getClass()]);
+
         if (!requiredRoles) {
             return true;
         }
+        console.log(requiredRoles);
 
-        const { user } = context.switchToHttp().getRequest();
-        return requiredRoles.some((role) => user?.roles?.includes(role));
+        const request = context.switchToHttp().getRequest();
+        const authHeader = request.headers['authorization'];
+        if (!authHeader) {
+            throw new ForbiddenException('Acceso denegado');
+        }
+
+        const token = authHeader.split(' ')[1];
+        if (!token) {
+            throw new ForbiddenException('Acceso denegado');
+        }
+
+        try {
+            const usuarioToken: Usuarios = this.jwtService.verify(token);
+            
+            const usuario = await Usuarios.findOne({
+                where: { email: usuarioToken.email },
+            });
+
+            if (!usuario) {
+                throw new ForbiddenException('Acceso denegado');
+            }
+
+            if (usuario.estado !== ESTADOS.OPCION_1) {
+                throw new ForbiddenException('Acceso denegado');
+            }
+
+            return requiredRoles.includes(
+                usuario.nombre_tipos as TiposDeUsuario,
+            );
+        } catch (error) {
+            throw new ForbiddenException('Acceso denegado' + error);
+        }
     }
 }

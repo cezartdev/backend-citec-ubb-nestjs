@@ -20,6 +20,8 @@ import Usuarios from 'src/database/models/usuarios.model';
 import { UsuariosService } from '../services/usuarios.service';
 import { ApiRespuestaError } from 'src/common/utils/decorators';
 import { BaseControllers } from 'src/common/base/base-controllers.class';
+import { Tipo } from 'src/common/utils/decorators';
+import { TIPOS_DE_USUARIO } from 'src/common/constants/tipos-usuarios.constants';
 
 @ApiTags('Usuarios')
 @Controller('usuarios')
@@ -33,10 +35,10 @@ export class UsuariosController extends BaseControllers {
     crear(@Body() usuario: CrearUsuariosDto) {
         return this.usuariosService.crear(usuario);
     }
-    
+
     @ApiOperation({ summary: 'Obtener a todos los usuarios' })
     @ApiRespuestaError()
-    // @Tipo(TIPOS_DE_USUARIO.OPCION_1)
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1)
     @Get('obtener-todos')
     obtenerTodos(): Promise<Usuarios[]> {
         return this.usuariosService.obtenerTodos();

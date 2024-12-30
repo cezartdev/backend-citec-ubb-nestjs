@@ -11,10 +11,13 @@ export class AutenticacionService {
     async generateToken(usuario: Usuarios) {
         /**
          * Payload del JWT
+         * signAsync recibe un objeto con los datos que se quieren encriptar
+         * y encripta el payload. El token contiene el payload encriptado
          */
-        const datos = { email: usuario.email, nombre_tipos: usuario.nombre_tipos };
+        // const datos = { email: usuario.email, nombre_tipos: usuario.nombre_tipos };
+        
 
-        const token = await this.jwtService.signAsync(datos);
+        const token = await this.jwtService.signAsync(usuario);
 
         return token;
     }

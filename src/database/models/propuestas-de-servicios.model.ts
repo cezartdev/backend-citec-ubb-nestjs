@@ -9,13 +9,17 @@ import {
     CreatedAt,
     UpdatedAt,
     Sequelize,
-    AutoIncrement
+    AutoIncrement,
+    HasOne,
+    HasMany
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
 import { ESTADOS } from 'src/common/constants/estados.constants';
 import { ADJUDICADO } from 'src/common/constants/adjudicados.constants';   
-import Empresas from './empresas.model';
+import {Empresas} from './empresas.model';
+import {PropuestaDeServicioServicios} from './propuesta-de-servicio-servicios.model';
+
 
 @Table({
     tableName: 'propuestas_de_servicios',
@@ -93,6 +97,10 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
         allowNull: false,
     })
     declare updatedAt: Date;
+
+    @HasMany(() => PropuestaDeServicioServicios)
+    declare servicios: PropuestaDeServicioServicios;
+
 }
 
 export default PropuestasDeServicios;

@@ -104,6 +104,9 @@ export class Empresas extends Model<Empresas> {
 
     @HasMany(() => PropuestasDeServicios)
     declare propuesta:PropuestasDeServicios
+
+    
+
 }
 
 export default Empresas;

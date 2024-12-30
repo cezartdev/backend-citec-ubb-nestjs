@@ -29,7 +29,10 @@ export class SeederService {
         /**
          * Usuario de Desarrollo
          */
-        const contraseñaEncriptada = await bcrypt.hash(this.configService.desarrollador.contraseña,10)
+        const contraseñaEncriptada = await bcrypt.hash(
+            this.configService.desarrollador.contraseña,
+            10,
+        );
 
         await Usuarios.findOrCreate({
             where: {
@@ -45,7 +48,19 @@ export class SeederService {
             },
         });
 
-
-        
+        const contraseñaEncriptadaTest = await bcrypt.hash('1234', 10);
+        await Usuarios.findOrCreate({
+            where: {
+                email: 'test@gmail.com',
+            },
+            defaults: {
+                email: 'test@gmail.com',
+                nombre: 'Test',
+                apellido: 'Test',
+                contraseña: contraseñaEncriptadaTest,
+                estado: ESTADOS.OPCION_1,
+                nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
+            },
+        });
     }
 }

@@ -62,7 +62,7 @@ export class TiposGuard implements CanActivate {
                 usuario.nombre_tipos as TiposDeUsuario,
             );
         } catch (error) {
-            throw new ForbiddenException('Acceso denegado' + error);
+            throw new ForbiddenException('Acceso denegado');
         }
     }
 }

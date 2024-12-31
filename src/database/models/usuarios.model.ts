@@ -8,14 +8,13 @@ import {
     ForeignKey,
     CreatedAt,
     UpdatedAt,
-    Sequelize
 } from 'sequelize-typescript';
 
 import { Tipos } from './tipos.model';
-import { ESTADOS } from 'src/common/constants/estados.constants';
+import { ESTADOS } from '../../common/constants/estados.constants';
 
 import { ApiProperty } from '@nestjs/swagger';
-import { TIPOS_DE_USUARIO } from 'src/common/constants/tipos-usuarios.constants';
+import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
 
 @Table({
     tableName: 'usuarios',

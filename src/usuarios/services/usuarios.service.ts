@@ -4,7 +4,7 @@ import {
     ConflictException,
     ForbiddenException,
 } from '@nestjs/common';
-import { Usuarios } from 'src/database/models/usuarios.model';
+import { Usuarios } from '../../database/models/usuarios.model';
 import {
     CrearUsuariosDto,
     ActualizarUsuariosDto,
@@ -13,7 +13,7 @@ import {
     IniciarSesionDto,
 } from '../dtos/usuarios.dto';
 import { BaseServices } from '../../common/base/base-services.class';
-import { ESTADOS } from 'src/common/constants/estados.constants';
+import { ESTADOS } from '../../common/constants/estados.constants';
 
 import * as bcrypt from 'bcrypt';
 
@@ -28,7 +28,7 @@ export class UsuariosService extends BaseServices {
         const existeUsuario = await Usuarios.findOne({
             where: { email: usuario.email },
         });
-        
+
         if (existeUsuario) {
             throw new ConflictException(['Ya existe un usuario con ese email']);
         }

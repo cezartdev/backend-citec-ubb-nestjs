@@ -8,9 +8,6 @@ import {
     ForeignKey,
     CreatedAt,
     UpdatedAt,
-    Sequelize,
-    AutoIncrement,
-    HasOne,
     HasMany
 } from 'sequelize-typescript';
 

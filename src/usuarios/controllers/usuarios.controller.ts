@@ -15,13 +15,13 @@ import {
     EliminarUsuariosDto,
     ObtenerPorIdUsuariosDto,
 } from '../dtos/usuarios.dto';
-import Usuarios from 'src/database/models/usuarios.model';
+import { Usuarios } from '../../database/models/usuarios.model';
 
 import { UsuariosService } from '../services/usuarios.service';
-import { ApiRespuestaError } from 'src/common/utils/decorators';
-import { BaseControllers } from 'src/common/base/base-controllers.class';
-import { Tipo } from 'src/common/utils/decorators';
-import { TIPOS_DE_USUARIO } from 'src/common/constants/tipos-usuarios.constants';
+import { ApiRespuestaError } from '../../common/utils/decorators';
+import { BaseControllers } from '../../common/base/base-controllers.class';
+import { Tipo } from '../../common/utils/decorators';
+import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
 
 @ApiTags('Usuarios')
 @Controller('usuarios')

@@ -4,16 +4,15 @@ import {
     IsEmail,
     Length,
     IsIn,
-    IsAlphanumeric,
 } from 'class-validator';
-import { PartialType, ApiProperty, PickType } from '@nestjs/swagger';
-import { ESTADOS, Estados } from 'src/common/constants/estados.constants';
+import { ApiProperty, PickType } from '@nestjs/swagger';
+import { ESTADOS, Estados } from '../../common/constants/estados.constants';
 import { Transform } from 'class-transformer';
-import { toCapitalizeCase } from 'src/common/utils/capitalize';
+import { toCapitalizeCase } from '../../common/utils/capitalize';
 import {
     TIPOS_DE_USUARIO,
     TiposDeUsuario,
-} from 'src/common/constants/tipos-usuarios.constants';
+} from '../../common/constants/tipos-usuarios.constants';
 
 export class IniciarSesionDto {
     @IsEmail({}, { message: 'El email debe ser un email valido' })

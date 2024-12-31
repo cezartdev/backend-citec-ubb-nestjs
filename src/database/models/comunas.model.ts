@@ -8,12 +8,9 @@ import {
     ForeignKey,
     CreatedAt,
     UpdatedAt,
-    Sequelize,
-    AutoIncrement
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
-import {Regiones} from './regiones.model';
 import {Provincias} from './provincias.model';
 
 @Table({

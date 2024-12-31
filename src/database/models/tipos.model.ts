@@ -7,11 +7,10 @@ import {
     HasOne,
     CreatedAt,
     UpdatedAt,
-    Sequelize,
 } from 'sequelize-typescript';
 
 import { Usuarios } from './usuarios.model';
-import { TIPOS_DE_USUARIO } from 'src/common/constants/tipos-usuarios.constants';
+import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
 
 import { ApiProperty } from '@nestjs/swagger';
 

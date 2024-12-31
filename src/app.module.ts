@@ -12,7 +12,6 @@ import config from './config';
 import { TiposGuard } from './auth/guards/tipos/tipos.guard';
 import { EmpresasModule } from './empresas/empresas.module';
 import { PropuestasDeServiciosModule } from './propuestas-de-servicios/propuestas-de-servicios.module';
-import { JwtService } from '@nestjs/jwt';
 
 
 

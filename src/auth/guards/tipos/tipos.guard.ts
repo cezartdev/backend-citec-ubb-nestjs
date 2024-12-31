@@ -56,7 +56,7 @@ export class TiposGuard implements CanActivate {
             if (usuario.estado !== ESTADOS.OPCION_1) {
                 throw new ForbiddenException('Acceso denegado');
             }
-            console.log(usuario.nombre_tipos);
+            // console.log(usuario.nombre_tipos);
             
             return requiredRoles.includes(
                 usuario.nombre_tipos as TiposDeUsuario,

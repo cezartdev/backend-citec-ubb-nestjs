@@ -28,6 +28,7 @@ export class UsuariosService extends BaseServices {
         const existeUsuario = await Usuarios.findOne({
             where: { email: usuario.email },
         });
+        
         if (existeUsuario) {
             throw new ConflictException(['Ya existe un usuario con ese email']);
         }

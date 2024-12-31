@@ -26,7 +26,9 @@ export class DatabaseModule implements OnApplicationBootstrap {
 
     // Descomentar para ejecutar los seeders al iniciar la aplicación
     async onApplicationBootstrap() {
-        console.log('Ejecutando seeders...');
-        await this.seederService.run();
+        if (process.env.NODE_ENV !== 'test') {
+            console.log('Ejecutando seeders...');
+            await this.seederService.run();
+        }
     }
 }

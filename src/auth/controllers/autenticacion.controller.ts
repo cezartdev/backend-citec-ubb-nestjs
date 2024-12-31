@@ -1,8 +1,8 @@
 import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { AutenticacionService } from '../services/autenticacion.service';
-import { UsuariosService } from 'src/usuarios/services/usuarios.service';
-import { IniciarSesionDto } from 'src/usuarios/dtos/usuarios.dto';
-import { Public } from 'src/common/utils/decorators';
+import { UsuariosService } from '../../usuarios/services/usuarios.service';
+import { IniciarSesionDto } from '../../usuarios/dtos/usuarios.dto';
+import { Public } from '../../common/utils/decorators';
 import { AutenticacionUsuariosRespuestaDto } from '../dto/autenticacion-respuesta.dto';
 
 @Controller('autenticacion')

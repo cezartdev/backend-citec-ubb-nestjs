@@ -1,7 +1,7 @@
-import { IsString, IsNotEmpty, Length, IsIn , Matches ,IsNumber, Min, Max } from 'class-validator';
+import { IsString, IsNotEmpty, Length, IsIn , Matches ,IsNumber } from 'class-validator';
 import { ApiProperty, PickType, OmitType } from '@nestjs/swagger';
-import { ESTADOS, Estados } from 'src/common/constants/estados.constants';
-import { ADJUDICADO, Adjudicado } from 'src/common/constants/adjudicados.constants';
+import { ESTADOS, Estados } from '../../common/constants/estados.constants';
+import { ADJUDICADO, Adjudicado } from '../../common/constants/adjudicados.constants';
 import { Transform } from 'class-transformer';
 
 export class ActualizarPropuestasDeServiciosDto {

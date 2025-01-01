@@ -88,7 +88,6 @@ export class UsuariosService extends BaseServices {
                 nombre: usuario.nombre,
                 apellido: usuario.apellido,
                 contraseña: usuario.contraseña,
-                estado: usuario.estado,
                 nombre_tipos: usuario.nombre_tipos,
             },
             { where: { email: usuario.email } },

@@ -14,7 +14,11 @@ export class IniciarSesionDto {
     })
     @IsEmail({}, { message: 'El email debe ser un email valido' })
     @IsString({ message: 'El email debe ser texto' })
-    @IsNotEmpty({ message: 'El email está vacio' })
+    @IsNotEmpty({ message: 'El email esta vacio' })
+    @Transform(({ value }) => {
+        if (typeof value !== 'string') return value;
+        return value.toLowerCase();
+    })
     @ApiProperty({ description: 'Este es el email del usuario' })
     readonly email: string;
 
@@ -80,17 +84,6 @@ export class CrearUsuariosDto {
         default: '$_i;3%z2hpNJM!C4X',
     })
     readonly contraseña: string;
-
-    @IsIn(Object.values(ESTADOS), {
-        message: 'El estado debe ser uno de los valores permitidos',
-    })
-    @IsString({ message: 'El estado debe ser texto' })
-    @IsNotEmpty({ message: 'El estado esta vacio' })
-    @Transform(({ value }) => {
-        if (typeof value !== 'string') return value;
-        return value.toUpperCase();
-    })
-    readonly estado: Estados;
 
     @IsIn(Object.values(TIPOS_DE_USUARIO), {
         message: 'El nombre del tipo debe ser uno de los valores permitidos',

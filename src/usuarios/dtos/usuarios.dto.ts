@@ -111,7 +111,17 @@ export class CrearUsuariosDto {
 export class ObtenerPorIdUsuariosDto extends PickType(CrearUsuariosDto, [
     'email',
 ]) {}
-export class ActualizarUsuariosDto extends CrearUsuariosDto {}
+
+export class ActualizarUsuariosDto extends CrearUsuariosDto {
+    @Length(1, 70, {
+        message: 'La longitud del nuevo email debe ser entre 1 y 70 caracteres',
+    })
+    @IsEmail({}, { message: 'El nuevo email debe ser un email valido' })
+    @IsString({ message: 'El nuevo email debe ser texto' })
+    @IsNotEmpty({ message: 'El nuevo email está vacio' })
+    @ApiProperty({ description: 'Este es el nuevo email del usuario' })
+    readonly nuevo_email: string;
+}
 
 export class EliminarUsuariosDto extends PickType(CrearUsuariosDto, [
     'email',

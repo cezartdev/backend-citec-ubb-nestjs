@@ -45,6 +45,14 @@ export class UsuariosController extends BaseControllers {
         return this.usuariosService.obtenerTodos();
     }
 
+    @ApiOperation({ summary: 'Obtener a todos los usuarios eliminados' })
+    @ApiRespuestaError()
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
+    @Get('obtener-todos-eliminados')
+    obtenerTodosEliminados(): Promise<Usuarios[]> {
+        return this.usuariosService.obtenerTodosEliminados();
+    }
+
     @ApiOperation({ summary: 'Obtener a usuarios segun su clave primaria' })
     @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Get('obtener-por-id/:email')

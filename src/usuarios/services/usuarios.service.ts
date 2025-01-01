@@ -20,11 +20,7 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsuariosService extends BaseServices {
     async crear(usuario: CrearUsuariosDto): Promise<Usuarios> {
-        /**
-         * Validaciones
-         * - Usuario ya existe
-         * -
-         */
+
         const existeUsuario = await Usuarios.findOne({
             where: { email: usuario.email },
         });

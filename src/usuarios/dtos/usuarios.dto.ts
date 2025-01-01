@@ -119,6 +119,10 @@ export class ActualizarUsuariosDto extends CrearUsuariosDto {
     @IsEmail({}, { message: 'El nuevo email debe ser un email valido' })
     @IsString({ message: 'El nuevo email debe ser texto' })
     @IsNotEmpty({ message: 'El nuevo email está vacio' })
+    @Transform(({ value }) => {
+        if (typeof value !== 'string') return value;
+        return value.toLowerCase();
+    })
     @ApiProperty({ description: 'Este es el nuevo email del usuario' })
     readonly nuevo_email: string;
 }

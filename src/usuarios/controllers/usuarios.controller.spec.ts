@@ -7,7 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Usuarios } from '../../database/models/usuarios.model';
 import { Tipos } from '../../database/models/tipos.model';
 import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
-import { ActualizarUsuariosDto, CrearUsuariosDto } from '../dtos/usuarios.dto';
+import { ActualizarUsuariosDto, CrearUsuariosDto, ObtenerPorIdUsuariosDto } from '../dtos/usuarios.dto';
 import { ESTADOS } from '../../common/constants/estados.constants';
 
 describe('UsuariosController', () => {
@@ -88,7 +88,7 @@ describe('UsuariosController', () => {
         });
 
 
-        it('fallar si falta un campo o esta mal escrito', async () => {
+        it('fallar si existen campos adicionales o estan mal escritos', async () => {
             // Probar cada campo faltante
             const camposAProbar = [
                 { ...crearUsuarioDto, emai: crearUsuarioDto.email, email: undefined }, // Error en email
@@ -193,6 +193,15 @@ describe('UsuariosController', () => {
             nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
         };
 
+        const crearUsuario2Dto: CrearUsuariosDto = {
+            email: 'test2@test.com',
+            nombre: 'Test2',
+            apellido: 'Test2',
+            contraseña: '123456',
+            estado: ESTADOS.OPCION_1,
+            nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
+        };
+
         const actualizarUsuarioDto: ActualizarUsuariosDto = {
             email: 'test@test.com',
             nuevo_email: 'test2@test.com',
@@ -226,10 +235,21 @@ describe('UsuariosController', () => {
         });
 
 
-        it('fallar si falta un campo o esta mal escrito', async () => {
+        it('fallar si el email que intenta actualizar no existe', async () => {
+
+            const res = await request(app.getHttpServer()).put(`${ruta}/actualizar`).send(actualizarUsuarioDto);
+
+            expect(res.status).toBe(404);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(404);
+            expect(res.body.error).toBe('Not Found');
+        });
+
+        it('fallar si existen campos adicionales o estan mal escritos', async () => {
             // Probar cada campo faltante
             const camposAProbar = [
-                { ...actualizarUsuarioDto, emai: actualizarUsuarioDto.nuevo_email, nuevo_email: undefined }, // Error en email
+                { ...actualizarUsuarioDto, emai: actualizarUsuarioDto.email, email: undefined }, // Error en email
+                { ...actualizarUsuarioDto, email_n: actualizarUsuarioDto.nuevo_email, nuevo_email: undefined }, // Error en el nuevo email
                 { ...actualizarUsuarioDto, nombr: actualizarUsuarioDto.nombre, nombre: undefined }, // Error en nombre
                 { ...actualizarUsuarioDto, apellid: actualizarUsuarioDto.apellido, apellido: undefined }, // Error en apellido
                 { ...actualizarUsuarioDto, contraseñ: actualizarUsuarioDto.contraseña, contraseña: undefined }, // Error en contraseña
@@ -248,9 +268,9 @@ describe('UsuariosController', () => {
             }
         });
 
-        it('fallar si el email ya existe', async () => {
-            
-            const actualizarUsuarioAntes = await request(app.getHttpServer()).post(`${ruta}/actualizar`).send(actualizarUsuarioDto);
+        it('fallar si el nuevo_email ya lo tiene otro usuario', async () => {
+            const crearUsuario1 = await request(app.getHttpServer()).post(`${ruta}/crear`).send(crearUsuarioDto);
+            const crearUsuario2 = await request(app.getHttpServer()).post(`${ruta}/crear`).send(crearUsuario2Dto);
 
             const res = await request(app.getHttpServer()).put(`${ruta}/actualizar`).send(actualizarUsuarioDto);
 
@@ -265,6 +285,10 @@ describe('UsuariosController', () => {
                 {
                     ...actualizarUsuarioDto,
                     email: 123 // Error intencionado: número en lugar de string
+                },
+                {
+                    ...actualizarUsuarioDto,
+                    nuevo_email: 123 // Error intencionado: número en lugar de string
                 },
                 {
                     ...actualizarUsuarioDto,
@@ -297,10 +321,12 @@ describe('UsuariosController', () => {
             }
         });
 
-        it('verificar transformación de datos: email en minúsculas, nombre/apellido capitalize, estado/tipos en mayúsculas', async () => {
-            const datosPrueba = {
+        it('verificar transformación de datos: email/nuevo_email en minúsculas, nombre/apellido capitalize, estado/tipos en mayúsculas', async () => {
+            const crearUsuario = await request(app.getHttpServer()).post(`${ruta}/crear`).send(crearUsuarioDto);
+            const datosPrueba: any = {
                 ...actualizarUsuarioDto,
-                email: 'USUARIO@TEST.COM',
+                email: 'TEST@TEST.COM',
+                nuevo_email: 'TEST2@TEST.COM',
                 nombre: 'jUaN',
                 apellido: 'pEREz',
                 estado: 'activo',
@@ -311,12 +337,162 @@ describe('UsuariosController', () => {
                 .put(`${ruta}/actualizar`)
                 .send(datosPrueba);
             expect(res.status).toBe(200);
-            expect(res.body.email).toBe('usuario@test.com');
+            expect(res.body.email).toBe('test2@test.com');
             expect(res.body.nombre).toBe('Juan');
             expect(res.body.apellido).toBe('Perez');
             expect(res.body.estado).toBe('ACTIVO');
             expect(res.body.nombre_tipos).toBe('ADMINISTRADOR');
         });
+
+    })
+
+    describe('obtener-por-id', () => {
+
+        const crearUsuarioDto: CrearUsuariosDto = {
+            email: 'test@test.com',
+            nombre: 'Test',
+            apellido: 'Test',
+            contraseña: '123456',
+            estado: ESTADOS.OPCION_1,
+            nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
+        };
+
+        const obtenerPorIdUsuarioDto: ObtenerPorIdUsuariosDto = {
+            email: 'test@test.com'
+        };
+
+        const usuario = {
+            email: 'test@test.com',
+            nombre: 'Test',
+            apellido: 'Test',
+            contraseña: expect.any(String),
+            estado: ESTADOS.OPCION_1,
+            nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+        };
+        
+        it('obtener usuario por id correctamente', async () => {
+            const crearUsuario = await request(app.getHttpServer()).post(`${ruta}/crear`).send(crearUsuarioDto);
+            const res = await request(app.getHttpServer()).get(`${ruta}/obtener-por-id/${obtenerPorIdUsuarioDto.email}`)
+
+            expect(res.status).toBe(200);
+            expect(res.body).toMatchObject(usuario);
+
+            expect(res.body).toHaveProperty('email');
+            expect(res.body).toHaveProperty('nombre');
+            expect(res.body).toHaveProperty('apellido');
+            expect(res.body).toHaveProperty('contraseña');
+            expect(res.body).toHaveProperty('estado');
+            expect(res.body).toHaveProperty('nombre_tipos');
+            expect(res.body).toHaveProperty('createdAt');
+            expect(res.body).toHaveProperty('updatedAt');
+        });
+
+        it('fallar si el id (email) no es valido', async () => {
+            const res = await request(app.getHttpServer()).get(`${ruta}/obtener-por-id/123`);
+
+            expect(res.status).toBe(400);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(400);
+            expect(res.body.error).toBe('Bad Request');
+        });
+
+    })
+
+    describe('obtener-todos', () => {
+        const crearUsuarioDto: CrearUsuariosDto = {
+            email: 'test@test.com',
+            nombre: 'Test',
+            apellido: 'Test',
+            contraseña: '123456',
+            estado: ESTADOS.OPCION_1,
+            nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
+        };
+
+        const usuario = {
+            email: 'test@test.com',
+            nombre: 'Test',
+            apellido: 'Test',
+            contraseña: expect.any(String),
+            estado: ESTADOS.OPCION_1,
+            nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+        };
+        
+        it('obtener todos los usuarios activos', async () => {
+            const crearUsuario = await request(app.getHttpServer()).post(`${ruta}/crear`).send(crearUsuarioDto);
+            const res = await request(app.getHttpServer()).get(`${ruta}/obtener-todos`)
+
+            expect(res.status).toBe(200);
+
+            expect(Array.isArray(res.body)).toBe(true);
+            expect(res.body[0]).toMatchObject(usuario);
+            expect(res.body[0]).toHaveProperty('email');
+            expect(res.body[0]).toHaveProperty('nombre'); 
+            expect(res.body[0]).toHaveProperty('apellido');
+            expect(res.body[0]).toHaveProperty('contraseña');
+            expect(res.body[0]).toHaveProperty('estado');
+            expect(res.body[0]).toHaveProperty('nombre_tipos');
+            expect(res.body[0]).toHaveProperty('createdAt');
+            expect(res.body[0]).toHaveProperty('updatedAt');
+
+            expect(res.body[0].estado).toBe(ESTADOS.OPCION_1);
+        });
+
+
+
+    })
+
+    describe('obtener-todos-eliminados', () => {
+        const crearUsuarioDto: CrearUsuariosDto = {
+            email: 'test@test.com',
+            nombre: 'Test',
+            apellido: 'Test',
+            contraseña: '123456',
+            estado: ESTADOS.OPCION_2,
+            nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
+        };
+
+        const usuario = {
+            email: 'test@test.com',
+            nombre: 'Test',
+            apellido: 'Test',
+            contraseña: expect.any(String),
+            estado: ESTADOS.OPCION_2,
+            nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+        };
+        
+        it('obtener todos los usuarios eliminados', async () => {
+            const crearUsuario = await request(app.getHttpServer()).post(`${ruta}/crear`).send(crearUsuarioDto);
+            const res = await request(app.getHttpServer()).get(`${ruta}/obtener-todos-eliminados`)
+
+            expect(res.status).toBe(200);
+
+            expect(Array.isArray(res.body)).toBe(true);
+            expect(res.body[0]).toMatchObject(usuario);
+            expect(res.body[0]).toHaveProperty('email');
+            expect(res.body[0]).toHaveProperty('nombre'); 
+            expect(res.body[0]).toHaveProperty('apellido');
+            expect(res.body[0]).toHaveProperty('contraseña');
+            expect(res.body[0]).toHaveProperty('estado');
+            expect(res.body[0]).toHaveProperty('nombre_tipos');
+            expect(res.body[0]).toHaveProperty('createdAt');
+            expect(res.body[0]).toHaveProperty('updatedAt');
+
+            expect(res.body[0].estado).toBe(ESTADOS.OPCION_2);
+        })
+    })
+
+    describe('iniciar-sesion', () => {
+        
+
+    })
+
+    describe('eliminar', () => {
 
     })
         

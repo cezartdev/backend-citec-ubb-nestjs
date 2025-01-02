@@ -20,7 +20,10 @@ import { ESTADOS } from 'src/common/constants/estados.constants';
 import { ADJUDICADO } from 'src/common/constants/adjudicados.constants';   
 import {Empresas} from './empresas.model';
 import {PropuestaDeServicioServicios} from './propuesta-de-servicio-servicios.model';
-import GruposDeServicios from './grupos-de-servicios.model';
+import {GruposDeServicios} from './grupos-de-servicios.model';
+import { PropuestaDeServicioSubServicios } from './propuesta-de-servicio-sub-servicios.model';
+import { SubServicios } from './sub-servicios.model';
+
 
 
 @Table({
@@ -100,8 +103,14 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
     })
     declare updatedAt: Date;
 
-    @BelongsToMany(() => GruposDeServicios, () => PropuestaDeServicioServicios)
+    @BelongsToMany(() => GruposDeServicios, () => PropuestaDeServicioServicios, )
     declare grupoDeServicios: GruposDeServicios[];
+
+    @BelongsToMany(
+        () => SubServicios,
+        () => PropuestaDeServicioSubServicios,
+    )
+    declare subServicios: SubServicios[];
 
 }
 

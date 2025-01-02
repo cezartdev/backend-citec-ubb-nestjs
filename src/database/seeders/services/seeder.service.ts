@@ -2,11 +2,11 @@ import { Injectable, Inject } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { Tipos } from '../../models/tipos.model';
 import { Usuarios } from '../../models/usuarios.model';
-import { TIPOS_DE_USUARIO } from 'src/common/constants/tipos-usuarios.constants';
-import { ESTADOS } from 'src/common/constants/estados.constants';
+import { TIPOS_DE_USUARIO } from '../../../common/constants/tipos-usuarios.constants';
+import { ESTADOS } from '../../../common/constants/estados.constants';
 import * as bcrypt from 'bcrypt';
 import { ConfigType } from '@nestjs/config';
-import config from 'src/config';
+import config from '../../../config';
 
 @Injectable()
 export class SeederService {

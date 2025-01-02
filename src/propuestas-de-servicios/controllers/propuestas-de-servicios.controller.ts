@@ -14,8 +14,6 @@ import {
     ApiOperation,
     ApiResponse,
     ApiTags,
-    ApiExtraModels,
-    getSchemaPath,
 } from '@nestjs/swagger';
 
 import { 
@@ -26,12 +24,10 @@ import {
  } from '../dtos/propuestas-de-servicios.dto';
 
 
-import { ErrorRespuestaDto } from 'src/common/dto/error-respuesta.dto';
-import { OkRespuestaDto } from 'src/common/dto/ok-respuesta.dto';
-import PropuestasDeServicios from 'src/database/models/propuestas-de-servicios.model';
+import { ErrorRespuestaDto } from '../../common/dto/error-respuesta.dto';
+import PropuestasDeServicios from '../../database/models/propuestas-de-servicios.model';
 
 @ApiTags('Propuestas de Servicios')
-@ApiExtraModels(OkRespuestaDto)
 @Controller('propuestas-de-servicios')
 export class PropuestasDeServiciosController {
     constructor(private propuestasDeServiciosService: PropuestasDeServiciosService) {}

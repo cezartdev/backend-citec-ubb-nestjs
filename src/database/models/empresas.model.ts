@@ -8,15 +8,11 @@ import {
     ForeignKey,
     CreatedAt,
     UpdatedAt,
-    Sequelize,
-    AutoIncrement,
-    HasOne,
     HasMany
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
-import { ESTADOS } from 'src/common/constants/estados.constants';
-import { ADJUDICADO } from 'src/common/constants/adjudicados.constants';   
+import { ESTADOS } from '../../common/constants/estados.constants';
 import {Comunas} from './comunas.model';
 import {PropuestasDeServicios} from './propuestas-de-servicios.model';
 

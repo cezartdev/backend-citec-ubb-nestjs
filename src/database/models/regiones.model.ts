@@ -6,7 +6,6 @@ import {
     PrimaryKey,
     CreatedAt,
     UpdatedAt,
-
     HasMany
 } from 'sequelize-typescript';
 

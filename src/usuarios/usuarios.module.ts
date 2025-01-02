@@ -13,7 +13,7 @@ export class UsuariosModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(EncriptarContraseñaMiddleware)
-            .forRoutes('/usuarios/crear'); // Aplica el middleware solo para las rutas de "usuarios"
+            .forRoutes('/usuarios/crear', '/usuarios/actualizar');
     }
 }
 //

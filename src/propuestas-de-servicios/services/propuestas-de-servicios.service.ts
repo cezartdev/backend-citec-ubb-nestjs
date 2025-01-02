@@ -1,11 +1,9 @@
 import {
     Injectable,
     NotFoundException,
-    ConflictException,
-    ForbiddenException,
 } from '@nestjs/common';
 
-import { PropuestasDeServicios } from 'src/database/models/propuestas-de-servicios.model';
+import { PropuestasDeServicios } from '../../database/models/propuestas-de-servicios.model';
 
 import {
     CrearPropuestasDeServiciosDto,
@@ -15,8 +13,8 @@ import {
 } from '../dtos/propuestas-de-servicios.dto';
 
 import { BaseServices } from '../../common/base/base-services.class';
-import { ESTADOS } from 'src/common/constants/estados.constants';
-import Empresas from 'src/database/models/empresas.model';
+import { ESTADOS } from '../../common/constants/estados.constants';
+import Empresas from '../../database/models/empresas.model';
 
 @Injectable()
 export class PropuestasDeServiciosService extends BaseServices {

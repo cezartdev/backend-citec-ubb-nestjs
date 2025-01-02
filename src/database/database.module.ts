@@ -1,7 +1,8 @@
-import { Module, Global, OnApplicationBootstrap } from '@nestjs/common';
+import { Module, Global, OnApplicationBootstrap, Inject } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { SeederService } from './seeders/services/seeder.service';
-
+import { ConfigType } from '@nestjs/config';
+import config from '../config';
 @Global()
 @Module({
     providers: [
@@ -22,11 +23,14 @@ import { SeederService } from './seeders/services/seeder.service';
     exports: [Sequelize],
 })
 export class DatabaseModule implements OnApplicationBootstrap {
-    constructor(private readonly seederService: SeederService) {}
+    constructor(private readonly seederService: SeederService,@Inject(config.KEY) private configService: ConfigType<typeof config> ) {}
 
     // Descomentar para ejecutar los seeders al iniciar la aplicación
     async onApplicationBootstrap() {
-        console.log('Ejecutando seeders...');
-        await this.seederService.run();
+        
+        if (this.configService.node.env !== 'test') {
+            console.log('Ejecutando seeders...');
+            await this.seederService.run();
+        }
     }
 }

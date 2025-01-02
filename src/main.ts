@@ -10,6 +10,7 @@ import { AppModule } from './app.module';
 
 import { JwtAuthGuard } from './auth/guards/jwt/jwt.guard'; // Asegúrate de importar el guard
 import { JwtService } from '@nestjs/jwt';
+import { LogsMiddleware } from './common/middlewares/logs.middleware';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -36,6 +37,7 @@ async function bootstrap() {
             transform: true,
         }),
     );
+
 
     app.useGlobalGuards(
         new JwtAuthGuard(app.get(JwtService), app.get(Reflector)),
@@ -75,6 +77,14 @@ async function bootstrap() {
 
     const expressApp = app.getHttpAdapter().getInstance();
     expressApp.set('trust proxy', true); // Configurar trust proxy
+
+
+    /**
+     * Middleware para log de las peticiones
+     * Loggea la ip, la ruta y la fecha y hora de la peticion
+     * Formateada en español
+     */ 
+    app.use(new LogsMiddleware().use);
 
     /**
      * Titulo de la API

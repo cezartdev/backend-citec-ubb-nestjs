@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import Usuarios from 'src/database/models/usuarios.model';
+import Usuarios from '../../../database/models/usuarios.model';
 
 
 @Injectable()

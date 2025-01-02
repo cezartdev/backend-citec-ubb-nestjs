@@ -35,3 +35,8 @@ lerna-debug.log*
 
 # variables de entorno
 *.env
+
+# logs
+logs/*
+/logs
+logs.txt

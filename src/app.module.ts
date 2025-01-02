@@ -12,6 +12,13 @@ import config from './config';
 import { TiposGuard } from './auth/guards/tipos/tipos.guard';
 import { EmpresasModule } from './empresas/empresas.module';
 import { PropuestasDeServiciosModule } from './propuestas-de-servicios/propuestas-de-servicios.module';
+import { RegionesController } from './geografia/controllers/regiones.controller';
+import { ProvinciasController } from './geografia/controllers/provincias.controller';
+import { ComunasController } from './geografia/controllers/comunas.controller';
+import { ComunasService } from './geografia/services/comunas.service';
+import { RegionesService } from './geografia/services/regiones.service';
+import { ProvinciasService } from './geografia/services/provincias.service';
+import { GeografiaModule } from './geografia/geografia.module';
 
 
 
@@ -35,15 +42,19 @@ import { PropuestasDeServiciosModule } from './propuestas-de-servicios/propuesta
         AutenticacionModule,
         EmpresasModule,
         PropuestasDeServiciosModule,
+        GeografiaModule,
         
     ],
-    controllers: [AppController],
+    controllers: [AppController, RegionesController, ProvinciasController, ComunasController],
     providers: [
         AppService,
         {
             provide: APP_GUARD,
             useClass: TiposGuard,
         },
+        ComunasService,
+        RegionesService,
+        ProvinciasService,
     ],
 })
 export class AppModule {}

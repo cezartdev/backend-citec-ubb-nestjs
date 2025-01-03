@@ -15,6 +15,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ESTADOS } from '../../common/constants/estados.constants';
 import { Comunas } from './comunas.model';
 import { PropuestasDeServicios } from './propuestas-de-servicios.model';
+import Contactos from './contactos.model';
 
 @Table({
     tableName: 'empresas',
@@ -78,7 +79,7 @@ export class Empresas extends Model<Empresas> {
     @ApiProperty({ type: 'string', default: '+56912345678' })
     @Column({
         type: DataType.STRING(20),
-        allowNull: false,
+        allowNull: true,
     })
     declare telefono: string;
 
@@ -99,7 +100,10 @@ export class Empresas extends Model<Empresas> {
     declare updatedAt: Date;
 
     @HasMany(() => PropuestasDeServicios)
-    declare propuesta: PropuestasDeServicios;
+    declare propuestas: PropuestasDeServicios[];
+
+    @HasMany(() => Contactos)
+    declare contactos: Contactos[];
 }
 
 export default Empresas;

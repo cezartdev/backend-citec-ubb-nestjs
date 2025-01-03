@@ -21,6 +21,7 @@ import {
     CrearPropuestasDeServiciosDto,
     EliminarPropuestasDeServiciosDto,
     ObtenerPorIdPropuestasDeServiciosDto,
+    RetornoPropuestaDeServicio,
  } from '../dtos/propuestas-de-servicios.dto';
 
 
@@ -41,12 +42,12 @@ export class PropuestasDeServiciosController {
     })
 
     @Get('obtener-todos')       
-    obtenerTodos(): Promise<PropuestasDeServicios[]> {
+    obtenerTodos(): Promise<RetornoPropuestaDeServicio[]> {
         return this.propuestasDeServiciosService.obtenerTodos();
     }
 
     @Get('obtener-todos-eliminados')
-    obtenerTodosEliminados(): Promise<PropuestasDeServicios[]> {
+    obtenerTodosEliminados(): Promise<RetornoPropuestaDeServicio[]> {
         return this.propuestasDeServiciosService.obtenerTodosEliminados();
     }
 

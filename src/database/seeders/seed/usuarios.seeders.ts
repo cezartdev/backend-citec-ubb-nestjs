@@ -3,7 +3,7 @@ import { Usuarios } from '../../models/usuarios.model';
 import * as fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import * as path from 'path';
-import { ESTADOS } from '../../../common/constants/estados.constants';
+
 
 @Injectable()
 export class UsuariosSeeder {
@@ -17,6 +17,14 @@ export class UsuariosSeeder {
             throw new Error(`Archivo no encontrado: ${archivoUsuariosPath}`);
         }
 
+        // Verificar si ya existen usuarios
+        const usuariosExistentes = await Usuarios.count();
+
+        if (usuariosExistentes > 0) {
+            console.log('Los usuarios ya están cargados en la base de datos.');
+            return;
+        }
+
         const archivoUsuarios = fs.readFileSync(archivoUsuariosPath, 'utf-8');
 
         const usuarios = parse(archivoUsuarios, {
@@ -25,12 +33,7 @@ export class UsuariosSeeder {
         });
 
         for (const usuario of usuarios) {
-            await Usuarios.findOrCreate({
-                where: { email: usuario.email },
-                defaults: {
-                    ...usuario,
-                },
-            });
+            await Usuarios.create(usuario);
         }
 
         console.log('Usuarios importados desde CSV exitosamente.');

@@ -3,7 +3,6 @@ import { Tipos } from '../../models/tipos.model';
 import * as fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import * as path from 'path';
-import { ESTADOS } from '../../../common/constants/estados.constants';
 
 @Injectable()
 export class TiposSeeder {
@@ -14,6 +13,14 @@ export class TiposSeeder {
             throw new Error(`Archivo no encontrado: ${archivoTiposPath}`);
         }
 
+        // Verificar si ya existen regiones
+        const tiposExistentes = await Tipos.count();
+
+        if (tiposExistentes > 0) {
+            console.log('Los tipos ya están cargados en la base de datos.');
+            return;
+        }
+
         const archivoTipos = fs.readFileSync(archivoTiposPath, 'utf-8');
 
         const tipos = parse(archivoTipos, {
@@ -21,15 +28,10 @@ export class TiposSeeder {
             skip_empty_lines: true
         });
 
-        for (const tipo of tipos) {
-            await Tipos.findOrCreate({
-                where: { nombre: tipo.nombre },
-                defaults: {
-                    ...tipo
-                }
-            });
-        }
 
+        for (const tipo of tipos) {
+            await Tipos.create(tipo);
+        }
         console.log('Tipos importados desde CSV exitosamente.');
     }
 }

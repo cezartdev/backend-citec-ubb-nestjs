@@ -1,14 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Sequelize } from 'sequelize-typescript';
-import { Tipos } from '../../models/tipos.model';
-import { Usuarios } from '../../models/usuarios.model';
-import { TIPOS_DE_USUARIO } from '../../../common/constants/tipos-usuarios.constants';
-import { ESTADOS } from '../../../common/constants/estados.constants';
-import * as bcrypt from 'bcrypt';
 import { ConfigType } from '@nestjs/config';
 import config from '../../../config';
 import { UsuariosSeeder } from '../seed/usuarios.seeders';
 import { TiposSeeder } from '../seed/tipos.seeders';
+import { RegionesSeeder } from '../seed/regiones.seeders';
 
 @Injectable()
 export class SeederService {
@@ -16,6 +11,7 @@ export class SeederService {
         @Inject(config.KEY) private configService: ConfigType<typeof config>,
         private readonly tiposSeeder: TiposSeeder,
         private readonly usuariosSeeder: UsuariosSeeder,
+        private readonly regionesSeeder: RegionesSeeder,
     ) {}
 
     async run() {
@@ -68,6 +64,7 @@ export class SeederService {
 
         await this.tiposSeeder.run();
         await this.usuariosSeeder.run();
+        await this.regionesSeeder.run();
     }
 }
 

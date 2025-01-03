@@ -5,6 +5,7 @@ import { ConfigType } from '@nestjs/config';
 import config from '../config';
 import { TiposSeeder } from './seeders/seed/tipos.seeders';
 import { UsuariosSeeder } from './seeders/seed/usuarios.seeders';
+import { RegionesSeeder } from './seeders/seed/regiones.seeders';
 @Global()
 @Module({
     providers: [
@@ -23,6 +24,7 @@ import { UsuariosSeeder } from './seeders/seed/usuarios.seeders';
         SeederService,
         TiposSeeder,
         UsuariosSeeder,
+        RegionesSeeder,
     ],
     exports: [Sequelize],
 })

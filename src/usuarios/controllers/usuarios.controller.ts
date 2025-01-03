@@ -41,7 +41,7 @@ export class UsuariosController extends BaseControllers {
     @ApiRespuestaError()
     @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Get('obtener-todos')
-    obtenerTodos(): Promise<Usuarios[]> {
+    obtenerTodos() {
         return this.usuariosServicio.obtenerTodos();
     }
 
@@ -49,7 +49,7 @@ export class UsuariosController extends BaseControllers {
     @ApiRespuestaError()
     @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Get('obtener-todos-eliminados')
-    obtenerTodosEliminados(): Promise<Usuarios[]> {
+    obtenerTodosEliminados() {
         return this.usuariosServicio.obtenerTodosEliminados();
     }
 

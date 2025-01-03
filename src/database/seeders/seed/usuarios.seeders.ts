@@ -32,9 +32,10 @@ export class UsuariosSeeder {
             skip_empty_lines: true,
         });
 
-        for (const usuario of usuarios) {
-            await Usuarios.create(usuario);
-        }
+        await Usuarios.bulkCreate(usuarios, {
+            validate: true,
+            returning: false
+        });
 
         console.log('Usuarios importados desde CSV exitosamente.');
     }

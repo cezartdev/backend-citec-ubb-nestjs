@@ -8,13 +8,13 @@ import {
     ForeignKey,
     CreatedAt,
     UpdatedAt,
-    HasMany
+    HasMany,
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
 import { ESTADOS } from '../../common/constants/estados.constants';
-import {Comunas} from './comunas.model';
-import {PropuestasDeServicios} from './propuestas-de-servicios.model';
+import { Comunas } from './comunas.model';
+import { PropuestasDeServicios } from './propuestas-de-servicios.model';
 
 @Table({
     tableName: 'empresas',
@@ -31,7 +31,7 @@ export class Empresas extends Model<Empresas> {
 
     @ApiProperty({ type: 'string', default: 'Construcciones Spa' })
     @Column({
-        type: DataType.STRING(50),
+        type: DataType.STRING(80),
         allowNull: false,
     })
     declare razon_social: string;
@@ -99,10 +99,7 @@ export class Empresas extends Model<Empresas> {
     declare updatedAt: Date;
 
     @HasMany(() => PropuestasDeServicios)
-    declare propuesta:PropuestasDeServicios
-
-    
-
+    declare propuesta: PropuestasDeServicios;
 }
 
 export default Empresas;

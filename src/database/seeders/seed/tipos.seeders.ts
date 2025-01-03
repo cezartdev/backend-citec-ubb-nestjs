@@ -28,10 +28,11 @@ export class TiposSeeder {
             skip_empty_lines: true
         });
 
+        await Tipos.bulkCreate(tipos, {
+            validate: true,
+            returning: false
+        });
 
-        for (const tipo of tipos) {
-            await Tipos.create(tipo);
-        }
         console.log('Tipos importados desde CSV exitosamente.');
     }
 }

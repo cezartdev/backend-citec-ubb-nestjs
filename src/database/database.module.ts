@@ -6,6 +6,9 @@ import config from '../config';
 import { TiposSeeder } from './seeders/seed/tipos.seeders';
 import { UsuariosSeeder } from './seeders/seed/usuarios.seeders';
 import { RegionesSeeder } from './seeders/seed/regiones.seeders';
+import { ProvinciasSeeder } from './seeders/seed/provincias.seeders';
+import { ComunasSeeder } from './seeders/seed/comunas.seeders';
+import { EmpresasSeeder } from './seeders/seed/empresas.seeders';
 @Global()
 @Module({
     providers: [
@@ -25,15 +28,20 @@ import { RegionesSeeder } from './seeders/seed/regiones.seeders';
         TiposSeeder,
         UsuariosSeeder,
         RegionesSeeder,
+        ProvinciasSeeder,
+        ComunasSeeder,
+        EmpresasSeeder,
     ],
     exports: [Sequelize],
 })
 export class DatabaseModule implements OnApplicationBootstrap {
-    constructor(private readonly seederService: SeederService,@Inject(config.KEY) private configService: ConfigType<typeof config> ) {}
+    constructor(
+        private readonly seederService: SeederService,
+        @Inject(config.KEY) private configService: ConfigType<typeof config>,
+    ) {}
 
     // Descomentar para ejecutar los seeders al iniciar la aplicación
     async onApplicationBootstrap() {
-        
         if (this.configService.node.env !== 'test') {
             console.log('Ejecutando seeders...');
             await this.seederService.run();

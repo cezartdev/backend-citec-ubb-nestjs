@@ -31,9 +31,11 @@ export class RegionesSeeder {
             skip_empty_lines: true,
         });
 
-        for (const region of regiones) {
-            await Regiones.create(region);
-        }
+
+        await Regiones.bulkCreate(regiones, {
+            validate: true,
+            returning: false
+        });
 
         console.log('Regiones importadas desde CSV exitosamente.');
     }

@@ -4,6 +4,13 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "plugins": ["@nestjs/swagger/plugin"],
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "assets": [
+      {
+        "include": "database/seeders/archives/*.csv"
+        
+      }
+    ],
+    "watchAssets": true
   }
 }

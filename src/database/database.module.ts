@@ -3,6 +3,8 @@ import { Sequelize } from 'sequelize-typescript';
 import { SeederService } from './seeders/services/seeder.service';
 import { ConfigType } from '@nestjs/config';
 import config from '../config';
+import { TiposSeeder } from './seeders/seed/tipos.seeders';
+import { UsuariosSeeder } from './seeders/seed/usuarios.seeders';
 @Global()
 @Module({
     providers: [
@@ -19,6 +21,8 @@ import config from '../config';
             },
         },
         SeederService,
+        TiposSeeder,
+        UsuariosSeeder,
     ],
     exports: [Sequelize],
 })

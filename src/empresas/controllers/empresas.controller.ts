@@ -4,8 +4,8 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BaseControllers } from '../../common/base/base-controllers.class';
 import { ApiRespuestaError, Tipo } from '../../common/utils/decorators';
 import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
-import { Usuarios } from 'src/database/models/usuarios.model';
-import { CrearUsuariosDto } from 'src/usuarios/dtos/usuarios.dto';
+import { Usuarios } from '../../database/models/usuarios.model';
+import { CrearUsuariosDto } from '../../usuarios/dtos/usuarios.dto';
 
 @ApiTags('Empresas')
 @Controller('empresas')

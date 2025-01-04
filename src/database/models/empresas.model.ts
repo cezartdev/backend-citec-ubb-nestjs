@@ -35,7 +35,7 @@ export class Empresas extends Model<Empresas> {
 
     @ApiProperty({ type: 'string', default: 'Construcciones Spa' })
     @Column({
-        type: DataType.STRING(80),
+        type: DataType.STRING(100),
         allowNull: false,
     })
     declare razon_social: string;

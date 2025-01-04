@@ -97,6 +97,10 @@ export class CrearUsuariosDto {
         if (typeof value !== 'string') return value;
         return value.toUpperCase();
     })
+    @ApiProperty({
+        description: 'Este es el tipo de usuario',
+        default: 'ADMINISTRADOR',
+    })
     readonly nombre_tipos: TiposDeUsuario;
 }
 

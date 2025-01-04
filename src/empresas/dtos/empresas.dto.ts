@@ -138,6 +138,7 @@ export class ActualizarEmpresasDto {
 
     @ValidateNested({ each: true })
     @Type(() => ContactoDto)
+    @IsOptional()
     @ApiProperty({
         description: 'Estos son los contactos de la empresa',
         type: [ContactoDto],

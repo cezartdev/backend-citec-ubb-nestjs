@@ -20,6 +20,12 @@ import { GirosSeeder } from './seeders/seed/giros.seeders';
                 const sequelize = new Sequelize(process.env.DATABASE_URL, {
                     logging: false,
                     models: [__dirname + '/models/**/*.model.js'],
+                    pool: {
+                        max: 5,
+                        min: 0,
+                        acquire: 30000,
+                        idle: 10000,
+                    },
                 });
 
                 await sequelize.sync();

@@ -4,7 +4,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BaseControllers } from '../../common/base/base-controllers.class';
 import { ApiRespuestaError, Tipo } from '../../common/utils/decorators';
 import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
-import { CrearEmpresasDto } from '../dtos/empresas.dto';
+import { ActualizarEmpresasDto, CrearEmpresasDto } from '../dtos/empresas.dto';
 
 @ApiTags('Empresas')
 @Controller('empresas')
@@ -45,13 +45,13 @@ export class EmpresasController  {
     //     return this.empresasServicio.obtenerPorId(email);
     // }
 
-    // @ApiOperation({ summary: 'Actualizar usuarios' })
-    // @ApiRespuestaError()
-    // @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
-    // @Put('actualizar')
-    // actualizar(@Body() usuario: ActualizarUsuariosDto) {
-    //     return this.empresasServicio.actualizar(usuario);
-    // }
+    @ApiOperation({ summary: 'Actualizar empresas' })
+    @ApiRespuestaError()
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
+    @Put('actualizar')
+    actualizar(@Body() empresa: ActualizarEmpresasDto) {
+        return this.empresasServicio.actualizar(empresa);
+    }
 
     // @ApiOperation({ summary: 'Eliminar usuario' })
     // @ApiRespuestaError()

@@ -13,7 +13,7 @@ export class TiposSeeder {
             throw new Error(`Archivo no encontrado: ${archivoTiposPath}`);
         }
 
-        // Verificar si ya existen regiones
+        
         const tiposExistentes = await Tipos.count();
 
         if (tiposExistentes > 0) {

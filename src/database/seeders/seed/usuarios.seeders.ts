@@ -17,7 +17,7 @@ export class UsuariosSeeder {
             throw new Error(`Archivo no encontrado: ${archivoUsuariosPath}`);
         }
 
-        // Verificar si ya existen usuarios
+        
         const usuariosExistentes = await Usuarios.count();
 
         if (usuariosExistentes > 0) {

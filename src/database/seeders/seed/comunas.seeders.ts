@@ -16,7 +16,7 @@ export class ComunasSeeder {
             throw new Error(`Archivo no encontrado: ${archivoComunasPath}`);
         }
 
-        // Verificar si ya existen regiones
+        
         const comunasExistentes = await Comunas.count();
 
         if (comunasExistentes > 0) {

@@ -9,6 +9,8 @@ import { RegionesSeeder } from './seeders/seed/regiones.seeders';
 import { ProvinciasSeeder } from './seeders/seed/provincias.seeders';
 import { ComunasSeeder } from './seeders/seed/comunas.seeders';
 import { EmpresasSeeder } from './seeders/seed/empresas.seeders';
+import { CategoriasSeeder } from './seeders/seed/categorias.seeders';
+import { GirosSeeder } from './seeders/seed/giros.seeders';
 @Global()
 @Module({
     providers: [
@@ -31,6 +33,8 @@ import { EmpresasSeeder } from './seeders/seed/empresas.seeders';
         ProvinciasSeeder,
         ComunasSeeder,
         EmpresasSeeder,
+        CategoriasSeeder,
+        GirosSeeder,
     ],
     exports: [Sequelize],
 })

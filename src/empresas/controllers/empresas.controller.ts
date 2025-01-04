@@ -4,8 +4,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BaseControllers } from '../../common/base/base-controllers.class';
 import { ApiRespuestaError, Tipo } from '../../common/utils/decorators';
 import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
-import { Usuarios } from '../../database/models/usuarios.model';
-import { CrearUsuariosDto } from '../../usuarios/dtos/usuarios.dto';
+import { CrearEmpresasDto } from '../dtos/empresas.dto';
 
 @ApiTags('Empresas')
 @Controller('empresas')
@@ -14,13 +13,13 @@ export class EmpresasController  {
         
     }
 
-    // @ApiOperation({ summary: 'Crear usuarios' })
-    // @ApiRespuestaError()
-    // @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
-    // @Post('crear')
-    // crear(@Body() usuario: CrearUsuariosDto) {
-    //     return this.empresasServicio.crear(usuario);
-    // }
+    @ApiOperation({ summary: 'Crear empresas' })
+    @ApiRespuestaError()
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
+    @Post('crear')
+    crear(@Body() empresa: CrearEmpresasDto) {
+        return this.empresasServicio.crear(empresa);
+    }
 
     // @ApiOperation({ summary: 'Obtener a todos los usuarios' })
     // @ApiRespuestaError()

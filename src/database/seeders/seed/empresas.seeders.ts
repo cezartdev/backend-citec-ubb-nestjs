@@ -16,7 +16,7 @@ export class EmpresasSeeder {
             throw new Error(`Archivo no encontrado: ${archivoEmpresasPath}`);
         }
 
-        // Verificar si ya existen regiones
+       
         const empresasExistentes = await Empresas.count();
 
         if (empresasExistentes > 0) {

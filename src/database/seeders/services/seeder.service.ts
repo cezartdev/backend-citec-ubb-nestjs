@@ -7,6 +7,8 @@ import { RegionesSeeder } from '../seed/regiones.seeders';
 import { ProvinciasSeeder } from '../seed/provincias.seeders';
 import { ComunasSeeder } from '../seed/comunas.seeders';
 import { EmpresasSeeder } from '../seed/empresas.seeders';
+import { GirosSeeder } from '../seed/giros.seeders';
+import { CategoriasSeeder } from '../seed/categorias.seeders';
 
 @Injectable()
 export class SeederService {
@@ -18,6 +20,8 @@ export class SeederService {
         private readonly provinciasSeeder: ProvinciasSeeder,
         private readonly comunasSeeder: ComunasSeeder,
         private readonly empresasSeeder: EmpresasSeeder,
+        private readonly categoriasSeeder: CategoriasSeeder,
+        private readonly girosSeeder: GirosSeeder,
     ) {}
 
     async run() {
@@ -27,5 +31,7 @@ export class SeederService {
         await this.provinciasSeeder.run();
         await this.comunasSeeder.run();
         await this.empresasSeeder.run();
+        await this.categoriasSeeder.run();
+        await this.girosSeeder.run();
     }
 }

@@ -1,8 +1,10 @@
-import { IsString, IsNotEmpty, Length, IsIn , Matches ,IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, Length, IsIn , Matches ,IsNumber,ArrayMinSize, IsArray } from 'class-validator';
 import { ApiProperty, PickType, OmitType } from '@nestjs/swagger';
-import { ESTADOS, Estados } from '../../common/constants/estados.constants';
 import { ADJUDICADO, Adjudicado } from '../../common/constants/adjudicados.constants';
 import { Transform } from 'class-transformer';
+import {GruposDeServicios} from '../../database/models/grupos-de-servicios.model';
+import SubServicios from 'src/database/models/sub-servicios.model';
+
 
 export class ActualizarPropuestasDeServiciosDto {
     @IsNumber({}, { message: 'El codigo de la propuesta de servicio debe ser un número' })
@@ -34,18 +36,6 @@ export class ActualizarPropuestasDeServiciosDto {
     @ApiProperty({ description: 'Este es el rut de la propuesta de servicio' })
     readonly rut_receptor: string;
 
-
-    @IsIn(Object.values(ESTADOS), {
-        message: 'El estado debe ser uno de los valores permitidos',
-    })
-    @Length(1, 10,{ message: 'La longitud del estado debe ser entre 1 y 10 caracteres'})  
-    @IsString( { message: 'El estado debe ser texto' }) 
-    @IsNotEmpty( { message: 'El estado está vacio' })
-    @Transform(({ value }) => value.toUpperCase())
-    @ApiProperty({ description: 'Este es el estado de la propuesta de servicio' })
-    readonly estado: Estados;
-
-
     @IsIn(Object.values(ADJUDICADO), {
         message: 'El estado debe ser uno de los valores permitidos',
     })
@@ -54,6 +44,13 @@ export class ActualizarPropuestasDeServiciosDto {
     @IsNotEmpty( { message: 'El adjudicado está vacio' })
     @Transform(({ value }) => value.toUpperCase())
     readonly adjudicado: Adjudicado;
+
+    //grupos de servicios
+    @IsArray({ message: 'El campo debe ser un arreglo' })
+    @ArrayMinSize(1, { message: 'El arreglo debe contener al menos un elemento' })
+    @ApiProperty({ description: 'Este es un arreglo de elementos' })
+    readonly grupos_de_servicios: Array<{ nombre: string , sub_servicios: SubServicios[] }>;
+
 }
 
 export class CrearPropuestasDeServiciosDto extends OmitType(ActualizarPropuestasDeServiciosDto, [
@@ -71,3 +68,5 @@ export class EliminarPropuestasDeServiciosDto extends PickType(ActualizarPropues
     'codigo',
     'año',
 ]){}
+
+export class RetornoPropuestaDeServicio extends ActualizarPropuestasDeServiciosDto {}

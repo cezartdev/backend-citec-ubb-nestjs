@@ -17,7 +17,8 @@ import {
     CrearPropuestasDeServiciosDto,
     EliminarPropuestasDeServiciosDto,
     ObtenerPorIdPropuestasDeServiciosDto,
-} from '../dtos/propuestas-de-servicios.dto';
+    RetornoPropuestaDeServicio,
+ } from '../dtos/propuestas-de-servicios.dto';
 
 import { ErrorRespuestaDto } from '../../common/dtos/error-respuesta.dto';
 import PropuestasDeServicios from '../../database/models/propuestas-de-servicios.model';
@@ -35,13 +36,14 @@ export class PropuestasDeServiciosController {
         description: 'No encontrado',
         type: ErrorRespuestaDto,
     })
-    @Get('obtener-todos')
-    obtenerTodos(): Promise<PropuestasDeServicios[]> {
+
+    @Get('obtener-todos')       
+    obtenerTodos(): Promise<RetornoPropuestaDeServicio[]> {
         return this.propuestasDeServiciosService.obtenerTodos();
     }
 
     @Get('obtener-todos-eliminados')
-    obtenerTodosEliminados(): Promise<PropuestasDeServicios[]> {
+    obtenerTodosEliminados(): Promise<RetornoPropuestaDeServicio[]> {
         return this.propuestasDeServiciosService.obtenerTodosEliminados();
     }
 

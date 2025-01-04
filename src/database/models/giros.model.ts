@@ -17,7 +17,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { Empresas } from './empresas.model';
 import Categorias from './categorias.model';
-import GirosEmpresas from './giros_empresas.model';
+import GirosEmpresas from './giros-empresas.model';
 
 @Table({
     tableName: 'giros',
@@ -46,7 +46,10 @@ export class Giros extends Model<Giros> {
     })
     declare afecto_iva: string;
 
-    @ApiProperty({ type: 'string', default: 'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA' })
+    @ApiProperty({
+        type: 'string',
+        default: 'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
+    })
     @ForeignKey(() => Categorias)
     @Column({
         type: DataType.STRING(170),

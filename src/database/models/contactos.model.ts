@@ -9,6 +9,7 @@ import {
     CreatedAt,
     UpdatedAt,
     HasMany,
+    Sequelize,
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
@@ -58,6 +59,7 @@ export class Contactos extends Model<Contactos> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn('NOW'),
     })
     declare createdAt: Date;
 
@@ -66,6 +68,7 @@ export class Contactos extends Model<Contactos> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn('NOW'),
     })
     declare updatedAt: Date;
 }

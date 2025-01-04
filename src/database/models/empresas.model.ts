@@ -18,7 +18,7 @@ import { Comunas } from './comunas.model';
 import { PropuestasDeServicios } from './propuestas-de-servicios.model';
 import Contactos from './contactos.model';
 import Giros from './giros.model';
-import GirosEmpresas from './giros_empresas.model';
+import GirosEmpresas from './giros-empresas.model';
 
 @Table({
     tableName: 'empresas',
@@ -107,7 +107,7 @@ export class Empresas extends Model<Empresas> {
 
     @HasMany(() => Contactos)
     declare contactos: Contactos[];
-    
+
     @BelongsToMany(() => Giros, () => GirosEmpresas)
     declare giros: Giros[];
 }

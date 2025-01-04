@@ -15,6 +15,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import Giros from './giros.model';
 import Empresas from './empresas.model';
+import { Sequelize } from 'sequelize';
 
 
 @Table({
@@ -47,6 +48,7 @@ export class GirosEmpresas extends Model<GirosEmpresas> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn('NOW'),
     })
     declare createdAt: Date;
 
@@ -55,6 +57,7 @@ export class GirosEmpresas extends Model<GirosEmpresas> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn('NOW')
     })
     declare updatedAt: Date;
 }

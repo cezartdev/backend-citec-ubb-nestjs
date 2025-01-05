@@ -6,6 +6,7 @@ import {
 import {
     ActualizarEmpresasDto,
     CrearEmpresasDto,
+    EliminarEmpresasDto,
     RetornoEmpresasDto,
 } from '../dtos/empresas.dto';
 import { Empresas } from '../../database/models/empresas.model';
@@ -13,6 +14,8 @@ import { Comunas } from '../../database/models/comunas.model';
 import { Giros } from '../../database/models/giros.model';
 import { Contactos } from '../../database/models/contactos.model';
 import { Estados, ESTADOS } from '../../common/constants/estados.constants';
+import Usuarios from 'src/database/models/usuarios.model';
+import { QueryTypes, Sequelize } from 'sequelize';
 
 @Injectable()
 export class EmpresasService {
@@ -109,45 +112,46 @@ export class EmpresasService {
         return empresaRetorno;
     }
 
-    async actualizar(empresa: ActualizarEmpresasDto): Promise<RetornoEmpresasDto> {
-        const transaction = await Empresas.sequelize.transaction();
-        try {
+    async actualizar(
+        empresa: ActualizarEmpresasDto,
+    ): Promise<RetornoEmpresasDto> {
 
+   
             const empresaExistente = await Empresas.findOne({
                 where: { rut: empresa.rut },
-                transaction,
+     
             });
-    
+
             if (!empresaExistente) {
                 throw new NotFoundException([
                     `Empresa con el rut ${empresa.rut} no encontrada`,
                 ]);
             }
-    
+
             const empresaExistenteNuevo = await Empresas.findOne({
                 where: { rut: empresa.nuevo_rut },
-                transaction,
+ 
             });
-    
+
             if (empresaExistenteNuevo) {
                 throw new ConflictException([
                     `Ya existe una empresa con el rut ${empresa.nuevo_rut}`,
                 ]);
             }
-    
+
             const contactosExistentes = await Contactos.findAll({
                 where: { rut_empresas: empresaExistente.rut },
-                transaction,
+
             });
-    
+
             if (empresa.contactos?.length > 0) {
                 if (contactosExistentes.length > 0) {
                     await Contactos.destroy({
                         where: { rut_empresas: empresa.rut },
-                        transaction,
+
                     });
                 }
-    
+
                 await Promise.all(
                     empresa.contactos.map(async (contacto) => {
                         await Contactos.create(
@@ -157,31 +161,49 @@ export class EmpresasService {
                                 cargo: contacto.cargo,
                                 rut_empresas: empresa.rut,
                             },
-                            { transaction },
+  
                         );
                     }),
                 );
             }
-    
-            await empresaExistente.$set('giros', empresa.giros, { transaction });
-    
-            // await Empresas.update(
-            //     {
-            //         rut: empresa.nuevo_rut,
-            //         razon_social: empresa.razon_social,
-            //         nombre_de_fantasia: empresa.nombre_de_fantasia,
-            //         email_factura: empresa.email_factura,
-            //         direccion: empresa.direccion,
-            //         id_comunas: empresa.id_comunas,
-            //         telefono: empresa.telefono,
-            //     },
-            //     { where: { rut: empresa.rut }, transaction },
-            // );
 
-            
-    
-            const empresaActualizadaRetorno = await Empresas.findOne({
-                where: { rut: empresa.rut },
+            await empresaExistente.$set('giros', empresa.giros);
+
+            try {
+                
+                await Empresas.update(
+                    {
+                        rut: empresa.nuevo_rut,
+                        razon_social: empresa.razon_social,
+                        nombre_de_fantasia: empresa.nombre_de_fantasia,
+                        email_factura: empresa.email_factura,
+                        direccion: empresa.direccion,
+                        id_comunas: empresa.id_comunas,
+                        telefono: empresa.telefono,
+                    },
+                    { where: { rut: empresa.rut } },
+                );
+            } catch (error) {
+                await Empresas.sequelize.query(
+                    'UPDATE empresas SET rut = :nuevo_rut, razon_social = :razon_social, nombre_de_fantasia = :nombre_de_fantasia, email_factura = :email_factura, direccion = :direccion, id_comunas = :id_comunas, telefono = :telefono WHERE rut = :rut',
+                    {
+                        replacements: {
+                            nuevo_rut: empresa.nuevo_rut,
+                            razon_social: empresa.razon_social,
+                            nombre_de_fantasia: empresa.nombre_de_fantasia,
+                            email_factura: empresa.email_factura,
+                            direccion: empresa.direccion,
+                            id_comunas: empresa.id_comunas,
+                            telefono: empresa.telefono,
+                            rut: empresa.rut,
+                        },
+                        type: QueryTypes.UPDATE,
+                    },
+                );
+            }
+
+            const empresaActualizadaRetorno = (await Empresas.findOne({
+                where: { rut: empresa.nuevo_rut },
                 attributes: { exclude: ['id_comunas'] },
                 include: [
                     {
@@ -206,14 +228,72 @@ export class EmpresasService {
                         attributes: ['email', 'nombre', 'cargo'],
                     },
                 ],
-                transaction,
-            }) as RetornoEmpresasDto;
-    
-            await transaction.commit();
+
+            })) as RetornoEmpresasDto;
+
             return empresaActualizadaRetorno;
-        } catch (error) {
-            await transaction.rollback();
-            throw error;
+      
+    }
+
+    async eliminar(
+        clavePrimaria: EliminarEmpresasDto,
+    ): Promise<RetornoEmpresasDto> {
+        const empresa = await Empresas.findByPk(clavePrimaria.rut);
+
+        if (!empresa) {
+            throw new NotFoundException([
+                `Empresa con rut ${clavePrimaria.rut} no encontrada`,
+            ]);
         }
+
+
+        try {
+            
+            await Empresas.update({ estado: ESTADOS.OPCION_2 }, { where: { rut: clavePrimaria.rut } });
+        } catch (error) {
+            
+            await Empresas.sequelize.query(
+                'UPDATE empresas SET estado = :estado WHERE rut = :rut',
+                {
+                    replacements: {
+                        estado: ESTADOS.OPCION_2,
+                        rut: clavePrimaria.rut,
+                    },
+                    type: QueryTypes.UPDATE,
+                },
+            );
+        }
+
+
+
+        const empresaEliminadaRetorno = (await Empresas.findOne({
+            where: { rut: clavePrimaria.rut },
+            attributes: { exclude: ['id_comunas'] },
+            include: [
+                {
+                    model: Comunas,
+                    as: 'comuna',
+                    attributes: ['id', 'nombre'],
+                },
+                {
+                    model: Giros,
+                    as: 'giros',
+                    attributes: [
+                        'codigo',
+                        'nombre',
+                        'afecto_iva',
+                        'nombre_categorias',
+                    ],
+                    through: { attributes: [] },
+                },
+                {
+                    model: Contactos,
+                    as: 'contactos',
+                    attributes: ['email', 'nombre', 'cargo'],
+                },
+            ],
+        })) as RetornoEmpresasDto;
+
+        return empresaEliminadaRetorno;
     }
 }

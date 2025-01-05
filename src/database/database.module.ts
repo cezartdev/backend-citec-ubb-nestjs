@@ -25,7 +25,9 @@ import { GirosSeeder } from './seeders/seed/giros.seeders';
                         min: 0,
                         acquire: 30000,
                         idle: 10000,
+                        evict: 10000,
                     },
+                    
                 });
 
                 await sequelize.sync();

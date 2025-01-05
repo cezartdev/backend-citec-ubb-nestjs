@@ -547,9 +547,13 @@ describe('UsuariosController', () => {
         };
 
         it('eliminar usuario correctamente', async () => {
-            const crearUsuario = await request(app.getHttpServer()).post(`${ruta}/crear`).send(crearUsuarioDto);
+            const crearUsuario = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearUsuarioDto);
 
-            const res = await request(app.getHttpServer()).delete(`${ruta}/eliminar/${crearUsuario.body.email}`);
+            const res = await request(app.getHttpServer()).delete(
+                `${ruta}/eliminar/${crearUsuario.body.email}`,
+            );
 
             expect(res.status).toBe(200);
             expect(res.body.email).toBe(crearUsuarioDto.email);
@@ -560,9 +564,13 @@ describe('UsuariosController', () => {
         });
 
         it('fallar si el email no es valido', async () => {
-            const crearUsuario = await request(app.getHttpServer()).post(`${ruta}/crear`).send(crearUsuarioDto);
+            const crearUsuario = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearUsuarioDto);
 
-            const res = await request(app.getHttpServer()).delete(`${ruta}/eliminar/123`);
+            const res = await request(app.getHttpServer()).delete(
+                `${ruta}/eliminar/123`,
+            );
 
             expect(res.status).toBe(400);
             expect(Array.isArray(res.body.message)).toBe(true);
@@ -571,9 +579,13 @@ describe('UsuariosController', () => {
         });
 
         it('fallar si el email no existe', async () => {
-            const crearUsuario = await request(app.getHttpServer()).post(`${ruta}/crear`).send(crearUsuarioDto);
+            const crearUsuario = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearUsuarioDto);
 
-            const res = await request(app.getHttpServer()).delete(`${ruta}/eliminar/a@gmail.com`);
+            const res = await request(app.getHttpServer()).delete(
+                `${ruta}/eliminar/a@gmail.com`,
+            );
 
             expect(res.status).toBe(404);
             expect(Array.isArray(res.body.message)).toBe(true);
@@ -596,7 +608,7 @@ describe('UsuariosController', () => {
     //         email: 'test@test.com',
     //         contraseña: '123456',
     //     };
-        
+
     //     it('iniciar sesion correctamente', async () => {
     //         const crearUsuario = await request(app.getHttpServer()).post(`${ruta}/crear`).send(crearUsuarioDto);
 
@@ -612,7 +624,6 @@ describe('UsuariosController', () => {
 
     //     });
     // });
-
 
     afterAll(async () => {
         await app.close();

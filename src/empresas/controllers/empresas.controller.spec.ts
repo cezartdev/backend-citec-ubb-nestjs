@@ -38,7 +38,7 @@ describe('EmpresasController', () => {
                 ConfigModule.forRoot(),
                 SequelizeModule.forRoot({
                     dialect: 'sqlite',
-                    logging: console.log,
+                    logging: false,
                     storage: ':memory:',
                     models: [
                         Regiones,
@@ -47,13 +47,13 @@ describe('EmpresasController', () => {
                         Categorias,
                         Giros,
                         Empresas,
-                        Contactos,
-                        GirosEmpresas,
                         GruposDeServicios,
                         SubServicios,
-                        GrupoDeServicioSubServicios,
                         PropuestasDeServicios,
                         PropuestaDeServicioSubServicios,
+                        GrupoDeServicioSubServicios,
+                        GirosEmpresas,
+                        Contactos,
                     ], // Registra el modelo
                     autoLoadModels: true,
                     synchronize: true,
@@ -65,14 +65,14 @@ describe('EmpresasController', () => {
                     Categorias,
                     Giros,
                     Empresas,
-                    Contactos,
-                    GirosEmpresas,
                     GruposDeServicios,
                     SubServicios,
-                    GrupoDeServicioSubServicios,
                     PropuestasDeServicios,
                     PropuestaDeServicioSubServicios,
-                ]), // Importante: registramos los modelo
+                    GrupoDeServicioSubServicios,
+                    GirosEmpresas,
+                    Contactos,
+                ]),
                 EmpresasModule,
             ],
         }).compile();
@@ -94,7 +94,7 @@ describe('EmpresasController', () => {
         const regionesModel = app.get(getModelToken(Regiones));
         const provinciasModel = app.get(getModelToken(Provincias));
         const comunasModel = app.get(getModelToken(Comunas));
-        // const girosModel = app.get(getModelToken(Giros));
+        const girosModel = app.get(getModelToken(Giros));
 
         // Cargar datos desde archivos CSV
         const regiones = fs.readFileSync(

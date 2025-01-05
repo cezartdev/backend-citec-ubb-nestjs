@@ -19,6 +19,7 @@ import { ADJUDICADO } from '../../common/constants/adjudicados.constants';
 import {Empresas} from './empresas.model';
 import { PropuestaDeServicioSubServicios } from './propuesta-de-servicio-sub-servicios.model';
 import { SubServicios } from './sub-servicios.model';
+import { Transaction } from 'sequelize';
 
 
 
@@ -123,9 +124,16 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
 
 
     @BeforeCreate
-    static async asignarCodigo(instance: PropuestasDeServicios) {
-        const ultimoCodigo = (await PropuestasDeServicios.max('codigo') || 0) as number;
-        instance.codigo = ultimoCodigo + 1;
+    static async asignarCodigo(instance: PropuestasDeServicios, options: any) {
+        const añoActual = instance.año;
+        // Uso de transacción para evitar condiciones de carrera
+        await PropuestasDeServicios.sequelize?.transaction(async (t: Transaction) => {
+            const ultimoCodigo = (await PropuestasDeServicios.max('codigo', {
+                where: { año: añoActual },
+                transaction: t,
+            }) || 0) as number;
+            instance.codigo = ultimoCodigo + 1;
+        });
     }
 }
 

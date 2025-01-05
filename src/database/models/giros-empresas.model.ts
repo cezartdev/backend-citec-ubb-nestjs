@@ -4,12 +4,10 @@ import {
     Model,
     DataType,
     PrimaryKey,
-    BelongsTo,
     ForeignKey,
     CreatedAt,
     UpdatedAt,
-    HasMany,
-    BelongsToMany,
+
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
@@ -48,7 +46,7 @@ export class GirosEmpresas extends Model<GirosEmpresas> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.fn('NOW'),
+        defaultValue: Date.now(),
     })
     declare createdAt: Date;
 
@@ -57,7 +55,7 @@ export class GirosEmpresas extends Model<GirosEmpresas> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Date.now(),
     })
     declare updatedAt: Date;
 }

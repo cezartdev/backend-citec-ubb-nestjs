@@ -143,7 +143,7 @@ export class ActualizarEmpresasDto {
         description: 'Estos son los contactos de la empresa',
         type: [ContactoDto],
     })
-    readonly contactos: Contactos[];
+    readonly contactos: ContactoDto[];
 
     @IsArray({ message: 'Los giros deben ser un array' })
     @IsNumber({}, { each: true, message: 'Los giros deben ser numeros' })

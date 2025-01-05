@@ -21,21 +21,21 @@ export class EmpresasController  {
         return this.empresasServicio.crear(empresa);
     }
 
-    // @ApiOperation({ summary: 'Obtener a todos los usuarios' })
-    // @ApiRespuestaError()
-    // @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
-    // @Get('obtener-todos')
-    // obtenerTodos(): Promise<Usuarios[]> {
-    //     return this.empresasServicio.obtenerTodos();
-    // }
+    @ApiOperation({ summary: 'Obtener a todas las empresas' })
+    @ApiRespuestaError()
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
+    @Get('obtener-todos')
+    obtenerTodos() {
+        return this.empresasServicio.obtenerTodos();
+    }
 
-    // @ApiOperation({ summary: 'Obtener a todos los usuarios eliminados' })
-    // @ApiRespuestaError()
-    // @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
-    // @Get('obtener-todos-eliminados')
-    // obtenerTodosEliminados(): Promise<Usuarios[]> {
-    //     return this.empresasServicio.obtenerTodosEliminados();
-    // }
+    @ApiOperation({ summary: 'Obtener a todos los usuarios eliminados' })
+    @ApiRespuestaError()
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
+    @Get('obtener-todos-eliminados')
+    obtenerTodosEliminados() {
+        return this.empresasServicio.obtenerTodosEliminados();
+    }
 
     // @ApiOperation({ summary: 'Obtener a usuarios segun su clave primaria' })
     // @ApiRespuestaError()

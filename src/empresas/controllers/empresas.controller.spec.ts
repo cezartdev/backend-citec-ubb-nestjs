@@ -95,53 +95,53 @@ describe('EmpresasController', () => {
         /**
          * Crear datos necesarios antes de las pruebas
          */
-        // const comunasModel = app.get(getModelToken(Comunas));
-        // const regionesModel = app.get(getModelToken(Regiones));
-        // const provinciasModel = app.get(getModelToken(Provincias));
+        const regionesModel = app.get(getModelToken(Regiones));
+        const provinciasModel = app.get(getModelToken(Provincias));
+        const comunasModel = app.get(getModelToken(Comunas));
         // const girosModel = app.get(getModelToken(Giros));
 
         
-        // // Cargar datos desde archivos CSV
-        // const regiones = fs.readFileSync(
-        //     `${__dirname}/../../database/seeders/archives/regiones.csv`,
-        //     'utf-8',
-        // );
+        // Cargar datos desde archivos CSV
+        const regiones = fs.readFileSync(
+            `${__dirname}/../../database/seeders/archives/regiones.csv`,
+            'utf-8',
+        );
         
-        // const provincias = fs.readFileSync(
-        //     `${__dirname}/../../database/seeders/archives/provincias.csv`,
-        //     'utf-8',
-        // );
-        // const comunas = fs.readFileSync(
-        //     `${__dirname}/../../database/seeders/archives/comunas.csv`,
-        //     'utf-8',
-        // );
+        const provincias = fs.readFileSync(
+            `${__dirname}/../../database/seeders/archives/provincias.csv`,
+            'utf-8',
+        );
+        const comunas = fs.readFileSync(
+            `${__dirname}/../../database/seeders/archives/comunas.csv`,
+            'utf-8',
+        );
         // const giros = fs.readFileSync(
         //     `${__dirname}/../../database/seeders/archives/giros.csv`,
         //     'utf-8',
         // );
 
-        // // Insertar regiones
-        // const regionesData = parse(regiones, {
-        //     columns: true,
-        //     skip_empty_lines: true,
-        // });
-        // await regionesModel.bulkCreate(regionesData);
+        // Insertar regiones
+        const regionesData = parse(regiones, {
+            columns: true,
+            skip_empty_lines: true,
+        });
+        await regionesModel.bulkCreate(regionesData);
 
-        // // Insertar provincias
-        // const provinciasData = parse(provincias, {
-        //     columns: true,
-        //     skip_empty_lines: true,
-        // });
-        // await provinciasModel.bulkCreate(provinciasData);
+        // Insertar provincias
+        const provinciasData = parse(provincias, {
+            columns: true,
+            skip_empty_lines: true,
+        });
+        await provinciasModel.bulkCreate(provinciasData);
 
-        // // Insertar comunas
-        // const comunasData = parse(comunas, {
-        //     columns: true,
-        //     skip_empty_lines: true,
-        // });
-        // await comunasModel.bulkCreate(comunasData);
+        // Insertar comunas
+        const comunasData = parse(comunas, {
+            columns: true,
+            skip_empty_lines: true,
+        });
+        await comunasModel.bulkCreate(comunasData);
 
-        // // Insertar giros
+        // Insertar giros
         // const girosData = parse(giros, {
         //     columns: true,
         //     skip_empty_lines: true,
@@ -170,11 +170,27 @@ describe('EmpresasController', () => {
             giros: [11101, 11102, 11103],
         };
 
-        it('Debería conectarse y sincronizar con la base de datos SQLite en memoria', async () => {
-            const empresasModel = app.get(getModelToken(Comunas));
-            const count = await empresasModel.count();
-            expect(count).toBe(0); // Se espera que no haya registros inicialmente
+        it('Deberian existir 16 regiones', async () => {
+            const regionesModel = app.get(getModelToken(Regiones));
+            const count = await regionesModel.count();
+            expect(count).toBe(16); 
+
         });
+        it('Deberian existir 56 provincias', async () => {
+            const provinciasModel = app.get(getModelToken(Provincias));
+            const count = await provinciasModel.count();
+            expect(count).toBe(56); 
+        });
+        it('Deberian existir 346 comunas', async () => {
+            const comunasModel = app.get(getModelToken(Comunas));
+            const count = await comunasModel.count();
+            expect(count).toBe(346); 
+        });
+        // it('Deberian existir 1000 giros', async () => {
+        //     const girosModel = app.get(getModelToken(Giros));
+        //     const count = await girosModel.count();
+        //     expect(count).toBe(1000); 
+        // });
 
         // it('crear empresas correctamente', async () => {
         //     const res = await request(app.getHttpServer())

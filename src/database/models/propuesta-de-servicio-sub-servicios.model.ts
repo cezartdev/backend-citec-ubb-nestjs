@@ -11,37 +11,27 @@ import {
     Sequelize,
     AutoIncrement,
     HasOne,
-    HasMany
+    HasMany,
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
-import {PropuestasDeServicios}  from './propuestas-de-servicios.model';
-import {SubServicios} from './sub-servicios.model';
+import { PropuestasDeServicios } from './propuestas-de-servicios.model';
+import { SubServicios } from './sub-servicios.model';
 
 @Table({
     tableName: 'propuesta_de_servicio_sub_servicios',
     timestamps: true,
 })
-
 export class PropuestaDeServicioSubServicios extends Model<PropuestaDeServicioSubServicios> {
-
-    @ApiProperty({ type: 'number', default: 100 })
+    @ApiProperty({ type: 'number', default: 1 })
     @PrimaryKey
     @ForeignKey(() => PropuestasDeServicios) // Relación con PropuestasDeServicios
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
     })
-    declare codigo: number;
+    declare id: number;
 
-    @ApiProperty({ type: 'number', default: 2024 })
-    @PrimaryKey
-    @ForeignKey(() => PropuestasDeServicios) // Relación con PropuestasDeServicios
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false,
-    })
-    declare año: number;
 
     @ApiProperty({ type: 'string', default: 'Estanqueidad al aire - NCH 892' })
     @PrimaryKey
@@ -67,7 +57,6 @@ export class PropuestaDeServicioSubServicios extends Model<PropuestaDeServicioSu
         allowNull: false,
     })
     declare updatedAt: Date;
-
 }
 
 export default PropuestaDeServicioSubServicios;

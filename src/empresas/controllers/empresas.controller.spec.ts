@@ -7,7 +7,6 @@ import { EmpresasModule } from '../empresas.module';
 import { SequelizeModule, getModelToken } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import { Empresas } from '../../database/models/empresas.model';
-import { Tipos } from '../../database/models/tipos.model';
 import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
 import {
     ActualizarEmpresasDto,
@@ -23,7 +22,6 @@ import { Regiones } from '../../database/models/regiones.model';
 import { PropuestasDeServicios } from '../../database/models/propuestas-de-servicios.model';
 import { GirosEmpresas } from '../../database/models/giros-empresas.model';
 import { Categorias } from '../../database/models/categorias.model';
-import { PropuestaDeServicioServicios } from '../../database/models/propuesta-de-servicio-servicios.model';
 import { PropuestaDeServicioSubServicios } from '../../database/models/propuesta-de-servicio-sub-servicios.model';
 import { GruposDeServicios } from '../../database/models/grupos-de-servicios.model';
 import { SubServicios } from '../../database/models/sub-servicios.model';
@@ -40,42 +38,40 @@ describe('EmpresasController', () => {
                 ConfigModule.forRoot(),
                 SequelizeModule.forRoot({
                     dialect: 'sqlite',
-                    logging: false,
+                    logging: console.log,
                     storage: ':memory:',
                     models: [
-                        Comunas,
                         Regiones,
                         Provincias,
-                        // Empresas,
-                        // Giros,
-                        // GirosEmpresas,
-                        // Categorias,
-                        // Contactos,
-                        // PropuestasDeServicios,
-                        // PropuestaDeServicioServicios,
-                        // PropuestaDeServicioSubServicios,
-                        // GruposDeServicios,
-                        // SubServicios,
-                        // GrupoDeServicioSubServicios,
+                        Comunas,
+                        Categorias,
+                        Giros,
+                        Empresas,
+                        Contactos,
+                        GirosEmpresas,
+                        GruposDeServicios,
+                        SubServicios,
+                        GrupoDeServicioSubServicios,
+                        PropuestasDeServicios,
+                        PropuestaDeServicioSubServicios,
                     ], // Registra el modelo
                     autoLoadModels: true,
                     synchronize: true,
                 }),
                 SequelizeModule.forFeature([
-                    Comunas,
                     Regiones,
                     Provincias,
-                    // Empresas,
-                    // Giros,
-                    // GirosEmpresas,
-                    // Categorias,
-                    // Contactos,
-                    // PropuestasDeServicios,
-                    // PropuestaDeServicioServicios,
-                    // PropuestaDeServicioSubServicios,
-                    // GruposDeServicios,
-                    // SubServicios,
-                    // GrupoDeServicioSubServicios,
+                    Comunas,
+                    Categorias,
+                    Giros,
+                    Empresas,
+                    Contactos,
+                    GirosEmpresas,
+                    GruposDeServicios,
+                    SubServicios,
+                    GrupoDeServicioSubServicios,
+                    PropuestasDeServicios,
+                    PropuestaDeServicioSubServicios,
                 ]), // Importante: registramos los modelo
                 EmpresasModule,
             ],
@@ -100,13 +96,12 @@ describe('EmpresasController', () => {
         const comunasModel = app.get(getModelToken(Comunas));
         // const girosModel = app.get(getModelToken(Giros));
 
-        
         // Cargar datos desde archivos CSV
         const regiones = fs.readFileSync(
             `${__dirname}/../../database/seeders/archives/regiones.csv`,
             'utf-8',
         );
-        
+
         const provincias = fs.readFileSync(
             `${__dirname}/../../database/seeders/archives/provincias.csv`,
             'utf-8',
@@ -173,23 +168,22 @@ describe('EmpresasController', () => {
         it('Deberian existir 16 regiones', async () => {
             const regionesModel = app.get(getModelToken(Regiones));
             const count = await regionesModel.count();
-            expect(count).toBe(16); 
-
+            expect(count).toBe(16);
         });
         it('Deberian existir 56 provincias', async () => {
             const provinciasModel = app.get(getModelToken(Provincias));
             const count = await provinciasModel.count();
-            expect(count).toBe(56); 
+            expect(count).toBe(56);
         });
         it('Deberian existir 346 comunas', async () => {
             const comunasModel = app.get(getModelToken(Comunas));
             const count = await comunasModel.count();
-            expect(count).toBe(346); 
+            expect(count).toBe(346);
         });
         // it('Deberian existir 1000 giros', async () => {
         //     const girosModel = app.get(getModelToken(Giros));
         //     const count = await girosModel.count();
-        //     expect(count).toBe(1000); 
+        //     expect(count).toBe(1000);
         // });
 
         // it('crear empresas correctamente', async () => {
@@ -210,8 +204,6 @@ describe('EmpresasController', () => {
         //     expect(res.body).toHaveProperty('createdAt');
         //     expect(res.body).toHaveProperty('updatedAt');
         // });
-
-
 
         // it('fallar si existen campos adicionales o estan mal escritos', async () => {
         //     // Probar cada campo faltante

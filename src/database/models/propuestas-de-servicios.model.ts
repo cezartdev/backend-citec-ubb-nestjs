@@ -9,15 +9,14 @@ import {
     CreatedAt,
     UpdatedAt,
     AutoIncrement,
-    BelongsToMany
+    BelongsToMany,
+    BeforeCreate
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
 import { ESTADOS } from '../../common/constants/estados.constants';
 import { ADJUDICADO } from '../../common/constants/adjudicados.constants';   
 import {Empresas} from './empresas.model';
-import {PropuestaDeServicioServicios} from './propuesta-de-servicio-servicios.model';
-import {GruposDeServicios} from './grupos-de-servicios.model';
 import { PropuestaDeServicioSubServicios } from './propuesta-de-servicio-sub-servicios.model';
 import { SubServicios } from './sub-servicios.model';
 
@@ -26,8 +25,15 @@ import { SubServicios } from './sub-servicios.model';
 @Table({
     tableName: 'propuestas_de_servicios',
     timestamps: true,
+    indexes: [
+        {
+            fields: ['codigo', 'año'],
+            unique: true,
+        },
+    ],
 })
 export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
+
     @ApiProperty({ type: 'number', default: 1 })
     @PrimaryKey
     @AutoIncrement
@@ -35,10 +41,17 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
         type: DataType.INTEGER,
         allowNull: false,
     })
+    declare id: number;
+
+
+    @ApiProperty({ type: 'number', default: 1 })
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+    })
     declare codigo: number;
 
     @ApiProperty({ type: 'number', default: 2024 })
-    @PrimaryKey
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
@@ -100,15 +113,20 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
     })
     declare updatedAt: Date;
 
-    @BelongsToMany(() => GruposDeServicios, () => PropuestaDeServicioServicios, )
-    declare grupoDeServicios: GruposDeServicios[];
 
     @BelongsToMany(
         () => SubServicios,
         () => PropuestaDeServicioSubServicios,
+        
     )
     declare subServicios: SubServicios[];
 
+
+    @BeforeCreate
+    static async asignarCodigo(instance: PropuestasDeServicios) {
+        const ultimoCodigo = (await PropuestasDeServicios.max('codigo') || 0) as number;
+        instance.codigo = ultimoCodigo + 1;
+    }
 }
 
 export default PropuestasDeServicios;

@@ -4,12 +4,10 @@ import {
     Model,
     DataType,
     PrimaryKey,
-    BelongsToMany,
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
-import { PropuestaDeServicioServicios } from './propuesta-de-servicio-servicios.model';
-import { PropuestasDeServicios } from './propuestas-de-servicios.model';
+
 
 @Table({
     tableName: 'grupos_de_servicios',
@@ -27,11 +25,6 @@ export class GruposDeServicios extends Model<GruposDeServicios> {
     })
     declare nombre: string;
 
-    @BelongsToMany(
-        () => PropuestasDeServicios,
-        () => PropuestaDeServicioServicios,
-    )
-    declare propuestaDeServicios: PropuestasDeServicios[];
 }
 
 export default GruposDeServicios;

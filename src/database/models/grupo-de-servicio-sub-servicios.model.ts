@@ -33,7 +33,7 @@ export class GrupoDeServicioSubServicios extends Model<GrupoDeServicioSubServici
         type: DataType.STRING(150),
         allowNull: false,
     })
-    declare nombre_g: number;
+    declare nombre_g: string;
 
     @ApiProperty({ type: 'string', default: 'Estanqueidad al aire - NCH 892' })
     @PrimaryKey

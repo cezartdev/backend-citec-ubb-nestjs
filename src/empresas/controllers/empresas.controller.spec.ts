@@ -360,42 +360,69 @@ describe('EmpresasController', () => {
         it('fallar si la comuna no existe', async () => {
             const res = await request(app.getHttpServer())
                 .post(`${ruta}/crear`)
-                .send({...crearEmpresaDto, id_comunas: 110001});
+                .send({ ...crearEmpresaDto, id_comunas: 110001 });
 
             expect(res.status).toBe(404);
             expect(Array.isArray(res.body.message)).toBe(true);
             expect(res.body.statusCode).toBe(404);
             expect(res.body.error).toBe('Not Found');
-           
         });
 
         it('fallar si alguno de los giros no existe', async () => {
             const res = await request(app.getHttpServer())
                 .post(`${ruta}/crear`)
-                .send({...crearEmpresaDto, giros: [1110001]});
+                .send({ ...crearEmpresaDto, giros: [1110001] });
 
             expect(res.status).toBe(404);
             expect(Array.isArray(res.body.message)).toBe(true);
             expect(res.body.statusCode).toBe(404);
             expect(res.body.error).toBe('Not Found');
-           
         });
 
-        it('fallar si alguno de los contactos tiene el email duplicado', async () => {
+        it('fallar si alguno de los giros esta duplicado', async () => {
             const res = await request(app.getHttpServer())
                 .post(`${ruta}/crear`)
-                .send({...crearEmpresaDto, contactos: [
-                    {email: 'contacto@test.com', nombre: 'Contacto Test', cargo: 'Gerente'},
-                    {email: 'contacto@test.com', nombre: 'Contacto Test 2', cargo: 'Gerente 2'}
-                ]});
+                .send({ ...crearEmpresaDto, giros: [11101, 11101] });
 
             expect(res.status).toBe(409);
             expect(Array.isArray(res.body.message)).toBe(true);
             expect(res.body.statusCode).toBe(409);
             expect(res.body.error).toBe('Conflict');
-           
         });
 
+        it('fallar si alguno de los contactos tiene el email duplicado', async () => {
+            const res = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send({
+                    ...crearEmpresaDto,
+                    contactos: [
+                        {
+                            email: 'contacto@test.com',
+                            nombre: 'Contacto Test',
+                            cargo: 'Gerente',
+                        },
+                        {
+                            email: 'contacto@test.com',
+                            nombre: 'Contacto Test 2',
+                            cargo: 'Gerente 2',
+                        },
+                    ],
+                });
+
+            expect(res.status).toBe(409);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(409);
+            expect(res.body.error).toBe('Conflict');
+        });
+
+        it('Aceptar opcional el campo contactos', async () => {
+            const res = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send({...crearEmpresaDto, contactos: undefined});
+
+            expect(res.status).toBe(201);
+            expect(res.body).toMatchObject({...empresaRetorno, contactos:[]});
+        });
 
         it('verificar transformación de datos:  email_factura/email en minúsculas direccion/email/nombre/cargo capitalize razon_social/nombre_de_fantasia en mayúsculas', async () => {
             const datosPrueba = {
@@ -429,12 +456,12 @@ describe('EmpresasController', () => {
             expect(res.body.contactos).toContainEqual({
                 email: 'contacto@test.com',
                 nombre: 'Contacto Test',
-                cargo: 'Gerente 1'
+                cargo: 'Gerente 1',
             });
             expect(res.body.contactos).toContainEqual({
                 email: 'contacto2@test.com',
                 nombre: 'Contacto 2 Test',
-                cargo: 'Gerente 2'
+                cargo: 'Gerente 2',
             });
         });
     });
@@ -473,7 +500,7 @@ describe('EmpresasController', () => {
                     cargo: 'Gerente 2',
                 },
             ],
-            giros: [11101,11102],
+            giros: [11101, 11102],
         };
 
         const actualizarEmpresaDto: ActualizarEmpresasDto = {
@@ -492,7 +519,7 @@ describe('EmpresasController', () => {
                     cargo: 'Gerente 2',
                 },
             ],
-            giros: [11101,11102],
+            giros: [11101, 11102],
         };
 
         const empresaRetorno: RetornoEmpresasDto = {
@@ -600,9 +627,9 @@ describe('EmpresasController', () => {
                 }, // Error intencionado
                 {
                     ...actualizarEmpresaDto,
-                    giro: [Date.now(),undefined,true,'sad'],
+                    giro: [Date.now(), undefined, true, 'sad'],
                     giros: undefined,
-                }
+                },
             ];
 
             for (const casoError of camposAProbar) {
@@ -662,8 +689,8 @@ describe('EmpresasController', () => {
                 },
                 {
                     ...actualizarEmpresaDto,
-                    contactos: "no es un array",
-                }
+                    contactos: 'no es un array',
+                },
             ];
 
             for (const caso of casosInvalidos) {
@@ -680,25 +707,38 @@ describe('EmpresasController', () => {
         it('fallar si la comuna no existe', async () => {
             const res = await request(app.getHttpServer())
                 .put(`${ruta}/actualizar`)
-                .send({...actualizarEmpresaDto, id_comunas: 110001});
+                .send({ ...actualizarEmpresaDto, id_comunas: 110001 });
 
             expect(res.status).toBe(404);
             expect(Array.isArray(res.body.message)).toBe(true);
             expect(res.body.statusCode).toBe(404);
             expect(res.body.error).toBe('Not Found');
-           
         });
 
         it('fallar si alguno de los giros no existe', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresa1Dto);
             const res = await request(app.getHttpServer())
                 .put(`${ruta}/actualizar`)
-                .send({...actualizarEmpresaDto, giros: [1110001]});
-
+                .send({ ...actualizarEmpresaDto, giros: [1110001] });
             expect(res.status).toBe(404);
             expect(Array.isArray(res.body.message)).toBe(true);
             expect(res.body.statusCode).toBe(404);
             expect(res.body.error).toBe('Not Found');
-           
+        });
+
+        it('fallar si alguno de los giros esta duplicado', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresa1Dto);
+            const res = await request(app.getHttpServer())
+                .put(`${ruta}/actualizar`)
+                .send({ ...actualizarEmpresaDto, giros: [11101, 11101] });
+            expect(res.status).toBe(409);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(409);
+            expect(res.body.error).toBe('Conflict');
         });
 
         it('fallar si alguno de los contactos tiene el email duplicado', async () => {
@@ -707,15 +747,37 @@ describe('EmpresasController', () => {
                 .send(crearEmpresa1Dto);
             const res = await request(app.getHttpServer())
                 .put(`${ruta}/actualizar`)
-                .send({...actualizarEmpresaDto, contactos: [
-                    {email: 'contacto@test.com', nombre: 'Contacto Test', cargo: 'Gerente'},
-                    {email: 'contacto@test.com', nombre: 'Contacto Test 2', cargo: 'Gerente 2'}
-                ]});
+                .send({
+                    ...actualizarEmpresaDto,
+                    contactos: [
+                        {
+                            email: 'contacto@test.com',
+                            nombre: 'Contacto Test',
+                            cargo: 'Gerente',
+                        },
+                        {
+                            email: 'contacto@test.com',
+                            nombre: 'Contacto Test 2',
+                            cargo: 'Gerente 2',
+                        },
+                    ],
+                });
             expect(res.status).toBe(409);
             expect(Array.isArray(res.body.message)).toBe(true);
             expect(res.body.statusCode).toBe(409);
             expect(res.body.error).toBe('Conflict');
-           
+        });
+
+        it('Aceptar opcional el campo contactos', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresa1Dto);
+            const res = await request(app.getHttpServer())
+                .put(`${ruta}/actualizar`)
+                .send({ ...actualizarEmpresaDto, contactos: undefined });
+
+            expect(res.status).toBe(200);
+            expect(res.body).toMatchObject({...empresaRetorno, contactos:[{email:'contacto1@test.com',nombre:'Contacto Test 1', cargo:'Gerente 1'}]});
         });
 
         it('fallar si la empresa está eliminada', async () => {
@@ -750,9 +812,9 @@ describe('EmpresasController', () => {
                     {
                         email: 'CONTACTO@TEST.COM',
                         nombre: 'CONTACTO TEST',
-                        cargo: 'GERENTE'
-                    }
-                ]
+                        cargo: 'GERENTE',
+                    },
+                ],
             };
 
             const res = await request(app.getHttpServer())
@@ -760,13 +822,15 @@ describe('EmpresasController', () => {
                 .send(datosPrueba);
             expect(res.status).toBe(200);
             expect(res.body.razon_social).toBe('EMPRESA TEST ACTUALIZADA');
-            expect(res.body.nombre_de_fantasia).toBe('EMPRESA TEST ACTUALIZADA');
+            expect(res.body.nombre_de_fantasia).toBe(
+                'EMPRESA TEST ACTUALIZADA',
+            );
             expect(res.body.email_factura).toBe('test@test.com');
             expect(res.body.direccion).toBe('Calle Test 789');
             expect(res.body.contactos[0]).toMatchObject({
                 email: 'contacto@test.com',
                 nombre: 'Contacto Test',
-                cargo: 'Gerente'
+                cargo: 'Gerente',
             });
         });
     });
@@ -908,7 +972,7 @@ describe('EmpresasController', () => {
         const empresaRetorno: RetornoEmpresasDto = {
             rut: '11.111.111-1',
             razon_social: 'EMPRESA TEST',
-            nombre_de_fantasia: 'EMPRESA TEST', 
+            nombre_de_fantasia: 'EMPRESA TEST',
             email_factura: 'test@test.com',
             direccion: 'Calle Ohiggins N°12',
             comuna: {
@@ -922,7 +986,8 @@ describe('EmpresasController', () => {
                     codigo: 11101,
                     nombre: 'CULTIVO DE TRIGO',
                     afecto_iva: 'SI',
-                    nombre_categorias: 'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
+                    nombre_categorias:
+                        'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
                 },
             ],
             contactos: [
@@ -993,7 +1058,7 @@ describe('EmpresasController', () => {
         const empresaRetorno: RetornoEmpresasDto = {
             rut: '11.111.111-1',
             razon_social: 'EMPRESA TEST',
-            nombre_de_fantasia: 'EMPRESA TEST', 
+            nombre_de_fantasia: 'EMPRESA TEST',
             email_factura: 'test@test.com',
             direccion: 'Calle Ohiggins N°12',
             comuna: {
@@ -1007,7 +1072,8 @@ describe('EmpresasController', () => {
                     codigo: 11101,
                     nombre: 'CULTIVO DE TRIGO',
                     afecto_iva: 'SI',
-                    nombre_categorias: 'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
+                    nombre_categorias:
+                        'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
                 },
             ],
             contactos: [
@@ -1090,7 +1156,9 @@ describe('EmpresasController', () => {
             expect(res.status).toBe(200);
             expect(res.body.rut).toBe(crearEmpresaDto.rut);
             expect(res.body.razon_social).toBe(crearEmpresaDto.razon_social);
-            expect(res.body.nombre_de_fantasia).toBe(crearEmpresaDto.nombre_de_fantasia);
+            expect(res.body.nombre_de_fantasia).toBe(
+                crearEmpresaDto.nombre_de_fantasia,
+            );
             expect(res.body.email_factura).toBe(crearEmpresaDto.email_factura);
             expect(res.body.estado).toBe(ESTADOS.OPCION_2);
         });

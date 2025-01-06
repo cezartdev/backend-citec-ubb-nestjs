@@ -46,13 +46,22 @@ export class EmpresasService extends BaseServices {
             throw new NotFoundException(['La comuna no existe']);
         }
 
-        if (giros.length !== empresa.giros.length) {
-            const girosEncontrados = new Set(giros.map((g) => g.codigo));
-            const girosFaltantes = empresa.giros.filter(
-                (g) => !girosEncontrados.has(g),
-            );
+        // Validar que los giros existan en la base de datos
+        const girosNoExistentes = empresa.giros.filter(
+            giro => !giros.some(g => g.codigo === giro)
+        );
+
+        if (girosNoExistentes.length > 0) {
             throw new NotFoundException([
-                `Los siguientes codigos de giros no existen: ${girosFaltantes.join(', ')}`,
+                `Los siguientes códigos de giros no existen: ${girosNoExistentes.join(', ')}`
+            ]);
+        }
+
+        // Validar que no haya giros duplicados
+        const girosUnicos = new Set(empresa.giros);
+        if (girosUnicos.size !== empresa.giros.length) {
+            throw new ConflictException([
+                'No pueden existir giros duplicados'
             ]);
         }
 
@@ -258,7 +267,7 @@ export class EmpresasService extends BaseServices {
         empresa: ActualizarEmpresasDto,
     ): Promise<RetornoEmpresasDto> {
         // Ejecutar consultas en paralelo para optimizar rendimiento
-        const [empresaExistente, empresaExistenteNuevo, contactosExistentes] =
+        const [empresaExistente, empresaExistenteNuevo, contactosExistentes, giros] =
             await Promise.all([
                 Empresas.findOne({
                     where: { rut: empresa.rut },
@@ -273,6 +282,10 @@ export class EmpresasService extends BaseServices {
                 Contactos.findAll({
                     where: { rut_empresas: empresa.rut },
                     attributes: ['email'], // Solo necesitamos saber si existen
+                }),
+                Giros.findAll({
+                    where: { codigo: empresa.giros },
+                    attributes: ['codigo'],
                 }),
             ]);
 
@@ -291,6 +304,25 @@ export class EmpresasService extends BaseServices {
         if (empresaExistenteNuevo) {
             throw new ConflictException([
                 `Ya existe una empresa con el rut ${empresa.nuevo_rut}`,
+            ]);
+        }
+
+        // Validar que los giros existan en la base de datos
+        const girosNoExistentes = empresa.giros.filter(
+            giro => !giros.some(g => g.codigo === giro)
+        );
+
+        if (girosNoExistentes.length > 0) {
+            throw new NotFoundException([
+                `Los siguientes códigos de giros no existen: ${girosNoExistentes.join(', ')}`
+            ]);
+        }
+
+        // Validar que no haya giros duplicados
+        const girosUnicos = new Set(empresa.giros);
+        if (girosUnicos.size !== empresa.giros.length) {
+            throw new ConflictException([
+                'No pueden existir giros duplicados'
             ]);
         }
 

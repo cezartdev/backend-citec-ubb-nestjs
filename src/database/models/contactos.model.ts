@@ -59,7 +59,6 @@ export class Contactos extends Model<Contactos> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Date.now(),
     })
     declare createdAt: Date;
 
@@ -68,7 +67,6 @@ export class Contactos extends Model<Contactos> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Date.now(),
     })
     declare updatedAt: Date;
 }

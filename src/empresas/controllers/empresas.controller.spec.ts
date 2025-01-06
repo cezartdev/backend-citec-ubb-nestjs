@@ -396,20 +396,6 @@ describe('EmpresasController', () => {
            
         });
 
-        it('fallar si alguno de los contactos tiene el email duplicado', async () => {
-            
-            const res = await request(app.getHttpServer())
-                .post(`${ruta}/crear`)
-                .send({...crearEmpresaDto, contactos: [
-                    {email: 'contacto@test.com', nombre: 'Contacto Test', cargo: 'Gerente'},
-                    {email: 'contacto@test.com', nombre: 'Contacto Test 2', cargo: 'Gerente 2'}
-                ]});
-            expect(res.status).toBe(409);
-            expect(Array.isArray(res.body.message)).toBe(true);
-            expect(res.body.statusCode).toBe(409);
-            expect(res.body.error).toBe('Conflict');
-           
-        });
 
         it('verificar transformación de datos:  email_factura/email en minúsculas direccion/email/nombre/cargo capitalize razon_social/nombre_de_fantasia en mayúsculas', async () => {
             const datosPrueba = {

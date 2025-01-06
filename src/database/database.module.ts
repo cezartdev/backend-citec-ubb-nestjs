@@ -52,10 +52,9 @@ export class DatabaseModule implements OnApplicationBootstrap {
         @Inject(config.KEY) private configService: ConfigType<typeof config>,
     ) {}
 
-    // Descomentar para ejecutar los seeders al iniciar la aplicación
     async onApplicationBootstrap() {
-        if (this.configService.node.env !== 'test') {
-            console.log('Ejecutando seeders...');
+        if (this.configService.node.env === 'dev') {
+            console.log('Ejecutando seeders en entorno de desarrollo...');
             await this.seederService.run();
         }
     }

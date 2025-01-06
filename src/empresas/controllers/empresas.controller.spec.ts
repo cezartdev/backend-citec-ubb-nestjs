@@ -12,6 +12,7 @@ import {
     ActualizarEmpresasDto,
     CrearEmpresasDto,
     ObtenerPorIdEmpresasDto,
+    RetornoEmpresasDto,
 } from '../dtos/empresas.dto';
 import { ESTADOS } from '../../common/constants/estados.constants';
 import { Comunas } from '../../database/models/comunas.model';
@@ -95,6 +96,7 @@ describe('EmpresasController', () => {
         const provinciasModel = app.get(getModelToken(Provincias));
         const comunasModel = app.get(getModelToken(Comunas));
         const girosModel = app.get(getModelToken(Giros));
+        const categoriasModel = app.get(getModelToken(Categorias));
 
         // Cargar datos desde archivos CSV
         const regiones = fs.readFileSync(
@@ -110,10 +112,15 @@ describe('EmpresasController', () => {
             `${__dirname}/../../database/seeders/archives/comunas.csv`,
             'utf-8',
         );
-        // const giros = fs.readFileSync(
-        //     `${__dirname}/../../database/seeders/archives/giros.csv`,
-        //     'utf-8',
-        // );
+        const giros = fs.readFileSync(
+            `${__dirname}/../../database/seeders/archives/giros.csv`,
+            'utf-8',
+        );
+
+        const categorias = fs.readFileSync(
+            `${__dirname}/../../database/seeders/archives/categorias.csv`,
+            'utf-8',
+        );
 
         // Insertar regiones
         const regionesData = parse(regiones, {
@@ -136,35 +143,25 @@ describe('EmpresasController', () => {
         });
         await comunasModel.bulkCreate(comunasData);
 
+        // Insertar categorias
+        const categoriasData = parse(categorias, {
+            columns: true,
+            skip_empty_lines: true,
+        });
+        await categoriasModel.bulkCreate(categoriasData);
+
         // Insertar giros
-        // const girosData = parse(giros, {
-        //     columns: true,
-        //     skip_empty_lines: true,
-        // });
-        // await girosModel.bulkCreate(girosData);
+        const girosData = parse(giros, {
+            columns: true,
+            skip_empty_lines: true,
+        });
+
+        await girosModel.bulkCreate(girosData);
     });
 
     const ruta = '/empresas';
 
-    describe('crear', () => {
-        const crearEmpresaDto: CrearEmpresasDto = {
-            rut: '11.111.111-1',
-            razon_social: 'Empresa Test',
-            nombre_de_fantasia: 'Empresa Test',
-            email_factura: 'test@test.com',
-            direccion: 'calle ohiggins n°12',
-            id_comunas: 1101,
-            telefono: '+56912345678',
-            contactos: [
-                {
-                    email: 'contacto@test.com',
-                    nombre: 'Contacto Test',
-                    cargo: 'Gerente',
-                },
-            ],
-            giros: [11101, 11102, 11103],
-        };
-
+    describe('Geografia', () => {
         it('Deberian existir 16 regiones', async () => {
             const regionesModel = app.get(getModelToken(Regiones));
             const count = await regionesModel.count();
@@ -180,534 +177,968 @@ describe('EmpresasController', () => {
             const count = await comunasModel.count();
             expect(count).toBe(346);
         });
-        // it('Deberian existir 1000 giros', async () => {
-        //     const girosModel = app.get(getModelToken(Giros));
-        //     const count = await girosModel.count();
-        //     expect(count).toBe(1000);
-        // });
-
-        // it('crear empresas correctamente', async () => {
-        //     const res = await request(app.getHttpServer())
-        //         .post(`${ruta}/crear`)
-        //         .send(crearEmpresaDto);
-
-        //     expect(res.status).toBe(201);
-        //     expect(res.body).toMatchObject({
-        //         rut: crearEmpresaDto.rut,
-        //         razon_social: crearEmpresaDto.razon_social,
-        //         nombre_de_fantasia: crearEmpresaDto.nombre_de_fantasia,
-        //         email_factura: crearEmpresaDto.email_factura,
-        //         direccion: crearEmpresaDto.direccion,
-        //         id_comunas: crearEmpresaDto.id_comunas,
-        //         telefono: crearEmpresaDto.telefono,
-        //     });
-        //     expect(res.body).toHaveProperty('createdAt');
-        //     expect(res.body).toHaveProperty('updatedAt');
-        // });
-
-        // it('fallar si existen campos adicionales o estan mal escritos', async () => {
-        //     // Probar cada campo faltante
-        //     const camposAProbar = [
-        //         {
-        //             ...crearUsuarioDto,
-        //             emai: crearUsuarioDto.email,
-        //             email: undefined,
-        //         }, // Error en email
-        //         {
-        //             ...crearUsuarioDto,
-        //             nombr: crearUsuarioDto.nombre,
-        //             nombre: undefined,
-        //         }, // Error en nombre
-        //         {
-        //             ...crearUsuarioDto,
-        //             apellid: crearUsuarioDto.apellido,
-        //             apellido: undefined,
-        //         }, // Error en apellido
-        //         {
-        //             ...crearUsuarioDto,
-        //             contraseñ: crearUsuarioDto.contraseña,
-        //             contraseña: undefined,
-        //         }, // Error en contraseña
-        //         {
-        //             ...crearUsuarioDto,
-        //             nombre_tipo: crearUsuarioDto.nombre_tipos,
-        //             nombre_tipos: undefined,
-        //         }, // Error en nombre_tipos
-        //     ];
-
-        //     for (const casoError of camposAProbar) {
-        //         const res = await request(app.getHttpServer())
-        //             .post(`${ruta}/crear`)
-        //             .send(casoError);
-        //         expect(res.status).toBe(400);
-        //         expect(Array.isArray(res.body.message)).toBe(true);
-        //         expect(res.body.statusCode).toBe(400);
-        //         expect(res.body.error).toBe('Bad Request');
-        //     }
-        // });
-
-        // it('fallar si el email ya existe', async () => {
-        //     const crearUsuarioAntes = await request(app.getHttpServer())
-        //         .post(`${ruta}/crear`)
-        //         .send(crearUsuarioDto);
-
-        //     const res = await request(app.getHttpServer())
-        //         .post(`${ruta}/crear`)
-        //         .send(crearUsuarioDto);
-
-        //     expect(res.status).toBe(409);
-        //     expect(Array.isArray(res.body.message)).toBe(true);
-        //     expect(res.body.statusCode).toBe(409);
-        //     expect(res.body.error).toBe('Conflict');
-        // });
-
-        // it('fallar si los tipos de datos no son válidos', async () => {
-        //     const casosInvalidos = [
-        //         { ...crearUsuarioDto, email: 123 }, // Error intencionado: número en lugar de string
-        //         { ...crearUsuarioDto, nombre: true }, // Error intencionado: booleano en lugar de string
-        //         { ...crearUsuarioDto, apellido: 123 }, // Error intencionado: número en lugar de string
-        //         { ...crearUsuarioDto, contraseña: true }, // Error intencionado: booleano en lugar de string
-        //         { ...crearUsuarioDto, nombre_tipos: 'tipo_invalido' }, // Error intencionado: string inválido
-        //     ];
-
-        //     for (const caso of casosInvalidos) {
-        //         const res = await request(app.getHttpServer())
-        //             .post(`${ruta}/crear`)
-        //             .send(caso);
-        //         expect(res.status).toBe(400);
-        //         expect(Array.isArray(res.body.message)).toBe(true);
-        //         expect(res.body.statusCode).toBe(400);
-        //         expect(res.body.error).toBe('Bad Request');
-        //     }
-        // });
-
-        // it('verificar transformación de datos: email en minúsculas, nombre/apellido capitalize, nombre_tipos en mayúsculas', async () => {
-        //     const datosPrueba = {
-        //         ...crearUsuarioDto,
-        //         email: 'USUARIO@TEST.COM',
-        //         nombre: 'jUaN',
-        //         apellido: 'pEREz',
-        //         nombre_tipos: 'administrador',
-        //     };
-
-        //     const res = await request(app.getHttpServer())
-        //         .post(`${ruta}/crear`)
-        //         .send(datosPrueba);
-        //     expect(res.status).toBe(201);
-        //     expect(res.body.email).toBe('usuario@test.com');
-        //     expect(res.body.nombre).toBe('Juan');
-        //     expect(res.body.apellido).toBe('Perez');
-        //     expect(res.body.nombre_tipos).toBe('ADMINISTRADOR');
-        // });
     });
 
-    // describe('actualizar', () => {
-    //     const crearUsuarioDto: CrearUsuariosDto = {
-    //         email: 'test@test.com',
-    //         nombre: 'Test',
-    //         apellido: 'Test',
-    //         contraseña: '123456',
-    //         nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
-    //     };
+    describe('Categorias', () => {
+        it('Deberian existir 21 categorias', async () => {
+            const categoriasModel = app.get(getModelToken(Categorias));
+            const count = await categoriasModel.count();
+            expect(count).toBe(21);
+        });
+    });
 
-    //     const crearUsuario2Dto: CrearUsuariosDto = {
-    //         email: 'test2@test.com',
-    //         nombre: 'Test2',
-    //         apellido: 'Test2',
-    //         contraseña: '123456',
-    //         nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
-    //     };
+    describe('Giros', () => {
+        it('Deberian existir 674 giros', async () => {
+            const girosModel = app.get(getModelToken(Giros));
+            const count = await girosModel.count();
+            expect(count).toBe(674);
+        });
+    });
 
-    //     const actualizarUsuarioDto: ActualizarUsuariosDto = {
-    //         email: 'test@test.com',
-    //         nuevo_email: 'test2@test.com',
-    //         nombre: 'Test',
-    //         apellido: 'Test',
-    //         contraseña: '123456',
-    //         nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
-    //     };
+    describe('crear', () => {
+        const crearEmpresaDto: CrearEmpresasDto = {
+            rut: '11.111.111-1',
+            razon_social: 'EMPRESA TEST',
+            nombre_de_fantasia: 'EMPRESA TEST',
+            email_factura: 'test@test.com',
+            direccion: 'Calle Ohiggins N°12',
+            id_comunas: 1101,
+            telefono: '+56912345678',
+            contactos: [
+                {
+                    email: 'contacto@test.com',
+                    nombre: 'Contacto Test',
+                    cargo: 'Gerente',
+                },
+            ],
+            giros: [11101],
+        };
 
-    //     it('actualizar usuario correctamente', async () => {
-    //         const crearUsuario = await request(app.getHttpServer())
-    //             .post(`${ruta}/crear`)
-    //             .send(crearUsuarioDto);
+        const empresaRetorno: RetornoEmpresasDto = {
+            rut: '11.111.111-1',
+            razon_social: 'EMPRESA TEST',
+            nombre_de_fantasia: 'EMPRESA TEST',
+            email_factura: 'test@test.com',
+            direccion: 'Calle Ohiggins N°12',
+            comuna: {
+                id: 1101,
+                nombre: 'Iquique',
+            },
+            telefono: '+56912345678',
+            estado: ESTADOS.OPCION_1,
+            giros: [
+                {
+                    codigo: 11101,
+                    nombre: 'CULTIVO DE TRIGO',
+                    afecto_iva: 'SI',
+                    nombre_categorias:
+                        'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
+                },
+            ],
+            contactos: [
+                {
+                    email: 'contacto@test.com',
+                    nombre: 'Contacto Test',
+                    cargo: 'Gerente',
+                },
+            ],
+        };
 
-    //         const res = await request(app.getHttpServer())
-    //             .put(`${ruta}/actualizar`)
-    //             .send(actualizarUsuarioDto);
+        it('crear empresas correctamente', async () => {
+            const res = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresaDto);
 
-    //         expect(res.status).toBe(200);
-    //         expect(res.body).toMatchObject({
-    //             email: actualizarUsuarioDto.nuevo_email,
-    //             nombre: actualizarUsuarioDto.nombre,
-    //             apellido: actualizarUsuarioDto.apellido,
-    //             nombre_tipos: actualizarUsuarioDto.nombre_tipos,
-    //         });
-    //         expect(res.body).toHaveProperty('createdAt');
-    //         expect(res.body).toHaveProperty('updatedAt');
+            expect(res.status).toBe(201);
 
-    //         // Verificar que la contraseña sea un hash
-    //         expect(res.body.contraseña).not.toBe(
-    //             actualizarUsuarioDto.contraseña,
-    //         );
-    //         expect(res.body.contraseña).toMatch(/^\$2[ayb]\$.{56}$/); // Patrón de hash bcrypt
-    //     });
+            expect(res.body).toMatchObject(empresaRetorno);
+            expect(res.body).toHaveProperty('createdAt');
+            expect(res.body).toHaveProperty('updatedAt');
+        });
 
-    //     it('fallar si el email que intenta actualizar no existe', async () => {
-    //         const res = await request(app.getHttpServer())
-    //             .put(`${ruta}/actualizar`)
-    //             .send(actualizarUsuarioDto);
+        it('fallar si existen campos adicionales o estan mal escritos', async () => {
+            // Probar cada campo faltante
+            const camposAProbar = [
+                {
+                    ...crearEmpresaDto,
+                    ru: crearEmpresaDto.rut,
+                    rut: undefined,
+                }, // Error en rut
+                {
+                    ...crearEmpresaDto,
+                    razon_socia: crearEmpresaDto.razon_social,
+                    razon_social: undefined,
+                }, // Error en razon_social
+                {
+                    ...crearEmpresaDto,
+                    nombre_de_fantasi: crearEmpresaDto.nombre_de_fantasia,
+                    nombre_de_fantasia: undefined,
+                }, // Error en nombre_de_fantasia
+                {
+                    ...crearEmpresaDto,
+                    email_factur: crearEmpresaDto.email_factura,
+                    email_factura: undefined,
+                }, // Error en email_factura
+                {
+                    ...crearEmpresaDto,
+                    direccio: crearEmpresaDto.direccion,
+                    direccion: undefined,
+                }, // Error en direccion
+                {
+                    ...crearEmpresaDto,
+                    id_comun: crearEmpresaDto.id_comunas,
+                    id_comuna: undefined,
+                }, // Error en id_comuna
+                {
+                    ...crearEmpresaDto,
+                    telefon: crearEmpresaDto.telefono,
+                    telefono: undefined,
+                }, // Error en telefono
+                {
+                    ...crearEmpresaDto,
+                    giro: crearEmpresaDto.giros,
+                    giros: undefined,
+                }, // Error en giros
+            ];
 
-    //         expect(res.status).toBe(404);
-    //         expect(Array.isArray(res.body.message)).toBe(true);
-    //         expect(res.body.statusCode).toBe(404);
-    //         expect(res.body.error).toBe('Not Found');
-    //     });
+            for (const casoError of camposAProbar) {
+                const res = await request(app.getHttpServer())
+                    .post(`${ruta}/crear`)
+                    .send(casoError);
+                expect(res.status).toBe(400);
+                expect(Array.isArray(res.body.message)).toBe(true);
+                expect(res.body.statusCode).toBe(400);
+                expect(res.body.error).toBe('Bad Request');
+            }
+        });
 
-    //     it('fallar si existen campos adicionales o estan mal escritos', async () => {
-    //         // Probar cada campo faltante
-    //         const camposAProbar = [
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 emai: actualizarUsuarioDto.email,
-    //                 email: undefined,
-    //             }, // Error en email
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 email_n: actualizarUsuarioDto.nuevo_email,
-    //                 nuevo_email: undefined,
-    //             }, // Error en el nuevo email
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 nombr: actualizarUsuarioDto.nombre,
-    //                 nombre: undefined,
-    //             }, // Error en nombre
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 apellid: actualizarUsuarioDto.apellido,
-    //                 apellido: undefined,
-    //             }, // Error en apellido
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 contraseñ: actualizarUsuarioDto.contraseña,
-    //                 contraseña: undefined,
-    //             }, // Error en contraseña
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 nombre_tipo: actualizarUsuarioDto.nombre_tipos,
-    //                 nombre_tipos: undefined,
-    //             }, // Error en nombre_tipos
-    //         ];
+        it('fallar si el rut ya existe', async () => {
+            const crearEmpresaAntes = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresaDto);
 
-    //         for (const casoError of camposAProbar) {
-    //             const res = await request(app.getHttpServer())
-    //                 .put(`${ruta}/actualizar`)
-    //                 .send(casoError);
-    //             expect(res.status).toBe(400);
-    //             expect(Array.isArray(res.body.message)).toBe(true);
-    //             expect(res.body.statusCode).toBe(400);
-    //             expect(res.body.error).toBe('Bad Request');
-    //         }
-    //     });
+            const res = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresaDto);
 
-    //     it('fallar si el nuevo_email ya lo tiene otro usuario', async () => {
-    //         const crearUsuario1 = await request(app.getHttpServer())
-    //             .post(`${ruta}/crear`)
-    //             .send(crearUsuarioDto);
-    //         const crearUsuario2 = await request(app.getHttpServer())
-    //             .post(`${ruta}/crear`)
-    //             .send(crearUsuario2Dto);
+            expect(res.status).toBe(409);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(409);
+            expect(res.body.error).toBe('Conflict');
+        });
 
-    //         const res = await request(app.getHttpServer())
-    //             .put(`${ruta}/actualizar`)
-    //             .send(actualizarUsuarioDto);
+        it('fallar si los tipos de datos no son válidos', async () => {
+            const casosInvalidos = [
+                { ...crearEmpresaDto, rut: 123 }, // Error intencionado: número en lugar de string
+                { ...crearEmpresaDto, razon_social: true }, // Error intencionado: booleano en lugar de string
+                { ...crearEmpresaDto, nombre_de_fantasia: 123 }, // Error intencionado: número en lugar de string
+                { ...crearEmpresaDto, email_factura: true }, // Error intencionado: booleano en lugar de string
+                { ...crearEmpresaDto, direccion: 123 }, // Error intencionado: número en lugar de string
+                { ...crearEmpresaDto, telefono: true }, // Error intencionado: booleano en lugar de string
+                { ...crearEmpresaDto, id_comunas: 'abc' }, // Error intencionado: string en lugar de número
+                { ...crearEmpresaDto, giros: '11101' }, // Error intencionado: string en lugar de array
+                {
+                    ...crearEmpresaDto,
+                    contactos: [
+                        { email: 1, nombre: true, cargo: undefined },
+                        { email: 2, nombre: 'test', cargo: 'Gerente' },
+                    ],
+                }, // Error intencionado
+            ];
 
-    //         expect(res.status).toBe(409);
-    //         expect(Array.isArray(res.body.message)).toBe(true);
-    //         expect(res.body.statusCode).toBe(409);
-    //         expect(res.body.error).toBe('Conflict');
-    //     });
+            for (const caso of casosInvalidos) {
+                const res = await request(app.getHttpServer())
+                    .post(`${ruta}/crear`)
+                    .send(caso);
+                expect(res.status).toBe(400);
+                expect(Array.isArray(res.body.message)).toBe(true);
+                expect(res.body.statusCode).toBe(400);
+                expect(res.body.error).toBe('Bad Request');
+            }
+        });
 
-    //     it('fallar si los tipos de datos no son válidos', async () => {
-    //         const casosInvalidos = [
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 email: 123, // Error intencionado: número en lugar de string
-    //             },
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 nuevo_email: 123, // Error intencionado: número en lugar de string
-    //             },
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 nombre: true, // Error intencionado: booleano en lugar de string
-    //             },
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 apellido: 123, // Error intencionado: número en lugar de string
-    //             },
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 contraseña: true, // Error intencionado: booleano en lugar de string
-    //             },
-    //             {
-    //                 ...actualizarUsuarioDto,
-    //                 nombre_tipos: 'tipo_invalido', // Error intencionado: string inválido
-    //             },
-    //         ];
+        it('fallar si la comuna no existe', async () => {
+            const res = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send({...crearEmpresaDto, id_comunas: 110001});
 
-    //         for (const caso of casosInvalidos) {
-    //             const res = await request(app.getHttpServer())
-    //                 .put(`${ruta}/actualizar`)
-    //                 .send(caso);
-    //             expect(res.status).toBe(400);
-    //             expect(Array.isArray(res.body.message)).toBe(true);
-    //             expect(res.body.statusCode).toBe(400);
-    //             expect(res.body.error).toBe('Bad Request');
-    //         }
-    //     });
+            expect(res.status).toBe(404);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(404);
+            expect(res.body.error).toBe('Not Found');
+           
+        });
 
-    //     it('verificar transformación de datos: email/nuevo_email en minúsculas, nombre/apellido capitalize, nombre_tipos en mayúsculas', async () => {
-    //         const crearUsuario = await request(app.getHttpServer())
-    //             .post(`${ruta}/crear`)
-    //             .send(crearUsuarioDto);
-    //         const datosPrueba: any = {
-    //             ...actualizarUsuarioDto,
-    //             email: 'TEST@TEST.COM',
-    //             nuevo_email: 'TEST2@TEST.COM',
-    //             nombre: 'jUaN',
-    //             apellido: 'pEREz',
-    //             nombre_tipos: 'administrador',
-    //         };
+        it('fallar si alguno de los giros no existe', async () => {
+            const res = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send({...crearEmpresaDto, giros: [1110001]});
 
-    //         const res = await request(app.getHttpServer())
-    //             .put(`${ruta}/actualizar`)
-    //             .send(datosPrueba);
-    //         expect(res.status).toBe(200);
-    //         expect(res.body.email).toBe('test2@test.com');
-    //         expect(res.body.nombre).toBe('Juan');
-    //         expect(res.body.apellido).toBe('Perez');
-    //         expect(res.body.nombre_tipos).toBe('ADMINISTRADOR');
-    //     });
-    // });
+            expect(res.status).toBe(404);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(404);
+            expect(res.body.error).toBe('Not Found');
+           
+        });
 
-    // describe('obtener-por-id', () => {
-    //     const crearUsuarioDto: CrearUsuariosDto = {
-    //         email: 'test@test.com',
-    //         nombre: 'Test',
-    //         apellido: 'Test',
-    //         contraseña: '123456',
-    //         nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
-    //     };
+        it('fallar si alguno de los contactos tiene el email duplicado', async () => {
+            const res = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send({...crearEmpresaDto, contactos: [
+                    {email: 'contacto@test.com', nombre: 'Contacto Test', cargo: 'Gerente'},
+                    {email: 'contacto@test.com', nombre: 'Contacto Test 2', cargo: 'Gerente 2'}
+                ]});
 
-    //     const obtenerPorIdUsuarioDto: ObtenerPorIdUsuariosDto = {
-    //         email: 'test@test.com',
-    //     };
+            expect(res.status).toBe(409);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(409);
+            expect(res.body.error).toBe('Conflict');
+           
+        });
 
-    //     const usuario = {
-    //         email: 'test@test.com',
-    //         nombre: 'Test',
-    //         apellido: 'Test',
-    //         contraseña: expect.any(String),
-    //         estado: ESTADOS.OPCION_1,
-    //         nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
-    //         createdAt: expect.any(String),
-    //         updatedAt: expect.any(String),
-    //     };
+        it('fallar si alguno de los contactos tiene el email duplicado', async () => {
+            
+            const res = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send({...crearEmpresaDto, contactos: [
+                    {email: 'contacto@test.com', nombre: 'Contacto Test', cargo: 'Gerente'},
+                    {email: 'contacto@test.com', nombre: 'Contacto Test 2', cargo: 'Gerente 2'}
+                ]});
+            expect(res.status).toBe(409);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(409);
+            expect(res.body.error).toBe('Conflict');
+           
+        });
 
-    //     it('obtener usuario por id correctamente', async () => {
-    //         const crearUsuario = await request(app.getHttpServer())
-    //             .post(`${ruta}/crear`)
-    //             .send(crearUsuarioDto);
-    //         const res = await request(app.getHttpServer()).get(
-    //             `${ruta}/obtener-por-id/${obtenerPorIdUsuarioDto.email}`,
-    //         );
+        it('verificar transformación de datos:  email_factura/email en minúsculas direccion/email/nombre/cargo capitalize razon_social/nombre_de_fantasia en mayúsculas', async () => {
+            const datosPrueba = {
+                ...crearEmpresaDto,
+                razon_social: 'empresa test',
+                nombre_de_fantasia: 'empresa test',
+                email_factura: 'TEST@TEST.COM',
+                direccion: 'CALLE OHIGGINS N°12',
+                contactos: [
+                    {
+                        email: 'contacto@test.com',
+                        nombre: 'CONTACTO TEST',
+                        cargo: 'GERENTE 1',
+                    },
+                    {
+                        email: 'contacto2@test.com',
+                        nombre: 'CoNtACtO 2 TeSt',
+                        cargo: 'gerente 2',
+                    },
+                ],
+            };
 
-    //         expect(res.status).toBe(200);
-    //         expect(res.body).toMatchObject(usuario);
+            const res = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(datosPrueba);
+            expect(res.status).toBe(201);
+            expect(res.body.razon_social).toBe('EMPRESA TEST');
+            expect(res.body.nombre_de_fantasia).toBe('EMPRESA TEST');
+            expect(res.body.email_factura).toBe('test@test.com');
+            expect(res.body.direccion).toBe('Calle Ohiggins N°12');
+            expect(res.body.contactos).toContainEqual({
+                email: 'contacto@test.com',
+                nombre: 'Contacto Test',
+                cargo: 'Gerente 1'
+            });
+            expect(res.body.contactos).toContainEqual({
+                email: 'contacto2@test.com',
+                nombre: 'Contacto 2 Test',
+                cargo: 'Gerente 2'
+            });
+        });
+    });
 
-    //         expect(res.body).toHaveProperty('email');
-    //         expect(res.body).toHaveProperty('nombre');
-    //         expect(res.body).toHaveProperty('apellido');
-    //         expect(res.body).toHaveProperty('contraseña');
-    //         expect(res.body).toHaveProperty('estado');
-    //         expect(res.body).toHaveProperty('nombre_tipos');
-    //         expect(res.body).toHaveProperty('createdAt');
-    //         expect(res.body).toHaveProperty('updatedAt');
-    //     });
+    describe('actualizar', () => {
+        const crearEmpresa1Dto: CrearEmpresasDto = {
+            rut: '11.111.111-1',
+            razon_social: 'EMPRESA TEST 1',
+            nombre_de_fantasia: 'EMPRESA TEST 1',
+            email_factura: 'test1@test.com',
+            direccion: 'Calle Test 1',
+            id_comunas: 1101,
+            telefono: '+56912345678',
+            contactos: [
+                {
+                    email: 'contacto1@test.com',
+                    nombre: 'Contacto Test 1',
+                    cargo: 'Gerente 1',
+                },
+            ],
+            giros: [11101],
+        };
 
-    //     it('fallar si el id (email) no es valido', async () => {
-    //         const res = await request(app.getHttpServer()).get(
-    //             `${ruta}/obtener-por-id/123`,
-    //         );
+        const crearEmpresa2Dto: CrearEmpresasDto = {
+            rut: '11.111.111-2',
+            razon_social: 'EMPRESA TEST 2',
+            nombre_de_fantasia: 'EMPRESA TEST 2',
+            email_factura: 'test1@test.com',
+            direccion: 'Calle Test 2',
+            id_comunas: 1101,
+            telefono: '+56912345678',
+            contactos: [
+                {
+                    email: 'contacto2@test.com',
+                    nombre: 'Contacto Test 2',
+                    cargo: 'Gerente 2',
+                },
+            ],
+            giros: [11101,11102],
+        };
 
-    //         expect(res.status).toBe(400);
-    //         expect(Array.isArray(res.body.message)).toBe(true);
-    //         expect(res.body.statusCode).toBe(400);
-    //         expect(res.body.error).toBe('Bad Request');
-    //     });
+        const actualizarEmpresaDto: ActualizarEmpresasDto = {
+            rut: '11.111.111-1',
+            nuevo_rut: '11.111.111-2',
+            razon_social: 'EMPRESA TEST 2',
+            nombre_de_fantasia: 'EMPRESA TEST 2',
+            email_factura: 'test2@test.com',
+            direccion: 'Calle Test 2',
+            id_comunas: 1101,
+            telefono: '+56912345678',
+            contactos: [
+                {
+                    email: 'contacto2@test.com',
+                    nombre: 'Contacto Test 2',
+                    cargo: 'Gerente 2',
+                },
+            ],
+            giros: [11101,11102],
+        };
 
-    //     it('fallar si el id (email) no existe', async () => {
-    //         const res = await request(app.getHttpServer()).get(
-    //             `${ruta}/obtener-por-id/a@gmail.com`,
-    //         );
+        const empresaRetorno: RetornoEmpresasDto = {
+            rut: '11.111.111-2',
+            razon_social: 'EMPRESA TEST 2',
+            nombre_de_fantasia: 'EMPRESA TEST 2',
+            email_factura: 'test2@test.com',
+            direccion: 'Calle Test 2',
+            comuna: {
+                id: 1101,
+                nombre: 'Iquique',
+            },
+            telefono: '+56912345678',
+            estado: ESTADOS.OPCION_1,
+            giros: [
+                {
+                    codigo: 11101,
+                    nombre: 'CULTIVO DE TRIGO',
+                    afecto_iva: 'SI',
+                    nombre_categorias:
+                        'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
+                },
+                {
+                    codigo: 11102,
+                    nombre: 'CULTIVO DE MAÍZ',
+                    afecto_iva: 'SI',
+                    nombre_categorias:
+                        'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
+                },
+            ],
+            contactos: [
+                {
+                    email: 'contacto2@test.com',
+                    nombre: 'Contacto Test 2',
+                    cargo: 'Gerente 2',
+                },
+            ],
+        };
 
-    //         expect(res.status).toBe(404);
-    //         expect(Array.isArray(res.body.message)).toBe(true);
-    //         expect(res.body.statusCode).toBe(404);
-    //         expect(res.body.error).toBe('Not Found');
-    //     });
-    // });
+        it('actualizar empresa correctamente', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresa1Dto);
 
-    // describe('obtener-todos', () => {
-    //     const crearUsuarioDto: CrearUsuariosDto = {
-    //         email: 'test@test.com',
-    //         nombre: 'Test',
-    //         apellido: 'Test',
-    //         contraseña: '123456',
-    //         nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
-    //     };
+            const res = await request(app.getHttpServer())
+                .put(`${ruta}/actualizar`)
+                .send(actualizarEmpresaDto);
 
-    //     const usuario = {
-    //         email: 'test@test.com',
-    //         nombre: 'Test',
-    //         apellido: 'Test',
-    //         contraseña: expect.any(String),
-    //         estado: ESTADOS.OPCION_1,
-    //         nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
-    //         createdAt: expect.any(String),
-    //         updatedAt: expect.any(String),
-    //     };
+            expect(res.status).toBe(200);
+            expect(res.body).toMatchObject(empresaRetorno);
+            expect(res.body).toHaveProperty('createdAt');
+            expect(res.body).toHaveProperty('updatedAt');
+        });
 
-    //     it('obtener todos los usuarios activos', async () => {
-    //         const crearUsuario = await request(app.getHttpServer())
-    //             .post(`${ruta}/crear`)
-    //             .send(crearUsuarioDto);
-    //         const res = await request(app.getHttpServer()).get(
-    //             `${ruta}/obtener-todos`,
-    //         );
+        it('fallar si el rut que intenta actualizar no existe', async () => {
+            const res = await request(app.getHttpServer())
+                .put(`${ruta}/actualizar`)
+                .send(actualizarEmpresaDto);
 
-    //         expect(res.status).toBe(200);
+            expect(res.status).toBe(404);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(404);
+            expect(res.body.error).toBe('Not Found');
+        });
 
-    //         expect(Array.isArray(res.body)).toBe(true);
-    //         expect(res.body[0]).toMatchObject(usuario);
-    //         expect(res.body[0]).toHaveProperty('email');
-    //         expect(res.body[0]).toHaveProperty('nombre');
-    //         expect(res.body[0]).toHaveProperty('apellido');
-    //         expect(res.body[0]).toHaveProperty('contraseña');
-    //         expect(res.body[0]).toHaveProperty('estado');
-    //         expect(res.body[0]).toHaveProperty('nombre_tipos');
-    //         expect(res.body[0]).toHaveProperty('createdAt');
-    //         expect(res.body[0]).toHaveProperty('updatedAt');
+        it('fallar si existen campos adicionales o estan mal escritos', async () => {
+            const camposAProbar = [
+                {
+                    ...actualizarEmpresaDto,
+                    ru: actualizarEmpresaDto.rut,
+                    rut: undefined,
+                }, // Error en rut
+                {
+                    ...actualizarEmpresaDto,
+                    nuevo_ru: actualizarEmpresaDto.nuevo_rut,
+                    nuevo_rut: undefined,
+                }, // Error en nuevo_rut
+                {
+                    ...actualizarEmpresaDto,
+                    razon_socia: actualizarEmpresaDto.razon_social,
+                    razon_social: undefined,
+                }, // Error en razon_social
+                {
+                    ...actualizarEmpresaDto,
+                    nombre_de_fantasi: actualizarEmpresaDto.nombre_de_fantasia,
+                    nombre_de_fantasia: undefined,
+                }, // Error en nombre_de_fantasia
+                {
+                    ...actualizarEmpresaDto,
+                    email_factur: actualizarEmpresaDto.email_factura,
+                    email_factura: undefined,
+                }, // Error en email_factura
+                {
+                    ...actualizarEmpresaDto,
+                    direccio: actualizarEmpresaDto.direccion,
+                    direccion: undefined,
+                }, // Error en direccion
+                {
+                    ...actualizarEmpresaDto,
+                    contacto: [
+                        { email: 1, nombre: true, cargo: undefined },
+                        { email: 2, nombre: 'test', cargo: 'Gerente' },
+                    ],
+                    contactos: undefined,
+                }, // Error intencionado
+                {
+                    ...actualizarEmpresaDto,
+                    giro: [Date.now(),undefined,true,'sad'],
+                    giros: undefined,
+                }
+            ];
 
-    //         expect(res.body[0].estado).toBe(ESTADOS.OPCION_1);
-    //     });
-    // });
+            for (const casoError of camposAProbar) {
+                const res = await request(app.getHttpServer())
+                    .put(`${ruta}/actualizar`)
+                    .send(casoError);
+                expect(res.status).toBe(400);
+                expect(Array.isArray(res.body.message)).toBe(true);
+                expect(res.body.statusCode).toBe(400);
+                expect(res.body.error).toBe('Bad Request');
+            }
+        });
 
-    // describe('obtener-todos-eliminados', () => {
-    //     const crearUsuarioDto: CrearUsuariosDto = {
-    //         email: 'test@test.com',
-    //         nombre: 'Test',
-    //         apellido: 'Test',
-    //         contraseña: '123456',
-    //         nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
-    //     };
+        it('fallar si el nuevo_rut ya lo tiene otra empresa', async () => {
+            const crearEmpresa1 = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresa1Dto);
+            const crearEmpresa2 = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresa2Dto);
 
-    //     const usuario = {
-    //         email: 'test@test.com',
-    //         nombre: 'Test',
-    //         apellido: 'Test',
-    //         contraseña: expect.any(String),
-    //         estado: ESTADOS.OPCION_2,
-    //         nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
-    //         createdAt: expect.any(String),
-    //         updatedAt: expect.any(String),
-    //     };
+            const res = await request(app.getHttpServer())
+                .put(`${ruta}/actualizar`)
+                .send(actualizarEmpresaDto);
 
-    //     it('obtener todos los usuarios eliminados', async () => {
-    //         const crearUsuario = await request(app.getHttpServer())
-    //             .post(`${ruta}/crear`)
-    //             .send(crearUsuarioDto);
-    //         const eliminarUsuario = await request(app.getHttpServer()).delete(
-    //             `${ruta}/eliminar/${crearUsuario.body.email}`,
-    //         );
+            expect(res.status).toBe(409);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(409);
+            expect(res.body.error).toBe('Conflict');
+        });
 
-    //         const res = await request(app.getHttpServer()).get(
-    //             `${ruta}/obtener-todos-eliminados`,
-    //         );
+        it('fallar si los tipos de datos no son válidos', async () => {
+            const casosInvalidos = [
+                {
+                    ...actualizarEmpresaDto,
+                    rut: 123,
+                },
+                {
+                    ...actualizarEmpresaDto,
+                    nuevo_rut: 123,
+                },
+                {
+                    ...actualizarEmpresaDto,
+                    razon_social: true,
+                },
+                {
+                    ...actualizarEmpresaDto,
+                    nombre_de_fantasia: 123,
+                },
+                {
+                    ...actualizarEmpresaDto,
+                    email_factura: true,
+                },
+                {
+                    ...actualizarEmpresaDto,
+                    direccion: 123,
+                },
+                {
+                    ...actualizarEmpresaDto,
+                    contactos: "no es un array",
+                }
+            ];
 
-    //         expect(res.status).toBe(200);
-    //         expect(Array.isArray(res.body)).toBe(true);
-    //         expect(res.body[0]).toMatchObject(usuario);
-    //         expect(res.body[0]).toHaveProperty('email');
-    //         expect(res.body[0]).toHaveProperty('nombre');
-    //         expect(res.body[0]).toHaveProperty('apellido');
-    //         expect(res.body[0]).toHaveProperty('contraseña');
-    //         expect(res.body[0]).toHaveProperty('estado');
-    //         expect(res.body[0]).toHaveProperty('nombre_tipos');
-    //         expect(res.body[0]).toHaveProperty('createdAt');
-    //         expect(res.body[0]).toHaveProperty('updatedAt');
+            for (const caso of casosInvalidos) {
+                const res = await request(app.getHttpServer())
+                    .put(`${ruta}/actualizar`)
+                    .send(caso);
+                expect(res.status).toBe(400);
+                expect(Array.isArray(res.body.message)).toBe(true);
+                expect(res.body.statusCode).toBe(400);
+                expect(res.body.error).toBe('Bad Request');
+            }
+        });
 
-    //         expect(res.body[0].estado).toBe(ESTADOS.OPCION_2);
-    //     });
-    // });
+        it('fallar si la comuna no existe', async () => {
+            const res = await request(app.getHttpServer())
+                .put(`${ruta}/actualizar`)
+                .send({...actualizarEmpresaDto, id_comunas: 110001});
 
-    // describe('eliminar', () => {
-    //     const crearUsuarioDto: CrearUsuariosDto = {
-    //         email: 'test@test.com',
-    //         nombre: 'Test',
-    //         apellido: 'Test',
-    //         contraseña: '123456',
-    //         nombre_tipos: TIPOS_DE_USUARIO.OPCION_1,
-    //     };
+            expect(res.status).toBe(404);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(404);
+            expect(res.body.error).toBe('Not Found');
+           
+        });
 
-    //     it('eliminar usuario correctamente', async () => {
-    //         const crearUsuario = await request(app.getHttpServer())
-    //             .post(`${ruta}/crear`)
-    //             .send(crearUsuarioDto);
+        it('fallar si alguno de los giros no existe', async () => {
+            const res = await request(app.getHttpServer())
+                .put(`${ruta}/actualizar`)
+                .send({...actualizarEmpresaDto, giros: [1110001]});
 
-    //         const res = await request(app.getHttpServer()).delete(
-    //             `${ruta}/eliminar/${crearUsuario.body.email}`,
-    //         );
+            expect(res.status).toBe(404);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(404);
+            expect(res.body.error).toBe('Not Found');
+           
+        });
 
-    //         expect(res.status).toBe(200);
-    //         expect(res.body.email).toBe(crearUsuarioDto.email);
-    //         expect(res.body.nombre).toBe(crearUsuarioDto.nombre);
-    //         expect(res.body.apellido).toBe(crearUsuarioDto.apellido);
-    //         expect(res.body.nombre_tipos).toBe(crearUsuarioDto.nombre_tipos);
-    //         expect(res.body.estado).toBe(ESTADOS.OPCION_2);
-    //     });
+        it('fallar si alguno de los contactos tiene el email duplicado', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresa1Dto);
+            const res = await request(app.getHttpServer())
+                .put(`${ruta}/actualizar`)
+                .send({...actualizarEmpresaDto, contactos: [
+                    {email: 'contacto@test.com', nombre: 'Contacto Test', cargo: 'Gerente'},
+                    {email: 'contacto@test.com', nombre: 'Contacto Test 2', cargo: 'Gerente 2'}
+                ]});
+            expect(res.status).toBe(409);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(409);
+            expect(res.body.error).toBe('Conflict');
+           
+        });
 
-    //     it('fallar si el email no es valido', async () => {
-    //         const crearUsuario = await request(app.getHttpServer())
-    //             .post(`${ruta}/crear`)
-    //             .send(crearUsuarioDto);
+        it('fallar si la empresa está eliminada', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresa1Dto);
+            const eliminarEmpresa = await request(app.getHttpServer()).delete(
+                `${ruta}/eliminar/${crearEmpresa.body.rut}`,
+            );
+            const res = await request(app.getHttpServer())
+                .put(`${ruta}/actualizar`)
+                .send(actualizarEmpresaDto);
 
-    //         const res = await request(app.getHttpServer()).delete(
-    //             `${ruta}/eliminar/123`,
-    //         );
+            expect(res.status).toBe(409);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(409);
+            expect(res.body.error).toBe('Conflict');
+        });
 
-    //         expect(res.status).toBe(400);
-    //         expect(Array.isArray(res.body.message)).toBe(true);
-    //         expect(res.body.statusCode).toBe(400);
-    //         expect(res.body.error).toBe('Bad Request');
-    //     });
+        it('verificar transformación de datos: email_factura en minúsculas, direccion capitalize, razon_social/nombre_de_fantasia en mayúsculas', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresa1Dto);
 
-    //     it('fallar si el email no existe', async () => {
-    //         const crearUsuario = await request(app.getHttpServer())
-    //             .post(`${ruta}/crear`)
-    //             .send(crearUsuarioDto);
+            const datosPrueba = {
+                ...actualizarEmpresaDto,
+                razon_social: 'empresa test actualizada',
+                nombre_de_fantasia: 'empresa test actualizada',
+                email_factura: 'TEST@TEST.COM',
+                direccion: 'CALLE TEST 789',
+                contactos: [
+                    {
+                        email: 'CONTACTO@TEST.COM',
+                        nombre: 'CONTACTO TEST',
+                        cargo: 'GERENTE'
+                    }
+                ]
+            };
 
-    //         const res = await request(app.getHttpServer()).delete(
-    //             `${ruta}/eliminar/a@gmail.com`,
-    //         );
+            const res = await request(app.getHttpServer())
+                .put(`${ruta}/actualizar`)
+                .send(datosPrueba);
+            expect(res.status).toBe(200);
+            expect(res.body.razon_social).toBe('EMPRESA TEST ACTUALIZADA');
+            expect(res.body.nombre_de_fantasia).toBe('EMPRESA TEST ACTUALIZADA');
+            expect(res.body.email_factura).toBe('test@test.com');
+            expect(res.body.direccion).toBe('Calle Test 789');
+            expect(res.body.contactos[0]).toMatchObject({
+                email: 'contacto@test.com',
+                nombre: 'Contacto Test',
+                cargo: 'Gerente'
+            });
+        });
+    });
 
-    //         expect(res.status).toBe(404);
-    //         expect(Array.isArray(res.body.message)).toBe(true);
-    //         expect(res.body.statusCode).toBe(404);
-    //         expect(res.body.error).toBe('Not Found');
-    //     });
-    // });
+    describe('obtener-por-id', () => {
+        const crearEmpresaDto: CrearEmpresasDto = {
+            rut: '11.111.111-1',
+            razon_social: 'EMPRESA TEST',
+            nombre_de_fantasia: 'EMPRESA TEST',
+            email_factura: 'test@test.com',
+            direccion: 'Calle Test',
+            id_comunas: 1101,
+            telefono: '+56912345678',
+            contactos: [
+                {
+                    email: 'contacto@test.com',
+                    nombre: 'Contacto Test',
+                    cargo: 'Gerente',
+                },
+            ],
+            giros: [11101],
+        };
+
+        const obtenerPorIdEmpresaDto: ObtenerPorIdEmpresasDto = {
+            rut: '11.111.111-1',
+        };
+
+        const empresaRetorno: RetornoEmpresasDto = {
+            rut: '11.111.111-1',
+            razon_social: 'EMPRESA TEST',
+            nombre_de_fantasia: 'EMPRESA TEST',
+            email_factura: 'test@test.com',
+            direccion: 'Calle Test',
+            comuna: {
+                id: 1101,
+                nombre: 'Iquique',
+            },
+            telefono: '+56912345678',
+            estado: ESTADOS.OPCION_1,
+            giros: [
+                {
+                    codigo: 11101,
+                    nombre: 'CULTIVO DE TRIGO',
+                    afecto_iva: 'SI',
+                    nombre_categorias:
+                        'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
+                },
+            ],
+            contactos: [
+                {
+                    email: 'contacto@test.com',
+                    nombre: 'Contacto Test',
+                    cargo: 'Gerente',
+                },
+            ],
+        };
+
+        it('obtener empresa por id correctamente', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresaDto);
+            const res = await request(app.getHttpServer()).get(
+                `${ruta}/obtener-por-id/${obtenerPorIdEmpresaDto.rut}`,
+            );
+
+            expect(res.status).toBe(200);
+            expect(res.body).toMatchObject(empresaRetorno);
+
+            expect(res.body).toHaveProperty('rut');
+            expect(res.body).toHaveProperty('razon_social');
+            expect(res.body).toHaveProperty('nombre_de_fantasia');
+            expect(res.body).toHaveProperty('email_factura');
+            expect(res.body).toHaveProperty('direccion');
+            expect(res.body).toHaveProperty('comuna');
+            expect(res.body).toHaveProperty('telefono');
+            expect(res.body).toHaveProperty('estado');
+            expect(res.body).toHaveProperty('giros');
+            expect(res.body).toHaveProperty('contactos');
+        });
+
+        it('fallar si el id (rut) no es valido', async () => {
+            const res = await request(app.getHttpServer()).get(
+                `${ruta}/obtener-por-id/123`,
+            );
+
+            expect(res.status).toBe(400);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(400);
+            expect(res.body.error).toBe('Bad Request');
+        });
+
+        it('fallar si el id (rut) no existe', async () => {
+            const res = await request(app.getHttpServer()).get(
+                `${ruta}/obtener-por-id/11.111.111-2`,
+            );
+
+            expect(res.status).toBe(404);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(404);
+            expect(res.body.error).toBe('Not Found');
+        });
+
+        it('fallar si la empresa está eliminada', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresaDto);
+            const eliminarEmpresa = await request(app.getHttpServer()).delete(
+                `${ruta}/eliminar/${crearEmpresa.body.rut}`,
+            );
+            const res = await request(app.getHttpServer()).get(
+                `${ruta}/obtener-por-id/${crearEmpresa.body.rut}`,
+            );
+            expect(res.status).toBe(409);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(409);
+            expect(res.body.error).toBe('Conflict');
+        });
+    });
+
+    describe('obtener-todos', () => {
+        const crearEmpresaDto: CrearEmpresasDto = {
+            rut: '11.111.111-1',
+            razon_social: 'EMPRESA TEST',
+            nombre_de_fantasia: 'EMPRESA TEST',
+            email_factura: 'test@test.com',
+            direccion: 'Calle Ohiggins N°12',
+            id_comunas: 1101,
+            telefono: '+56912345678',
+            contactos: [
+                {
+                    email: 'contacto@test.com',
+                    nombre: 'Contacto Test',
+                    cargo: 'Gerente',
+                },
+            ],
+            giros: [11101],
+        };
+
+        const empresaRetorno: RetornoEmpresasDto = {
+            rut: '11.111.111-1',
+            razon_social: 'EMPRESA TEST',
+            nombre_de_fantasia: 'EMPRESA TEST', 
+            email_factura: 'test@test.com',
+            direccion: 'Calle Ohiggins N°12',
+            comuna: {
+                id: 1101,
+                nombre: 'Iquique',
+            },
+            telefono: '+56912345678',
+            estado: ESTADOS.OPCION_1,
+            giros: [
+                {
+                    codigo: 11101,
+                    nombre: 'CULTIVO DE TRIGO',
+                    afecto_iva: 'SI',
+                    nombre_categorias: 'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
+                },
+            ],
+            contactos: [
+                {
+                    email: 'contacto@test.com',
+                    nombre: 'Contacto Test',
+                    cargo: 'Gerente',
+                },
+            ],
+        };
+
+        it('obtener todas las empresas activas', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresaDto);
+            const res = await request(app.getHttpServer()).get(
+                `${ruta}/obtener-todos`,
+            );
+
+            expect(res.status).toBe(200);
+
+            expect(Array.isArray(res.body)).toBe(true);
+            expect(res.body[0]).toMatchObject(empresaRetorno);
+            expect(res.body[0]).toHaveProperty('rut');
+            expect(res.body[0]).toHaveProperty('razon_social');
+            expect(res.body[0]).toHaveProperty('nombre_de_fantasia');
+            expect(res.body[0]).toHaveProperty('email_factura');
+            expect(res.body[0]).toHaveProperty('direccion');
+            expect(res.body[0]).toHaveProperty('comuna');
+            expect(res.body[0]).toHaveProperty('telefono');
+            expect(res.body[0]).toHaveProperty('estado');
+            expect(res.body[0]).toHaveProperty('giros');
+            expect(res.body[0]).toHaveProperty('contactos');
+
+            expect(res.body[0].estado).toBe(ESTADOS.OPCION_1);
+        });
+
+        it('fallar si no hay empresas activas', async () => {
+            const res = await request(app.getHttpServer()).get(
+                `${ruta}/obtener-todos`,
+            );
+            expect(res.status).toBe(404);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(404);
+            expect(res.body.error).toBe('Not Found');
+        });
+    });
+
+    describe('obtener-todos-eliminados', () => {
+        const crearEmpresaDto: CrearEmpresasDto = {
+            rut: '11.111.111-1',
+            razon_social: 'EMPRESA TEST',
+            nombre_de_fantasia: 'EMPRESA TEST',
+            email_factura: 'test@test.com',
+            direccion: 'Calle Ohiggins N°12',
+            id_comunas: 1101,
+            telefono: '+56912345678',
+            contactos: [
+                {
+                    email: 'contacto@test.com',
+                    nombre: 'Contacto Test',
+                    cargo: 'Gerente',
+                },
+            ],
+            giros: [11101],
+        };
+
+        const empresaRetorno: RetornoEmpresasDto = {
+            rut: '11.111.111-1',
+            razon_social: 'EMPRESA TEST',
+            nombre_de_fantasia: 'EMPRESA TEST', 
+            email_factura: 'test@test.com',
+            direccion: 'Calle Ohiggins N°12',
+            comuna: {
+                id: 1101,
+                nombre: 'Iquique',
+            },
+            telefono: '+56912345678',
+            estado: ESTADOS.OPCION_2,
+            giros: [
+                {
+                    codigo: 11101,
+                    nombre: 'CULTIVO DE TRIGO',
+                    afecto_iva: 'SI',
+                    nombre_categorias: 'AGRICULTURA, GANADERÍA, SILVICULTURA Y PESCA',
+                },
+            ],
+            contactos: [
+                {
+                    email: 'contacto@test.com',
+                    nombre: 'Contacto Test',
+                    cargo: 'Gerente',
+                },
+            ],
+        };
+
+        it('obtener todas las empresas eliminadas', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresaDto);
+            const eliminarEmpresa = await request(app.getHttpServer()).delete(
+                `${ruta}/eliminar/${crearEmpresa.body.rut}`,
+            );
+            const res = await request(app.getHttpServer()).get(
+                `${ruta}/obtener-todos-eliminados`,
+            );
+
+            expect(res.status).toBe(200);
+
+            expect(Array.isArray(res.body)).toBe(true);
+            expect(res.body[0]).toMatchObject(empresaRetorno);
+            expect(res.body[0]).toHaveProperty('rut');
+            expect(res.body[0]).toHaveProperty('razon_social');
+            expect(res.body[0]).toHaveProperty('nombre_de_fantasia');
+            expect(res.body[0]).toHaveProperty('email_factura');
+            expect(res.body[0]).toHaveProperty('direccion');
+            expect(res.body[0]).toHaveProperty('comuna');
+            expect(res.body[0]).toHaveProperty('telefono');
+            expect(res.body[0]).toHaveProperty('estado');
+            expect(res.body[0]).toHaveProperty('giros');
+            expect(res.body[0]).toHaveProperty('contactos');
+
+            expect(res.body[0].estado).toBe(ESTADOS.OPCION_2);
+        });
+
+        it('fallar si no hay empresas eliminadas', async () => {
+            const res = await request(app.getHttpServer()).get(
+                `${ruta}/obtener-todos-eliminados`,
+            );
+            expect(res.status).toBe(404);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(404);
+            expect(res.body.error).toBe('Not Found');
+        });
+    });
+
+    describe('eliminar', () => {
+        const crearEmpresaDto: CrearEmpresasDto = {
+            rut: '11.111.111-1',
+            razon_social: 'EMPRESA TEST',
+            nombre_de_fantasia: 'EMPRESA TEST',
+            email_factura: 'test@test.com',
+            direccion: 'Calle Test',
+            id_comunas: 1101,
+            telefono: '+56912345678',
+            contactos: [
+                {
+                    email: 'contacto@test.com',
+                    nombre: 'Contacto Test',
+                    cargo: 'Gerente',
+                },
+            ],
+            giros: [11101],
+        };
+
+        it('eliminar empresa correctamente', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresaDto);
+
+            const res = await request(app.getHttpServer()).delete(
+                `${ruta}/eliminar/${crearEmpresa.body.rut}`,
+            );
+
+            expect(res.status).toBe(200);
+            expect(res.body.rut).toBe(crearEmpresaDto.rut);
+            expect(res.body.razon_social).toBe(crearEmpresaDto.razon_social);
+            expect(res.body.nombre_de_fantasia).toBe(crearEmpresaDto.nombre_de_fantasia);
+            expect(res.body.email_factura).toBe(crearEmpresaDto.email_factura);
+            expect(res.body.estado).toBe(ESTADOS.OPCION_2);
+        });
+
+        it('fallar si el rut no es valido', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresaDto);
+
+            const res = await request(app.getHttpServer()).delete(
+                `${ruta}/eliminar/123`,
+            );
+
+            expect(res.status).toBe(400);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(400);
+            expect(res.body.error).toBe('Bad Request');
+        });
+
+        it('fallar si el rut no existe', async () => {
+            const crearEmpresa = await request(app.getHttpServer())
+                .post(`${ruta}/crear`)
+                .send(crearEmpresaDto);
+
+            const res = await request(app.getHttpServer()).delete(
+                `${ruta}/eliminar/11.111.111-2`,
+            );
+
+            expect(res.status).toBe(404);
+            expect(Array.isArray(res.body.message)).toBe(true);
+            expect(res.body.statusCode).toBe(404);
+            expect(res.body.error).toBe('Not Found');
+        });
+    });
 
     afterAll(async () => {
         await app.close();

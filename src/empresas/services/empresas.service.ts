@@ -294,6 +294,18 @@ export class EmpresasService extends BaseServices {
             ]);
         }
 
+        // Verificar emails duplicados en los contactos
+        if (empresa.contactos?.length > 0) {
+            const emails = empresa.contactos.map(contacto => contacto.email);
+            const emailsUnicos = new Set(emails);
+            
+            if (emails.length !== emailsUnicos.size) {
+                throw new ConflictException([
+                    'No pueden existir contactos con el mismo email'
+                ]);
+            }
+        }
+
         if (empresa.contactos?.length > 0) {
             await Promise.all([
                 // Operaciones secuenciales de contactos

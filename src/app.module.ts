@@ -26,7 +26,7 @@ import { GeografiaModule } from './geografia/geografia.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
-            envFilePath: enviroments.dev,
+            envFilePath: enviroments.render,
             load: [config],
             isGlobal: true,
             validationSchema: Joi.object({

@@ -84,7 +84,7 @@ async function bootstrap() {
      * Loggea la ip, la ruta y la fecha y hora de la peticion
      * Formateada en español
      */ 
-    app.use(new LogsMiddleware().use);
+    // app.use(new LogsMiddleware().use);
 
     /**
      * Titulo de la API

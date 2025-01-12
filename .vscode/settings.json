@@ -1,3 +1,16 @@
 {
-    "material-icon-theme.activeIconPack": "nest"
+    "material-icon-theme.activeIconPack": "nest",
+    "material-icon-theme.folders.associations": {
+        "dtos": "element",
+        "dto": "element",
+        "entities": "context",
+        "usuarios": "admin",
+        "propuestas-de-servicios": "docs",
+        "geografia": "environment",
+        "empresas": "job",
+        "ordenes-de-trabajos": "mappings",
+        "comprobantes": "docs",
+        "facturas": "docs",
+        "ordenes-de-compra": "docs",
+    }
 }

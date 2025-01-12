@@ -19,6 +19,8 @@ import { ComunasService } from './geografia/services/comunas.service';
 import { RegionesService } from './geografia/services/regiones.service';
 import { ProvinciasService } from './geografia/services/provincias.service';
 import { GeografiaModule } from './geografia/geografia.module';
+import { OrdenesDeTrabajosModule } from './ordenes-de-trabajos/ordenes-de-trabajos.module';
+
 
 
 
@@ -43,6 +45,8 @@ import { GeografiaModule } from './geografia/geografia.module';
         EmpresasModule,
         PropuestasDeServiciosModule,
         GeografiaModule,
+        OrdenesDeTrabajosModule,
+
         
     ],
     controllers: [AppController, RegionesController, ProvinciasController, ComunasController],

@@ -26,50 +26,54 @@ import PropuestasDeServicios from '../../database/models/propuestas-de-servicios
 @ApiTags('Propuestas de Servicios')
 @Controller('propuestas-de-servicios')
 export class PropuestasDeServiciosController {
-    // constructor(
-    //     private propuestasDeServiciosService: PropuestasDeServiciosService,
-    // ) {}
+    constructor(
+        private propuestasDeServiciosService: PropuestasDeServiciosService,
+    ) {}
 
-    // @ApiOperation({ summary: 'Obtener a todas las propuestas de servicios' })
-    // @ApiResponse({
-    //     status: 404,
-    //     description: 'No encontrado',
-    //     type: ErrorRespuestaDto,
-    // })
+    @ApiOperation({ summary: 'Obtener a todas las propuestas de servicios' })
+    @ApiResponse({
+        status: 404,
+        description: 'No encontrado',
+        type: ErrorRespuestaDto,
+    })
 
-    // @Get('obtener-todos')       
-    // obtenerTodos(): Promise<RetornoPropuestaDeServicio[]> {
-    //     return this.propuestasDeServiciosService.obtenerTodos();
-    // }
+    @Get('obtener-todos')       
+    obtenerTodos(): Promise<RetornoPropuestaDeServicio[]> {
+        return this.propuestasDeServiciosService.obtenerTodos();
+    }
 
-    // @Get('obtener-todos-eliminados')
-    // obtenerTodosEliminados(): Promise<RetornoPropuestaDeServicio[]> {
-    //     return this.propuestasDeServiciosService.obtenerTodosEliminados();
-    // }
+    @ApiOperation({ summary: 'Obtener todas las propuestas de servicios eliminadas' })
+    @ApiResponse({
+        status: 404,
+        description: 'No encontrado',
+        type: ErrorRespuestaDto,
+    })
+    @Get('obtener-todos-eliminados')       
+    obtenerTodosEliminados(): Promise<RetornoPropuestaDeServicio[]> {
+        return this.propuestasDeServiciosService.obtenerTodosEliminados();
+    }
 
-    // @ApiOperation({
-    //     summary: 'Obtener a propuestas de servicios segun su clave primaria',
-    // })
-    // @Get('obtener-por-id/:codigo/:año')
-    // obtenerPorId(@Param() clavePrimaria: ObtenerPorIdPropuestasDeServiciosDto) {
-    //     return this.propuestasDeServiciosService.obtenerPorId(clavePrimaria);
-    // }
+    @ApiOperation({ summary: 'Obtener propuesta de servicios por id' })
+    @Get('obtener-por-id/:id')
+    obtenerPorId(@Param('id') id: number) {
+        return this.propuestasDeServiciosService.obtenerPorId({ id });
+    }
 
-    // @ApiOperation({ summary: 'Crear propuestas de servicios' })
-    // @Post('crear')
-    // crear(@Body() propuesta: CrearPropuestasDeServiciosDto) {
-    //     return this.propuestasDeServiciosService.crear(propuesta);
-    // }
+    @ApiOperation({ summary: 'Crear propuestas de servicios' })
+    @Post('crear')
+    crear(@Body() propuesta: CrearPropuestasDeServiciosDto) {
+        return this.propuestasDeServiciosService.crear(propuesta);
+    }
 
-    // @ApiOperation({ summary: 'Actualizar propuestas de servicios' })
-    // @Put('actualizar')
-    // actualizar(@Body() propuesta: ActualizarPropuestasDeServiciosDto) {
-    //     return this.propuestasDeServiciosService.actualizar(propuesta);
-    // }
+    @ApiOperation({ summary: 'Actualizar propuesta de servicios' })
+    @Put('actualizar')
+    actualizar(@Body() propuesta: ActualizarPropuestasDeServiciosDto) {
+        return this.propuestasDeServiciosService.actualizar(propuesta);
+    }
 
-    // @ApiOperation({ summary: 'Eliminar propuestas de servicios' })
-    // @Delete('eliminar')
-    // eliminar(@Body() clavePrimaria: EliminarPropuestasDeServiciosDto) {
-    //     return this.propuestasDeServiciosService.eliminar(clavePrimaria);
-    // }
+    @ApiOperation({ summary: 'Eliminar propuesta de servicios' })
+    @Delete('eliminar/:id')
+    eliminar(@Param('id') id: number) {
+        return this.propuestasDeServiciosService.eliminar({ id });
+    }
 }

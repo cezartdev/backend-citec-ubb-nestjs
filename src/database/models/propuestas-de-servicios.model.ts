@@ -114,13 +114,12 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
     })
     declare updatedAt: Date;
 
-
     @BelongsToMany(
         () => SubServicios,
         () => PropuestaDeServicioSubServicios,
         
     )
-    declare subServicios: SubServicios[];
+    declare sub_servicios: SubServicios[];
 
 
     @BeforeCreate

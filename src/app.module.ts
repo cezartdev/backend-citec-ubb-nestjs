@@ -21,6 +21,7 @@ import { ProvinciasService } from './geografia/services/provincias.service';
 import { GeografiaModule } from './geografia/geografia.module';
 import { OrdenesDeTrabajosModule } from './ordenes-de-trabajos/ordenes-de-trabajos.module';
 import { GirosModule } from './giros/giros.module';
+import { TiposModule } from './tipos/tipos.module';
 
 
 
@@ -48,6 +49,7 @@ import { GirosModule } from './giros/giros.module';
         GeografiaModule,
         OrdenesDeTrabajosModule,
         GirosModule,
+        TiposModule,
 
         
     ],

@@ -13,7 +13,7 @@ export class GirosService extends BaseServicesSimple {
         const girosRetorno = await Giros.findAll();
 
         if (girosRetorno.length === 0) {
-            throw new NotFoundException([`No hay giros activas`]);
+            throw new NotFoundException([`No hay giros activos`]);
         }
 
         return girosRetorno;

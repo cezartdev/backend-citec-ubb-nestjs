@@ -13,7 +13,7 @@ export class GirosController extends BaseControllersSimple {
         super();
     }
 
-    @ApiOperation({ summary: 'Obtener a todas las empresas' })
+    @ApiOperation({ summary: 'Obtener a todos los giros' })
     @ApiRespuestaError()
     @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Get('obtener-todos')
@@ -21,7 +21,7 @@ export class GirosController extends BaseControllersSimple {
         return this.girosService.obtenerTodos();
     }
 
-    @ApiOperation({ summary: 'Obtener a todas las empresas' })
+    @ApiOperation({ summary: 'Obtener a los giros por su id' })
     @ApiRespuestaError()
     @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Get('obtener-por-id/:codigo')

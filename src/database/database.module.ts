@@ -13,6 +13,8 @@ import { CategoriasSeeder } from './seeders/seed/categorias.seeders';
 import { GirosSeeder } from './seeders/seed/giros.seeders';
 import { GirosEmpresasSeeder } from './seeders/seed/giros-empresas-seeders';
 import { ContactosSeeder } from './seeders/seed/contactos.seeders';
+import { PropuestasDeServiciosSeeder } from './seeders/seed/propuestas-de-servicios.seeders';
+import { SubServiciosSeeder } from './seeders/seed/sub-servicios.sedders';
 @Global()
 @Module({
     providers: [
@@ -46,7 +48,9 @@ import { ContactosSeeder } from './seeders/seed/contactos.seeders';
         CategoriasSeeder,
         GirosSeeder,
         GirosEmpresasSeeder,
-        ContactosSeeder
+        ContactosSeeder,
+        PropuestasDeServiciosSeeder,
+        SubServiciosSeeder
     ],
     exports: [Sequelize],
 })

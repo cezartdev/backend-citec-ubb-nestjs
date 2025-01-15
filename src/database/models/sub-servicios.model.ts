@@ -31,7 +31,7 @@ export class SubServicios extends Model<SubServicios> {
     @ApiProperty({ type: 'string', default: 'Estanqueidad al aire - NCH 892' })
     @PrimaryKey
     @Column({
-        type: DataType.STRING(100),
+        type: DataType.STRING(200),
         allowNull: false,
     })
     declare nombre: string;

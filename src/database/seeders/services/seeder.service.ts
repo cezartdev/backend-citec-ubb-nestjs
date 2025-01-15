@@ -11,6 +11,8 @@ import { GirosSeeder } from '../seed/giros.seeders';
 import { CategoriasSeeder } from '../seed/categorias.seeders';
 import { GirosEmpresasSeeder } from '../seed/giros-empresas-seeders';
 import { ContactosSeeder } from '../seed/contactos.seeders';
+import { PropuestasDeServiciosSeeder } from '../seed/propuestas-de-servicios.seeders';
+import { SubServiciosSeeder } from '../seed/sub-servicios.sedders';
 
 @Injectable()
 export class SeederService {
@@ -26,6 +28,8 @@ export class SeederService {
         private readonly girosSeeder: GirosSeeder,
         private readonly girosEmpresasSeeder: GirosEmpresasSeeder,
         private readonly contactosSeeder: ContactosSeeder,
+        private readonly propuestasdeServiciosSeeder: PropuestasDeServiciosSeeder,
+        private readonly subServiciosSeeder: SubServiciosSeeder,
     ) {}
 
     async run() {
@@ -39,5 +43,7 @@ export class SeederService {
         await this.girosSeeder.run();
         await this.girosEmpresasSeeder.run();
         await this.contactosSeeder.run();
+        await this.propuestasdeServiciosSeeder.run();
+        await this.subServiciosSeeder.run();
     }
 }

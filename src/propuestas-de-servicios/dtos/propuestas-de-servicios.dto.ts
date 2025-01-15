@@ -14,11 +14,6 @@ export class ActualizarPropuestasDeServiciosDto {
     @ApiProperty({ description: 'Este es el id de la propuesta de servicio' })
     readonly id: number;
 
-    @IsNumber({}, { message: 'El codigo de la propuesta de servicio debe ser un número' })
-    @IsNotEmpty({ message: 'El codigo de la propuesta de servicio está vacio' })
-    @ApiProperty({ description: 'Este es el codigo de la propuesta de servicio' })
-    readonly codigo: number;
-
     @IsNumber({}, { message: 'El año de la propuesta de servicio debe ser un número' })
     @IsNotEmpty({ message: 'El año de la propuesta de servicio está vacio' })
     @ApiProperty({ description: 'Este es el año de la propuesta de servicio' })
@@ -79,10 +74,11 @@ export class EliminarPropuestasDeServiciosDto extends PickType(ActualizarPropues
 
 export class RetornoPropuestaDeServicio extends OmitType(ActualizarPropuestasDeServiciosDto, [
     'rut_receptor',
+    'sub_servicios',
 ]) {
 
     @ApiProperty({
-        description: 'Este es el estado de la empresa',
+        description: 'Este es el estado de la propuesta de servicio',
         enum: ESTADOS
     })
     readonly estado: Estados;
@@ -94,4 +90,5 @@ export class RetornoPropuestaDeServicio extends OmitType(ActualizarPropuestasDeS
     @ValidateNested()
     @Type(() => RetornoEmpresasDto)
     readonly empresa: RetornoEmpresasDto;
+    
 }

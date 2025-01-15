@@ -72,7 +72,7 @@ export class PropuestasDeServiciosController {
     }
 
     @ApiOperation({ summary: 'Eliminar propuesta de servicios' })
-    @Delete('eliminar/:id')
+    @Put('eliminar/:id')
     eliminar(@Param('id') id: number) {
         return this.propuestasDeServiciosService.eliminar({ id });
     }

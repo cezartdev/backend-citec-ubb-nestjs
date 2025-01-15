@@ -11,6 +11,14 @@ import { ComunasSeeder } from './seeders/seed/comunas.seeders';
 import { EmpresasSeeder } from './seeders/seed/empresas.seeders';
 import { CategoriasSeeder } from './seeders/seed/categorias.seeders';
 import { GirosSeeder } from './seeders/seed/giros.seeders';
+import { GirosEmpresasSeeder } from './seeders/seed/giros-empresas-seeders';
+import { ContactosSeeder } from './seeders/seed/contactos.seeders';
+import { PropuestasDeServiciosSeeder } from './seeders/seed/propuestas-de-servicios.seeders';
+import { SubServiciosSeeder } from './seeders/seed/sub-servicios.sedders';
+import { PropuestasDeServiciosSubServicioSeeder } from './seeders/seed/propuestas_de_servicios_sub_servicio.seeders';
+import GruposDeServicios from './models/grupos-de-servicios.model';
+import { GruposDeServiciosSeeder } from './seeders/seed/grupos-de-servicios.seeders';
+import { GrupoDeServiciosSubServiciosSeeder } from './seeders/seed/grupo-de-servicio-sub-servicio.seeders';
 @Global()
 @Module({
     providers: [
@@ -43,6 +51,13 @@ import { GirosSeeder } from './seeders/seed/giros.seeders';
         EmpresasSeeder,
         CategoriasSeeder,
         GirosSeeder,
+        GirosEmpresasSeeder,
+        ContactosSeeder,
+        PropuestasDeServiciosSeeder,
+        SubServiciosSeeder,
+        PropuestasDeServiciosSubServicioSeeder,
+        GruposDeServiciosSeeder,
+        GrupoDeServiciosSubServiciosSeeder
     ],
     exports: [Sequelize],
 })

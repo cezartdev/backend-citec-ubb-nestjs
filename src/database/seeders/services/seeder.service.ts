@@ -15,6 +15,7 @@ import { PropuestasDeServiciosSeeder } from '../seed/propuestas-de-servicios.see
 import { SubServiciosSeeder } from '../seed/sub-servicios.sedders';
 import { PropuestasDeServiciosSubServicioSeeder } from '../seed/propuestas_de_servicios_sub_servicio.seeders';
 import { GruposDeServiciosSeeder } from '../seed/grupos-de-servicios.seeders';
+import { GrupoDeServiciosSubServiciosSeeder } from '../seed/grupo-de-servicio-sub-servicio.seeders';
 
 @Injectable()
 export class SeederService {
@@ -34,6 +35,7 @@ export class SeederService {
         private readonly subServiciosSeeder: SubServiciosSeeder,
         private readonly propuestasDeServiciosSubServicioSeeder: PropuestasDeServiciosSubServicioSeeder,
         private readonly gruposDeServiciosSeeder: GruposDeServiciosSeeder,
+        private readonly grupoDeServiciosSubServiciosSeeder: GrupoDeServiciosSubServiciosSeeder,
     ) {}
 
     async run() {
@@ -51,5 +53,6 @@ export class SeederService {
         await this.subServiciosSeeder.run();
         await this.propuestasDeServiciosSubServicioSeeder.run();
         await this.gruposDeServiciosSeeder.run();
+        await this.grupoDeServiciosSubServiciosSeeder.run();
     }
 }

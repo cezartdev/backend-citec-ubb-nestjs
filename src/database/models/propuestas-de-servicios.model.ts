@@ -28,7 +28,7 @@ import { Transaction } from 'sequelize';
     timestamps: true,
     indexes: [
         {
-            fields: ['codigo', 'año'],
+            fields: ['id'],
             unique: true,
         },
     ],
@@ -43,14 +43,6 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
         allowNull: false,
     })
     declare id: number;
-
-
-    @ApiProperty({ type: 'number', default: 1 })
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false,
-    })
-    declare codigo: number;
 
     @ApiProperty({ type: 'number', default: 2024 })
     @Column({
@@ -123,17 +115,20 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
 
 
     @BeforeCreate
-    static async asignarCodigo(instance: PropuestasDeServicios, options: any) {
+    static async asignarID(instance: PropuestasDeServicios, options: any) {
         const añoActual = instance.año;
         // Uso de transacción para evitar condiciones de carrera
         await PropuestasDeServicios.sequelize?.transaction(async (t: Transaction) => {
-            const ultimoCodigo = (await PropuestasDeServicios.max('codigo', {
+            const ultimoId = (await PropuestasDeServicios.max('id', {
                 where: { año: añoActual },
                 transaction: t,
             }) || 0) as number;
-            instance.codigo = ultimoCodigo + 1;
+            instance.id = ultimoId + 1;
         });
     }
+
+
+
 }
 
 export default PropuestasDeServicios;

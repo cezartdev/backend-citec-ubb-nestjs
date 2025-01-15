@@ -82,7 +82,6 @@ export class PropuestasDeServiciosService {
 
         //Crear propuesta
         const propuestaCreada = await PropuestasDeServicios.create({
-            codigo: propuesta.codigo,
             año: propuesta.año,
             pago: pagoTotal, // Use calculated total
             fecha: propuesta.fecha,
@@ -99,7 +98,7 @@ export class PropuestasDeServiciosService {
             where: { 
                 id: propuestaCreada.id
             },
-            attributes: ['id','codigo', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
+            attributes: ['id', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
             include: [
                 {
                     model: Empresas,
@@ -188,7 +187,6 @@ export class PropuestasDeServiciosService {
 
         // Actualizar propuesta
         await PropuestasDeServicios.update({
-            codigo: propuesta.codigo,
             año: propuesta.año,
             pago: pagoTotal,
             fecha: propuesta.fecha,
@@ -233,7 +231,7 @@ export class PropuestasDeServiciosService {
     async obtenerTodos(): Promise<any> {
         const propuestasRetorno = (await PropuestasDeServicios.findAll({
             where: { estado: ESTADOS.OPCION_1 },
-            attributes: ['id','codigo', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
+            attributes: ['id', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
             include: [
                 {
                     model: Empresas,
@@ -267,7 +265,7 @@ export class PropuestasDeServiciosService {
     async obtenerTodosEliminados(): Promise<any> {
         const propuestasRetorno = (await PropuestasDeServicios.findAll({
             where: { estado: ESTADOS.OPCION_2 },
-            attributes: ['id','codigo', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
+            attributes: ['id', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
             include: [
                 {
                     model: Empresas,
@@ -301,7 +299,7 @@ export class PropuestasDeServiciosService {
     async obtenerPorId(clavePrimaria: ObtenerPorIdPropuestasDeServiciosDto): Promise<any> {
         const propuestaRetorno = await PropuestasDeServicios.findOne({
             where: { id: clavePrimaria.id },
-            attributes: ['id', 'codigo', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
+            attributes: ['id', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
             include: [
                 {
                     model: Empresas,

@@ -34,6 +34,8 @@ Las tecnologias usadas son:
 - [Swagger](https://docs.nestjs.com/openapi/introduction)
 - [Sequelize ORM](https://docs.nestjs.com/recipes/sql-sequelize)
 
+### Error de logs ⚠️
+- Si ocurre algun error relacionado a los logs o registros, se debe crear la carpeta logs, vacia y en la raiz del proyecto (mismo nivel src).
 
 ### Inicializar el Proyecto ⌨️
 

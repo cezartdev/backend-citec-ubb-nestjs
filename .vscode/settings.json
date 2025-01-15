@@ -12,5 +12,7 @@
         "comprobantes": "docs",
         "facturas": "docs",
         "ordenes-de-compra": "docs",
+        "giros": "tasks",
+        "tipos": "command",
     }
 }

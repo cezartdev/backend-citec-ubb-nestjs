@@ -29,7 +29,7 @@ import { QueryTypes } from 'sequelize';
 
 @Injectable()
 export class PropuestasDeServiciosService {
-    async crear(propuesta: CrearPropuestasDeServiciosDto): Promise<any> {
+    async crear(propuesta: CrearPropuestasDeServiciosDto): Promise<RetornoPropuestaDeServicio> {
         //validaciones en paralelo
         const [rutReceptor, subservicios] = await Promise.all([
             Empresas.findOne({
@@ -98,7 +98,6 @@ export class PropuestasDeServiciosService {
             where: { 
                 id: propuestaCreada.id
             },
-            attributes: ['id', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
             include: [
                 {
                     model: Empresas,
@@ -118,12 +117,12 @@ export class PropuestasDeServiciosService {
                     }]
                 },
             ],
-        })) as PropuestasDeServicios;
+        })) as RetornoPropuestaDeServicio;
 
         return propuestaRetorno;
     }
 
-    async actualizar(propuesta: ActualizarPropuestasDeServiciosDto): Promise<any> {
+    async actualizar(propuesta: ActualizarPropuestasDeServiciosDto): Promise<RetornoPropuestaDeServicio> {
         // Validar que exista la propuesta
         const propuestaExistente = await PropuestasDeServicios.findOne({
             where: { id: propuesta.id },
@@ -203,7 +202,7 @@ export class PropuestasDeServiciosService {
         return this.obtenerPorId({ id: propuesta.id });
     }
 
-    async eliminar(clavePrimaria: EliminarPropuestasDeServiciosDto): Promise<any> {
+    async eliminar(clavePrimaria: EliminarPropuestasDeServiciosDto): Promise<RetornoPropuestaDeServicio> {
         const propuesta = await PropuestasDeServicios.findOne({
             where: { id: clavePrimaria.id }
         });
@@ -220,12 +219,50 @@ export class PropuestasDeServiciosService {
             ]);
         }
 
-        await PropuestasDeServicios.update(
-            { estado: ESTADOS.OPCION_2 },
-            { where: { id: clavePrimaria.id } }
-        );
+        try {
+            await PropuestasDeServicios.update(
+                { estado: ESTADOS.OPCION_2 },
+                { where: { id: clavePrimaria.id } }
+            );
+        } catch (error) {
+            await PropuestasDeServicios.sequelize.query(
+                'UPDATE propuestas_de_servicios SET estado = :estado WHERE id = :id',
+                {
+                    replacements: {
+                        estado: ESTADOS.OPCION_2,
+                        id: clavePrimaria.id,
+                    },
+                    type: QueryTypes.UPDATE,
+                }
+            );
+        }
 
-        return { mensaje: 'Propuesta eliminada correctamente' };
+        // Retornar la propuesta eliminada con todos sus datos
+        const propuestaEliminadaRetorno = (await PropuestasDeServicios.findOne({
+            where: { id: clavePrimaria.id },
+            attributes: ['id', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
+            include: [
+                {
+                    model: Empresas,
+                    as: 'empresa',
+                    attributes: ['rut'],
+                },
+                {
+                    model: SubServicios,
+                    as: 'sub_servicios',
+                    attributes: ['nombre', 'pago_neto'],
+                    through: { attributes: [] },
+                    include: [{
+                        model: GruposDeServicios,
+                        as: 'grupoDeServicio',
+                        attributes: ['nombre'],
+                        through: { attributes: [] }
+                    }]
+                },
+            ],
+        })) as RetornoPropuestaDeServicio;
+
+        return propuestaEliminadaRetorno;
     }
 
     async obtenerTodos(): Promise<any> {
@@ -296,8 +333,8 @@ export class PropuestasDeServiciosService {
         return propuestasRetorno;
     }
 
-    async obtenerPorId(clavePrimaria: ObtenerPorIdPropuestasDeServiciosDto): Promise<any> {
-        const propuestaRetorno = await PropuestasDeServicios.findOne({
+    async obtenerPorId(clavePrimaria: ObtenerPorIdPropuestasDeServiciosDto): Promise<RetornoPropuestaDeServicio> {
+        const propuestaRetorno = (await PropuestasDeServicios.findOne({
             where: { id: clavePrimaria.id },
             attributes: ['id', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
             include: [
@@ -319,7 +356,7 @@ export class PropuestasDeServiciosService {
                     }]
                 },
             ],
-        });
+        })) as RetornoPropuestaDeServicio;
 
         if (!propuestaRetorno) {
             throw new NotFoundException([

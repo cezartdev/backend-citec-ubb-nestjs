@@ -74,10 +74,11 @@ export class EliminarPropuestasDeServiciosDto extends PickType(ActualizarPropues
 
 export class RetornoPropuestaDeServicio extends OmitType(ActualizarPropuestasDeServiciosDto, [
     'rut_receptor',
+    'sub_servicios',
 ]) {
 
     @ApiProperty({
-        description: 'Este es el estado de la empresa',
+        description: 'Este es el estado de la propuesta de servicio',
         enum: ESTADOS
     })
     readonly estado: Estados;
@@ -89,4 +90,5 @@ export class RetornoPropuestaDeServicio extends OmitType(ActualizarPropuestasDeS
     @ValidateNested()
     @Type(() => RetornoEmpresasDto)
     readonly empresa: RetornoEmpresasDto;
+    
 }

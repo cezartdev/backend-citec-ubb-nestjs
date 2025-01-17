@@ -22,6 +22,15 @@ import { GeografiaModule } from './geografia/geografia.module';
 import { OrdenesDeTrabajosModule } from './ordenes-de-trabajos/ordenes-de-trabajos.module';
 import { GirosModule } from './giros/giros.module';
 import { TiposModule } from './tipos/tipos.module';
+import { GrupoDeServiciosController } from './carpeta/subcarpeta/grupo_de_servicios.controller';
+import { GrupoDeServiciosService } from './carpeta/subcarpeta/grupo_de_servicios.service';
+import { GrupoDeServiciosController } from './grupo_de_servicios/controllers/grupo_de_servicios.controller';
+import { GrupoDeServiciosService } from './grupo_de_servicios/controllers/grupo_de_servicios.service';
+import { GrupoDeServiciosModule } from './grupo_de_servicios/grupo_de_servicios.module';
+import { GrupoDeServiciosService } from './grupo_de_servicios/service/grupo_de_servicios.service';
+import { SubServiciosService } from './sub_servicios/service/sub_servicios.service';
+import { SubServiciosModule } from './sub_servicios/sub_servicios.module';
+import { SubServiciosController } from './sub_servicios/controllers/sub_servicios.controller';
 
 
 
@@ -50,10 +59,12 @@ import { TiposModule } from './tipos/tipos.module';
         OrdenesDeTrabajosModule,
         GirosModule,
         TiposModule,
+        GrupoDeServiciosModule,
+        SubServiciosModule,
 
         
     ],
-    controllers: [AppController, RegionesController, ProvinciasController, ComunasController],
+    controllers: [AppController, RegionesController, ProvinciasController, ComunasController, GrupoDeServiciosController, SubServiciosController],
     providers: [
         AppService,
         {
@@ -63,6 +74,8 @@ import { TiposModule } from './tipos/tipos.module';
         ComunasService,
         RegionesService,
         ProvinciasService,
+        GrupoDeServiciosService,
+        SubServiciosService,
     ],
 })
 export class AppModule {}

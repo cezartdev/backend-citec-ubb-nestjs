@@ -22,18 +22,12 @@ import { GeografiaModule } from './geografia/geografia.module';
 import { OrdenesDeTrabajosModule } from './ordenes-de-trabajos/ordenes-de-trabajos.module';
 import { GirosModule } from './giros/giros.module';
 import { TiposModule } from './tipos/tipos.module';
-import { GrupoDeServiciosController } from './carpeta/subcarpeta/grupo_de_servicios.controller';
-import { GrupoDeServiciosService } from './carpeta/subcarpeta/grupo_de_servicios.service';
-import { GrupoDeServiciosController } from './grupo_de_servicios/controllers/grupo_de_servicios.controller';
-import { GrupoDeServiciosService } from './grupo_de_servicios/controllers/grupo_de_servicios.service';
-import { GrupoDeServiciosModule } from './grupo_de_servicios/grupo_de_servicios.module';
-import { GrupoDeServiciosService } from './grupo_de_servicios/service/grupo_de_servicios.service';
-import { SubServiciosService } from './sub_servicios/service/sub_servicios.service';
-import { SubServiciosModule } from './sub_servicios/sub_servicios.module';
-import { SubServiciosController } from './sub_servicios/controllers/sub_servicios.controller';
-
-
-
+import { GrupoDeServiciosController } from './grupo-de-servicios/controllers/grupo-de-servicios.controller';
+import { GrupoDeServiciosService } from './grupo-de-servicios/services/grupo-de-servicios.service';
+import { GrupoDeServiciosModule } from './grupo-de-servicios/grupo-de-servicios.module';
+import { SubServiciosService } from './sub-servicios/services/sub-servicios.service';
+import { SubServiciosModule } from './sub-servicios/sub-servicios.module';
+import { SubServiciosController } from './sub-servicios/controllers/sub-servicios.controller';
 
 //En imports se insertan los modulos o carpetas que se van a utilizar
 @Module({
@@ -61,10 +55,15 @@ import { SubServiciosController } from './sub_servicios/controllers/sub_servicio
         TiposModule,
         GrupoDeServiciosModule,
         SubServiciosModule,
-
-        
     ],
-    controllers: [AppController, RegionesController, ProvinciasController, ComunasController, GrupoDeServiciosController, SubServiciosController],
+    controllers: [
+        AppController,
+        RegionesController,
+        ProvinciasController,
+        ComunasController,
+        GrupoDeServiciosController,
+        SubServiciosController,
+    ],
     providers: [
         AppService,
         {

@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { BaseControllersSimple } from '../../common/base/base-controllers-simple.class';
-import { GrupoDeServiciosService } from '../service/grupo_de_servicios.service';
+import { GrupoDeServiciosService } from '../services/grupo-de-servicios.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiRespuestaError, Tipo } from '../../common/utils/decorators';
 import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
@@ -9,7 +9,9 @@ import { ObtenerPorIdGrupoDeServiciosDto } from '../dtos/grupo-de-servicios.dto'
 @ApiTags('Grupos de Servicios')
 @Controller('grupo-de-servicios')
 export class GrupoDeServiciosController extends BaseControllersSimple {
-    constructor(private readonly grupoDeServiciosService: GrupoDeServiciosService) {
+    constructor(
+        private readonly grupoDeServiciosService: GrupoDeServiciosService,
+    ) {
         super();
     }
 

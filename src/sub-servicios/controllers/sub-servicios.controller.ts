@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { BaseControllersSimple } from '../../common/base/base-controllers-simple.class';
-import { SubServiciosService } from '../service/sub_servicios.service';
+import { SubServiciosService } from '../services/sub-servicios.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiRespuestaError, Tipo } from '../../common/utils/decorators';
 import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';

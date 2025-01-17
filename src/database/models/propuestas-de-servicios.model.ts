@@ -10,7 +10,8 @@ import {
     UpdatedAt,
     AutoIncrement,
     BelongsToMany,
-    BeforeCreate
+    BeforeCreate,
+    HasOne
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
@@ -20,18 +21,13 @@ import {Empresas} from './empresas.model';
 import { PropuestaDeServicioSubServicios } from './propuesta-de-servicio-sub-servicios.model';
 import { SubServicios } from './sub-servicios.model';
 import { Transaction } from 'sequelize';
+import OrdenesDeTrabajos from './ordenes-de-trabajos.model';
 
 
 
 @Table({
     tableName: 'propuestas_de_servicios',
-    timestamps: true,
-    indexes: [
-        {
-            fields: ['id'],
-            unique: true,
-        },
-    ],
+    timestamps: true
 })
 export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
 
@@ -113,6 +109,8 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
     )
     declare sub_servicios: SubServicios[];
 
+    @HasOne(() => OrdenesDeTrabajos)
+    declare orden_de_trabajo: OrdenesDeTrabajos;
 
     @BeforeCreate
     static async asignarID(instance: PropuestasDeServicios, options: any) {

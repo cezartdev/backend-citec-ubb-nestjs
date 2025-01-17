@@ -22,9 +22,13 @@ import { GeografiaModule } from './geografia/geografia.module';
 import { OrdenesDeTrabajosModule } from './ordenes-de-trabajos/ordenes-de-trabajos.module';
 import { GirosModule } from './giros/giros.module';
 import { TiposModule } from './tipos/tipos.module';
-
-
-
+import { GrupoDeServiciosController } from './grupo-de-servicios/controllers/grupo-de-servicios.controller';
+import { GrupoDeServiciosService } from './grupo-de-servicios/services/grupo-de-servicios.service';
+import { GrupoDeServiciosModule } from './grupo-de-servicios/grupo-de-servicios.module';
+import { SubServiciosService } from './sub-servicios/services/sub-servicios.service';
+import { SubServiciosModule } from './sub-servicios/sub-servicios.module';
+import { SubServiciosController } from './sub-servicios/controllers/sub-servicios.controller';
+import { PagosModule } from './pagos/pagos.module';
 
 //En imports se insertan los modulos o carpetas que se van a utilizar
 @Module({
@@ -50,10 +54,18 @@ import { TiposModule } from './tipos/tipos.module';
         OrdenesDeTrabajosModule,
         GirosModule,
         TiposModule,
-
-        
+        GrupoDeServiciosModule,
+        SubServiciosModule,
+        PagosModule,
     ],
-    controllers: [AppController, RegionesController, ProvinciasController, ComunasController],
+    controllers: [
+        AppController,
+        RegionesController,
+        ProvinciasController,
+        ComunasController,
+        GrupoDeServiciosController,
+        SubServiciosController,
+    ],
     providers: [
         AppService,
         {
@@ -63,6 +75,8 @@ import { TiposModule } from './tipos/tipos.module';
         ComunasService,
         RegionesService,
         ProvinciasService,
+        GrupoDeServiciosService,
+        SubServiciosService,
     ],
 })
 export class AppModule {}

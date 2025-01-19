@@ -4,17 +4,18 @@ import { ADJUDICADO, Adjudicado } from '../../common/constants/adjudicados.const
 import { ESTADOS, Estados } from '../../common/constants/estados.constants';
 import { Transform, Type } from 'class-transformer';
 import { toCapitalizeCase } from '../../common/utils/capitalize';
+import { TIPOS_DE_PAGO, TiposDePago } from 'src/common/constants/tipos-de-pagos.constants';
 
-export class ActualizarPropuestasDeServiciosDto {
-    @IsNumber({}, { message: 'El id de la orden de trabajo debe ser un número' })
-    @IsNotEmpty({ message: 'El id de la orden de trabajo está vacio' })
-    @ApiProperty({ description: 'Este es el id de la orden de trabajo' })
-    readonly id: number;
+export class ActualizarOrdenesDeTrabajoDto {
+    // @IsNumber({}, { message: 'El id de la orden de trabajo debe ser un número' })
+    // @IsNotEmpty({ message: 'El id de la orden de trabajo está vacio' })
+    // @ApiProperty({ description: 'Este es el id de la orden de trabajo' })
+    // readonly id: number;
 
-    @IsNumber({}, { message: 'El año de la orden de trabajo debe ser un número' })
-    @IsNotEmpty({ message: 'El año de la orden de trabajo está vacio' })
-    @ApiProperty({ description: 'Este es el año de la orden de trabajo' })
-    readonly año: number;
+    // @IsNumber({}, { message: 'El año de la orden de trabajo debe ser un número' })
+    // @IsNotEmpty({ message: 'El año de la orden de trabajo está vacio' })
+    // @ApiProperty({ description: 'Este es el año de la orden de trabajo' })
+    // readonly año: number;
 
     @IsNotEmpty({ message: 'La fecha de solicitud de la orden de trabajo está vacia' })
     @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: 'La fecha de solicitud debe tener el formato YYYY-MM-DD' })
@@ -72,24 +73,64 @@ export class ActualizarPropuestasDeServiciosDto {
     @ApiProperty({ description: 'Este es el id de la comuna de la orden de trabajo' })
     readonly id_propuesta_de_servicio: number;
 
-    @IsNumber({}, { message: 'El id del pago debe ser un número' })
-    @IsNotEmpty({ message: 'El id del pago está vacio' })
-    @ApiProperty({ description: 'Este es el id del pago de la propuesta de servicios' })
-    readonly id_pagos: number;
+    @IsArray()
+    @ArrayMinSize(1, { message: 'Debe incluir al menos un archivo' })
+    @ValidateNested({ each: true })
+    @ApiProperty({ 
+        description: 'Archivos adjuntos de pagos (PDF o imágenes)', 
+        type: 'array',
+        items: {
+            type: 'string',
+            format: 'binary'
+        }
+    })
+    @Matches(/\.(pdf|jpg|jpeg|png)$/i, {
+        each: true,
+        message: 'Los archivos deben ser PDF o imágenes (jpg, jpeg, png)'
+    })
+    readonly imagen: Buffer[];
+
+
+    @IsNumber({}, { message: 'El numero de la orden de trabajo debe ser un número' })
+    @IsNotEmpty({ message: 'El numero de la orden de trabajo está vacia' })
+    @ApiProperty({ description: 'Este es el numero de la comuna de la orden de trabajo' })
+    readonly numero: number;
+
+    @IsIn(Object.values(TIPOS_DE_PAGO), {
+            message: 'El nombre del tipo debe ser uno de los valores permitidos',
+        })
+        @Length(1, 30, {
+            message:
+                'La longitud del nombre del tipo debe ser entre 1 y 30 caracteres',
+        })
+        @IsString({ message: 'El nombre del tipo debe ser texto' })
+        @IsNotEmpty({ message: 'El nombre del tipo esta vacio' })
+        @Transform(({ value }) => {
+            if (typeof value !== 'string') return value;
+            return value.toUpperCase();
+        })
+        @ApiProperty({
+            description: 'Este es el tipo de usuario',
+            default: 'ADMINISTRADOR',
+        })
+    readonly tipo: TiposDePago;
 }
 
-export class CrearPropuestasDeServiciosDto extends OmitType(ActualizarPropuestasDeServiciosDto , [
+export class CrearOrdenesDeTrabajoDto extends ActualizarOrdenesDeTrabajoDto{}
+
+
+
+export class ObtenerPorIdOrdenesDeTrabajoDto {
+    @IsNumber({}, { message: 'El id de la orden de trabajo debe ser un número' })
+    @IsNotEmpty({ message: 'El id de la orden de trabajo está vacio' })
+    @ApiProperty({ description: 'Este es el id de la orden de trabajo' })
+    readonly id: number;
+}
+
+export class EliminarOrdenesDeTrabajoDto extends PickType(ObtenerPorIdOrdenesDeTrabajoDto, [
     'id',
-    'año'
 ]){}
 
-// export class ObtenerPorIdPropuestasDeServiciosDto extends PickType(ActualizarPropuestasDeServiciosDto, [
-//     'id',
-// ]){}
-
-// export class EliminarPropuestasDeServiciosDto extends PickType(ActualizarPropuestasDeServiciosDto, [
-//     'id',
-// ]){}
 
 // export class RetornoPropuestaDeServicio extends OmitType(ActualizarPropuestasDeServiciosDto, []) {
 

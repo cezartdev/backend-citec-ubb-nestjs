@@ -18,6 +18,7 @@ import { ESTADOS } from '../../common/constants/estados.constants';
 import { Comunas } from './comunas.model';
 import { PropuestasDeServicios } from './propuestas-de-servicios.model';
 import Pagos from './pagos.model';
+import OrdenesDeTrabajosPagos from './ordenes_de_trabajo_pagos.model';
 
 @Table({
     tableName: 'ordenes_de_trabajos',
@@ -97,16 +98,8 @@ export class OrdenesDeTrabajos extends Model<OrdenesDeTrabajos> {
     @BelongsTo(() => PropuestasDeServicios)
     declare propuesta_de_servicio: PropuestasDeServicios;
 
-    @ForeignKey(() => Pagos)
-    @ApiProperty({ type: 'number', default: 1101 })
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false,
-    })
-    declare id_pagos: number;
-
-    @BelongsTo(() => Pagos)
-    declare pago: Pagos;
+    @BelongsToMany(() => Pagos, () => OrdenesDeTrabajosPagos)
+    declare pagos: Pagos[];
 
     @ApiProperty()
     @CreatedAt

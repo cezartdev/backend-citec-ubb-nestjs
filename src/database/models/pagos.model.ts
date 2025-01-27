@@ -5,25 +5,20 @@ import {
     Model,
     DataType,
     PrimaryKey,
-    BelongsTo,
-    ForeignKey,
     CreatedAt,
     UpdatedAt,
-    Sequelize,
     AutoIncrement,
-    HasOne,
     HasMany,
-    BelongsToMany
+    BelongsToMany,
 } from 'sequelize-typescript';
 
-import { GruposDeServicios } from './grupos-de-servicios.model';
-import {SubServicios} from './sub-servicios.model';
 import { TIPOS_DE_PAGO } from '../../common/constants/tipos-de-pagos.constants';
-import OrdenesDeTrabajos from './ordenes-de-trabajos.model';
+import { OrdenesDeTrabajos } from './ordenes-de-trabajos.model';
+import { OrdenesDeTrabajosPagos } from './ordenes_de_trabajo_pagos.model';
 
 @Table({
     tableName: 'pagos',
-    timestamps: true, 
+    timestamps: true,
     indexes: [
         {
             fields: ['numero', 'tipo'],
@@ -31,9 +26,7 @@ import OrdenesDeTrabajos from './ordenes-de-trabajos.model';
         },
     ],
 })
-
 export class Pagos extends Model<Pagos> {
-
     @ApiProperty({ type: 'number', default: 1 })
     @AutoIncrement
     @PrimaryKey
@@ -52,7 +45,11 @@ export class Pagos extends Model<Pagos> {
 
     @ApiProperty({ type: 'string', default: 'Estanqueidad al aire - NCH 892' })
     @Column({
-        type: DataType.ENUM(TIPOS_DE_PAGO.OPCION_1, TIPOS_DE_PAGO.OPCION_2, TIPOS_DE_PAGO.OPCION_3),
+        type: DataType.ENUM(
+            TIPOS_DE_PAGO.OPCION_1,
+            TIPOS_DE_PAGO.OPCION_2,
+            TIPOS_DE_PAGO.OPCION_3,
+        ),
         allowNull: false,
     })
     declare tipo: string;
@@ -65,8 +62,8 @@ export class Pagos extends Model<Pagos> {
     })
     declare imagen: string;
 
-    @HasMany(()=> OrdenesDeTrabajos)
-    declare ordenesDeTrabajos: OrdenesDeTrabajos[];
+    @BelongsToMany(() => OrdenesDeTrabajos, () => OrdenesDeTrabajosPagos)
+    declare ordenes_de_trabajo: OrdenesDeTrabajos[];
 
     @ApiProperty()
     @CreatedAt
@@ -83,7 +80,6 @@ export class Pagos extends Model<Pagos> {
         allowNull: false,
     })
     declare updatedAt: Date;
-    
 }
 
 export default Pagos;

@@ -11,7 +11,7 @@ export class GirosSeeder {
             __dirname,
             '../archives/giros.csv',
         );
-        
+
         if (!fs.existsSync(archivoGirosPath)) {
             throw new Error(`Archivo no encontrado: ${archivoGirosPath}`);
         }
@@ -32,7 +32,7 @@ export class GirosSeeder {
 
         await Giros.bulkCreate(giros, {
             validate: true,
-            returning: false
+            returning: false,
         });
 
         console.log('Giros importados desde CSV exitosamente.');

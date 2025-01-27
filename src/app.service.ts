@@ -11,5 +11,4 @@ export class AppService {
         const url = this.configService.database.url;
         return `Hello World!<br/> DATABASE_URL: ${url}`;
     }
-
 }

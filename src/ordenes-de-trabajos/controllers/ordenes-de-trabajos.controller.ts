@@ -12,21 +12,20 @@ import { BaseControllers } from '../../common/base/base-controllers.class';
 import { ApiRespuestaError, Tipo } from '../../common/utils/decorators';
 import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
 import { OrdenesDeTrabajosService } from '../services/ordenes-de-trabajos.service';
+import { CrearOrdenesDeTrabajoDto } from '../dtos/ordenes-de-trabajo.dto';
 
 @ApiTags('Ordenes de trabajos')
 @Controller('ordenes-de-trabajos')
 export class OrdenesDeTrabajosController {
-    constructor(private ordenesDeTrabajoServicios: OrdenesDeTrabajosService) {
-        
-    }
+    constructor(private ordenesDeTrabajoServicios: OrdenesDeTrabajosService) {}
 
-    // @ApiOperation({ summary: 'Crear empresas' })
-    // @ApiRespuestaError()
-    // @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
-    // @Post('crear')
-    // crear(@Body() empresa: CrearEmpresasDto) {
-    //     return this.ordenesDeTrabajoServicios.crear(empresa);
-    // }
+    @ApiOperation({ summary: 'Crear orden de trabajo' })
+    @ApiRespuestaError()
+    @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
+    @Post('crear')
+    crear(@Body() ordenDeTrabajo: CrearOrdenesDeTrabajoDto) {
+        return this.ordenesDeTrabajoServicios.crear(ordenDeTrabajo);
+    }
 
     // @ApiOperation({ summary: 'Obtener a todas las empresas' })
     // @ApiRespuestaError()

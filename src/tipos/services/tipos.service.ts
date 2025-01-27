@@ -5,7 +5,6 @@ import { BaseServicesSimple } from '../../common/base/base-services-simple.class
 
 @Injectable()
 export class TiposService extends BaseServicesSimple {
-
     async obtenerTodos(): Promise<Tipos[]> {
         const retornoTipos = await Tipos.findAll();
 
@@ -16,12 +15,13 @@ export class TiposService extends BaseServicesSimple {
         return retornoTipos;
     }
 
-    async obtenerPorId( clavePrimaria: ObtenerPorIdTiposDto): Promise<Tipos> {
-
+    async obtenerPorId(clavePrimaria: ObtenerPorIdTiposDto): Promise<Tipos> {
         const retornoTipo = await Tipos.findByPk(clavePrimaria.nombre);
 
-        if(!retornoTipo) {
-            throw new NotFoundException([`No existe el tipo de usuario con el nombre ${clavePrimaria.nombre}`]);
+        if (!retornoTipo) {
+            throw new NotFoundException([
+                `No existe el tipo de usuario con el nombre ${clavePrimaria.nombre}`,
+            ]);
         }
 
         return retornoTipo;

@@ -1,4 +1,12 @@
-import { IsString, IsNotEmpty, IsEmail, Length, IsIn, Matches, IsAlphanumeric } from 'class-validator';
+import {
+    IsString,
+    IsNotEmpty,
+    IsEmail,
+    Length,
+    IsIn,
+    Matches,
+    IsAlphanumeric,
+} from 'class-validator';
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { toCapitalizeCase } from '../../common/utils/capitalize';

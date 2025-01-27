@@ -16,7 +16,6 @@ export class RegionesSeeder {
             throw new Error(`Archivo no encontrado: ${archivoRegionesPath}`);
         }
 
-       
         const regionesExistentes = await Regiones.count();
 
         if (regionesExistentes > 0) {
@@ -31,10 +30,9 @@ export class RegionesSeeder {
             skip_empty_lines: true,
         });
 
-
         await Regiones.bulkCreate(regiones, {
             validate: true,
-            returning: false
+            returning: false,
         });
 
         console.log('Regiones importadas desde CSV exitosamente.');

@@ -34,7 +34,7 @@ export class Tipos extends Model<Tipos> {
     @CreatedAt
     @Column({
         type: DataType.DATE,
-        allowNull: false
+        allowNull: false,
     })
     declare createdAt: Date;
 
@@ -42,7 +42,7 @@ export class Tipos extends Model<Tipos> {
     @UpdatedAt
     @Column({
         type: DataType.DATE,
-        allowNull: false
+        allowNull: false,
     })
     declare updatedAt: Date;
 }

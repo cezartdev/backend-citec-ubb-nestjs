@@ -4,7 +4,6 @@ import * as fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import * as path from 'path';
 
-
 @Injectable()
 export class UsuariosSeeder {
     async run() {
@@ -17,7 +16,6 @@ export class UsuariosSeeder {
             throw new Error(`Archivo no encontrado: ${archivoUsuariosPath}`);
         }
 
-        
         const usuariosExistentes = await Usuarios.count();
 
         if (usuariosExistentes > 0) {
@@ -34,7 +32,7 @@ export class UsuariosSeeder {
 
         await Usuarios.bulkCreate(usuarios, {
             validate: true,
-            returning: false
+            returning: false,
         });
 
         console.log('Usuarios importados desde CSV exitosamente.');

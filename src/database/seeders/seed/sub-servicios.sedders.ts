@@ -26,7 +26,6 @@ export class SubServiciosSeeder {
         }
 
         const archivoGiros = fs.readFileSync(archivoPath, 'utf-8');
-       
 
         const propuestas = parse(archivoGiros, {
             columns: true,
@@ -38,8 +37,6 @@ export class SubServiciosSeeder {
             returning: false,
         });
 
-        console.log(
-            'Subservicios importados desde CSV exitosamente.',
-        );
+        console.log('Subservicios importados desde CSV exitosamente.');
     }
 }

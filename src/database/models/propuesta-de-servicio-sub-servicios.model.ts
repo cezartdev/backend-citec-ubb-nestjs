@@ -32,7 +32,6 @@ export class PropuestaDeServicioSubServicios extends Model<PropuestaDeServicioSu
     })
     declare id: number;
 
-
     @ApiProperty({ type: 'string', default: 'Estanqueidad al aire - NCH 892' })
     @PrimaryKey
     @ForeignKey(() => SubServicios) // Relación con SubServicios

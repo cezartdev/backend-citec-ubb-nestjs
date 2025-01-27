@@ -418,10 +418,13 @@ describe('EmpresasController', () => {
         it('Aceptar opcional el campo contactos', async () => {
             const res = await request(app.getHttpServer())
                 .post(`${ruta}/crear`)
-                .send({...crearEmpresaDto, contactos: undefined});
+                .send({ ...crearEmpresaDto, contactos: undefined });
 
             expect(res.status).toBe(201);
-            expect(res.body).toMatchObject({...empresaRetorno, contactos:[]});
+            expect(res.body).toMatchObject({
+                ...empresaRetorno,
+                contactos: [],
+            });
         });
 
         it('verificar transformación de datos:  email_factura/email en minúsculas direccion/email/nombre/cargo capitalize razon_social/nombre_de_fantasia en mayúsculas', async () => {
@@ -777,7 +780,16 @@ describe('EmpresasController', () => {
                 .send({ ...actualizarEmpresaDto, contactos: undefined });
 
             expect(res.status).toBe(200);
-            expect(res.body).toMatchObject({...empresaRetorno, contactos:[{email:'contacto1@test.com',nombre:'Contacto Test 1', cargo:'Gerente 1'}]});
+            expect(res.body).toMatchObject({
+                ...empresaRetorno,
+                contactos: [
+                    {
+                        email: 'contacto1@test.com',
+                        nombre: 'Contacto Test 1',
+                        cargo: 'Gerente 1',
+                    },
+                ],
+            });
         });
 
         it('fallar si la empresa está eliminada', async () => {

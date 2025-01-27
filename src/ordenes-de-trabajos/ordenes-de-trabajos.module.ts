@@ -3,7 +3,7 @@ import { OrdenesDeTrabajosController } from './controllers/ordenes-de-trabajos.c
 import { OrdenesDeTrabajosService } from './services/ordenes-de-trabajos.service';
 
 @Module({
-  controllers: [OrdenesDeTrabajosController],
-  providers: [OrdenesDeTrabajosService]
+    controllers: [OrdenesDeTrabajosController],
+    providers: [OrdenesDeTrabajosService],
 })
 export class OrdenesDeTrabajosModule {}

@@ -16,12 +16,19 @@ export class AutenticacionController {
     @Public()
     @HttpCode(200)
     @Post('iniciar-sesion')
-    async iniciarSesion(@Body() iniciarSesion: IniciarSesionDto): Promise<AutenticacionUsuariosRespuestaDto> {
-        const usuario = (await this.usuarioServicio.iniciarSesion(iniciarSesion)).dataValues;
+    async iniciarSesion(
+        @Body() iniciarSesion: IniciarSesionDto,
+    ): Promise<AutenticacionUsuariosRespuestaDto> {
+        const usuario = (
+            await this.usuarioServicio.iniciarSesion(iniciarSesion)
+        ).dataValues;
 
         const token = await this.autenticacionService.generateToken(usuario);
 
-        const autenticacion: AutenticacionUsuariosRespuestaDto = {...usuario, token};
+        const autenticacion: AutenticacionUsuariosRespuestaDto = {
+            ...usuario,
+            token,
+        };
 
         return autenticacion;
     }

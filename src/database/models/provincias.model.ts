@@ -8,12 +8,12 @@ import {
     ForeignKey,
     CreatedAt,
     UpdatedAt,
-    HasMany
+    HasMany,
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
-import {Regiones} from './regiones.model';
-import {Comunas} from './comunas.model';
+import { Regiones } from './regiones.model';
+import { Comunas } from './comunas.model';
 
 @Table({
     tableName: 'provincias',
@@ -62,7 +62,7 @@ export class Provincias extends Model<Provincias> {
     })
     declare updatedAt: Date;
 
-    @HasMany(()=> Comunas)
+    @HasMany(() => Comunas)
     declare comuna: Comunas[];
 }
 

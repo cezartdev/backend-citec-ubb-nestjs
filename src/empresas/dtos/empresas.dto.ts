@@ -33,7 +33,10 @@ export class ActualizarEmpresasDto {
         if (typeof value !== 'string') return value;
         return value.toLowerCase();
     })
-    @ApiProperty({ description: 'Este es el rut de la empresa', default: '11.111.111-1' })
+    @ApiProperty({
+        description: 'Este es el rut de la empresa',
+        default: '11.111.111-1',
+    })
     readonly rut: string;
 
     @Length(1, 15, {
@@ -46,7 +49,10 @@ export class ActualizarEmpresasDto {
         if (typeof value !== 'string') return value;
         return value.toLowerCase();
     })
-    @ApiProperty({ description: 'Este es el rut de la empresa', default: '11.111.111-2' })
+    @ApiProperty({
+        description: 'Este es el rut de la empresa',
+        default: '11.111.111-2',
+    })
     readonly nuevo_rut: string;
 
     @Length(1, 100, {
@@ -172,10 +178,9 @@ export class RetornoEmpresasDto extends OmitType(ActualizarEmpresasDto, [
     'id_comunas',
     'giros',
 ]) {
-    
     @ApiProperty({
         description: 'Este es el estado de la empresa',
-        enum: ESTADOS
+        enum: ESTADOS,
     })
     readonly estado: Estados;
 

@@ -16,7 +16,6 @@ export class ComunasSeeder {
             throw new Error(`Archivo no encontrado: ${archivoComunasPath}`);
         }
 
-        
         const comunasExistentes = await Comunas.count();
 
         if (comunasExistentes > 0) {
@@ -34,7 +33,7 @@ export class ComunasSeeder {
         // Usar bulkCreate para inserción masiva más rápida
         await Comunas.bulkCreate(comunas, {
             validate: true,
-            returning: false
+            returning: false,
         });
 
         console.log('Comunas importadas desde CSV exitosamente.');

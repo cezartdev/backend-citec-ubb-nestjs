@@ -15,7 +15,6 @@ export class AutenticacionService {
          * y encripta el payload. El token contiene el payload encriptado
          */
         // const datos = { email: usuario.email, nombre_tipos: usuario.nombre_tipos };
-        
 
         const token = await this.jwtService.signAsync(usuario);
 

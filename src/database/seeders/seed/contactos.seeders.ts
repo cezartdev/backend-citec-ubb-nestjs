@@ -16,7 +16,6 @@ export class ContactosSeeder {
             throw new Error(`Archivo no encontrado: ${archivocontactosPath}`);
         }
 
-       
         const contactosExistentes = await Contactos.count();
 
         if (contactosExistentes > 0) {
@@ -33,7 +32,7 @@ export class ContactosSeeder {
 
         await Contactos.bulkCreate(contactos, {
             validate: true,
-            returning: false
+            returning: false,
         });
 
         console.log('Contactos importados desde CSV exitosamente.');

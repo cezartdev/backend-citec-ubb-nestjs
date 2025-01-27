@@ -1,8 +1,6 @@
-import { ApiProperty} from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsNumber } from 'class-validator';
-
-
 
 export class ObtenerPorIdComunasDto {
     @IsNumber({}, { message: 'El id debe ser un número' })

@@ -23,7 +23,9 @@ export class GirosService extends BaseServicesSimple {
         const girosRetorno = await Giros.findByPk(clavePrimaria.codigo);
 
         if (!girosRetorno) {
-            throw new NotFoundException([`No existe el giro con id ${clavePrimaria.codigo}`]);
+            throw new NotFoundException([
+                `No existe el giro con id ${clavePrimaria.codigo}`,
+            ]);
         }
 
         return girosRetorno;

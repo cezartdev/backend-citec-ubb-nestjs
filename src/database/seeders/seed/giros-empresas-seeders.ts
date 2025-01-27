@@ -13,17 +13,24 @@ export class GirosEmpresasSeeder {
         );
 
         if (!fs.existsSync(archivosEmpresasGirosPath)) {
-            throw new Error(`Archivo no encontrado: ${archivosEmpresasGirosPath}`);
+            throw new Error(
+                `Archivo no encontrado: ${archivosEmpresasGirosPath}`,
+            );
         }
 
         const empresasExistentes = await GirosEmpresas.count();
 
         if (empresasExistentes > 0) {
-            console.log('Los giros de las empresas ya están cargadas en la base de datos.');
+            console.log(
+                'Los giros de las empresas ya están cargadas en la base de datos.',
+            );
             return;
         }
 
-        const archivosEmpresasGiros = fs.readFileSync(archivosEmpresasGirosPath, 'utf-8');
+        const archivosEmpresasGiros = fs.readFileSync(
+            archivosEmpresasGirosPath,
+            'utf-8',
+        );
 
         const empresas = parse(archivosEmpresasGiros, {
             columns: true,
@@ -32,7 +39,7 @@ export class GirosEmpresasSeeder {
 
         await GirosEmpresas.bulkCreate(empresas, {
             validate: true,
-            returning: false
+            returning: false,
         });
 
         console.log('Giros Empresas importadas desde CSV exitosamente.');

@@ -16,7 +16,6 @@ export class EmpresasSeeder {
             throw new Error(`Archivo no encontrado: ${archivoEmpresasPath}`);
         }
 
-       
         const empresasExistentes = await Empresas.count();
 
         if (empresasExistentes > 0) {
@@ -33,7 +32,7 @@ export class EmpresasSeeder {
 
         await Empresas.bulkCreate(empresas, {
             validate: true,
-            returning: false
+            returning: false,
         });
 
         console.log('Empresas importadas desde CSV exitosamente.');

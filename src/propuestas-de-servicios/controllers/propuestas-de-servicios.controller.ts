@@ -20,7 +20,7 @@ import {
     EliminarPropuestasDeServiciosDto,
     ObtenerPorIdPropuestasDeServiciosDto,
     RetornoPropuestaDeServicio,
- } from '../dtos/propuestas-de-servicios.dto';
+} from '../dtos/propuestas-de-servicios.dto';
 
 import { ErrorRespuestaDto } from '../../common/dtos/error-respuesta.dto';
 import PropuestasDeServicios from '../../database/models/propuestas-de-servicios.model';
@@ -40,13 +40,14 @@ export class PropuestasDeServiciosController {
         description: 'No encontrado',
         type: ErrorRespuestaDto,
     })
-
-    @Get('obtener-todos')       
+    @Get('obtener-todos')
     obtenerTodos(): Promise<RetornoPropuestaDeServicio[]> {
         return this.propuestasDeServiciosService.obtenerTodos();
     }
 
-    @ApiOperation({ summary: 'Obtener todas las propuestas de servicios eliminadas' })
+    @ApiOperation({
+        summary: 'Obtener todas las propuestas de servicios eliminadas',
+    })
     @ApiRespuestaError()
     @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @ApiResponse({
@@ -54,7 +55,7 @@ export class PropuestasDeServiciosController {
         description: 'No encontrado',
         type: ErrorRespuestaDto,
     })
-    @Get('obtener-todos-eliminados')       
+    @Get('obtener-todos-eliminados')
     obtenerTodosEliminados(): Promise<RetornoPropuestaDeServicio[]> {
         return this.propuestasDeServiciosService.obtenerTodosEliminados();
     }

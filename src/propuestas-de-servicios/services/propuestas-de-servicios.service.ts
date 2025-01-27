@@ -18,9 +18,9 @@ import {
 import { PropuestasDeServicios } from '../../database/models/propuestas-de-servicios.model';
 import { BaseServices } from '../../common/base/base-services.class';
 import { ESTADOS } from '../../common/constants/estados.constants';
-import {Empresas} from '../../database/models/empresas.model';
-import {SubServicios} from 'src/database/models/sub-servicios.model';
-import {GruposDeServicios } from 'src/database/models/grupos-de-servicios.model';
+import { Empresas } from '../../database/models/empresas.model';
+import { SubServicios } from 'src/database/models/sub-servicios.model';
+import { GruposDeServicios } from 'src/database/models/grupos-de-servicios.model';
 import { PropuestaDeServicioSubServicios } from 'src/database/models/propuesta-de-servicio-sub-servicios.model';
 import { ADJUDICADO } from 'src/common/constants/adjudicados.constants';
 import { Estados } from 'src/common/constants/estados.constants';
@@ -29,7 +29,9 @@ import { QueryTypes } from 'sequelize';
 
 @Injectable()
 export class PropuestasDeServiciosService {
-    async crear(propuesta: CrearPropuestasDeServiciosDto): Promise<RetornoPropuestaDeServicio> {
+    async crear(
+        propuesta: CrearPropuestasDeServiciosDto,
+    ): Promise<RetornoPropuestaDeServicio> {
         //validaciones en paralelo
         const [rutReceptor, subservicios] = await Promise.all([
             Empresas.findOne({
@@ -39,30 +41,32 @@ export class PropuestasDeServiciosService {
             SubServicios.findAll({
                 where: {
                     nombre: {
-                        [Op.in]: propuesta.sub_servicios
-                    }
+                        [Op.in]: propuesta.sub_servicios,
+                    },
                 },
                 attributes: ['nombre', 'pago_neto'],
-                include: [{
-                    model: GruposDeServicios,
-                    as: 'grupoDeServicio',
-                    attributes: ['nombre'],
-                    through: { attributes: [] }
-                }]
-            } ),
+                include: [
+                    {
+                        model: GruposDeServicios,
+                        as: 'grupoDeServicio',
+                        attributes: ['nombre'],
+                        through: { attributes: [] },
+                    },
+                ],
+            }),
         ]);
 
         if (!rutReceptor) {
-            throw new NotFoundException(
-                [`Empresa con rut ${propuesta.rut_receptor} no encontrada`],
-            );
+            throw new NotFoundException([
+                `Empresa con rut ${propuesta.rut_receptor} no encontrada`,
+            ]);
         }
 
         //validar que los subservicios existan
         if (subservicios.length !== propuesta.sub_servicios.length) {
-            const subserviciosEncontrados = subservicios.map(s => s.nombre);
+            const subserviciosEncontrados = subservicios.map((s) => s.nombre);
             const subserviciosNoExistentes = propuesta.sub_servicios.filter(
-                nombre => !subserviciosEncontrados.includes(nombre)
+                (nombre) => !subserviciosEncontrados.includes(nombre),
             );
             throw new NotFoundException([
                 `Los siguientes subservicios no existen: ${subserviciosNoExistentes.join(' , ')}`,
@@ -72,13 +76,14 @@ export class PropuestasDeServiciosService {
         //validar que no haya subservicios repetidos
         const subserviciosUnicos = new Set(propuesta.sub_servicios);
         if (subserviciosUnicos.size !== propuesta.sub_servicios.length) {
-            throw new ConflictException(
-                ['No se pueden repetir subservicios'],
-            );
+            throw new ConflictException(['No se pueden repetir subservicios']);
         }
 
         // Calculate total pago from subservicios pago_neto
-        const pagoTotal = subservicios.reduce((sum, sub) => sum + sub.pago_neto, 0);
+        const pagoTotal = subservicios.reduce(
+            (sum, sub) => sum + sub.pago_neto,
+            0,
+        );
 
         //Crear propuesta
         const propuestaCreada = await PropuestasDeServicios.create({
@@ -91,12 +96,15 @@ export class PropuestasDeServiciosService {
         });
 
         //Ejecutar creación de relaciones
-        await propuestaCreada.$add('sub_servicios', subservicios.map(s => s.nombre));
+        await propuestaCreada.$add(
+            'sub_servicios',
+            subservicios.map((s) => s.nombre),
+        );
 
         //Retorno
         const propuestaRetorno = (await PropuestasDeServicios.findOne({
-            where: { 
-                id: propuestaCreada.id
+            where: {
+                id: propuestaCreada.id,
             },
             include: [
                 {
@@ -109,12 +117,14 @@ export class PropuestasDeServiciosService {
                     as: 'sub_servicios',
                     attributes: ['nombre', 'pago_neto'],
                     through: { attributes: [] },
-                    include: [{
-                        model: GruposDeServicios,
-                        as: 'grupoDeServicio',
-                        attributes: ['nombre'],
-                        through: { attributes: [] }
-                    }]
+                    include: [
+                        {
+                            model: GruposDeServicios,
+                            as: 'grupoDeServicio',
+                            attributes: ['nombre'],
+                            through: { attributes: [] },
+                        },
+                    ],
                 },
             ],
         })) as RetornoPropuestaDeServicio;
@@ -122,37 +132,41 @@ export class PropuestasDeServiciosService {
         return propuestaRetorno;
     }
 
-    async actualizar(propuesta: ActualizarPropuestasDeServiciosDto): Promise<RetornoPropuestaDeServicio> {
+    async actualizar(
+        propuesta: ActualizarPropuestasDeServiciosDto,
+    ): Promise<RetornoPropuestaDeServicio> {
         // Validar que exista la propuesta
         const propuestaExistente = await PropuestasDeServicios.findOne({
             where: { id: propuesta.id },
-            include: [{
-                model: SubServicios,
-                as: 'sub_servicios',
-                attributes: ['nombre', 'pago_neto']
-            }]
+            include: [
+                {
+                    model: SubServicios,
+                    as: 'sub_servicios',
+                    attributes: ['nombre', 'pago_neto'],
+                },
+            ],
         });
 
         if (!propuestaExistente) {
             throw new NotFoundException([
-                `Propuesta con id ${propuesta.id} no encontrada`
+                `Propuesta con id ${propuesta.id} no encontrada`,
             ]);
         }
 
         if (propuestaExistente.estado === ESTADOS.OPCION_2) {
             throw new ConflictException([
-                `Propuesta con id ${propuesta.id} está eliminada`
+                `Propuesta con id ${propuesta.id} está eliminada`,
             ]);
         }
 
         // Validar empresa
         const empresa = await Empresas.findOne({
-            where: { rut: propuesta.rut_receptor }
+            where: { rut: propuesta.rut_receptor },
         });
 
         if (!empresa) {
             throw new NotFoundException([
-                `Empresa con rut ${propuesta.rut_receptor} no encontrada`
+                `Empresa con rut ${propuesta.rut_receptor} no encontrada`,
             ]);
         }
 
@@ -160,69 +174,82 @@ export class PropuestasDeServiciosService {
         const subservicios = await SubServicios.findAll({
             where: {
                 nombre: {
-                    [Op.in]: propuesta.sub_servicios
-                }
+                    [Op.in]: propuesta.sub_servicios,
+                },
             },
             attributes: ['nombre', 'pago_neto'],
-            include: [{
-                model: GruposDeServicios,
-                as: 'grupoDeServicio',
-                attributes: ['nombre']
-            }]
+            include: [
+                {
+                    model: GruposDeServicios,
+                    as: 'grupoDeServicio',
+                    attributes: ['nombre'],
+                },
+            ],
         });
 
         if (subservicios.length !== propuesta.sub_servicios.length) {
-            const encontrados = subservicios.map(s => s.nombre);
+            const encontrados = subservicios.map((s) => s.nombre);
             const noExistentes = propuesta.sub_servicios.filter(
-                nombre => !encontrados.includes(nombre)
+                (nombre) => !encontrados.includes(nombre),
             );
             throw new NotFoundException([
-                `Los siguientes subservicios no existen: ${noExistentes.join(', ')}`
+                `Los siguientes subservicios no existen: ${noExistentes.join(', ')}`,
             ]);
         }
 
         // Calcular nuevo pago total
-        const pagoTotal = subservicios.reduce((sum, sub) => sum + sub.pago_neto, 0);
+        const pagoTotal = subservicios.reduce(
+            (sum, sub) => sum + sub.pago_neto,
+            0,
+        );
 
         // Actualizar propuesta
-        await PropuestasDeServicios.update({
-            año: propuesta.año,
-            pago: pagoTotal,
-            fecha: propuesta.fecha,
-            rut_receptor: propuesta.rut_receptor,
-            adjudicado: propuesta.adjudicado
-        }, {
-            where: { id: propuesta.id }
-        });
+        await PropuestasDeServicios.update(
+            {
+                año: propuesta.año,
+                pago: pagoTotal,
+                fecha: propuesta.fecha,
+                rut_receptor: propuesta.rut_receptor,
+                adjudicado: propuesta.adjudicado,
+            },
+            {
+                where: { id: propuesta.id },
+            },
+        );
 
         // Actualizar relaciones con subservicios
-        await propuestaExistente.$set('sub_servicios', subservicios.map(s => s.nombre));
+        await propuestaExistente.$set(
+            'sub_servicios',
+            subservicios.map((s) => s.nombre),
+        );
 
         // Retornar propuesta actualizada
         return this.obtenerPorId({ id: propuesta.id });
     }
 
-    async eliminar(clavePrimaria: EliminarPropuestasDeServiciosDto): Promise<RetornoPropuestaDeServicio> {
+    async eliminar(
+        clavePrimaria: EliminarPropuestasDeServiciosDto,
+    ): Promise<RetornoPropuestaDeServicio> {
         const propuesta = await PropuestasDeServicios.findOne({
-            where: { id: clavePrimaria.id }
+            where: { id: clavePrimaria.id },
         });
 
         if (!propuesta) {
             throw new NotFoundException([
-                `Propuesta con id ${clavePrimaria.id} no encontrada`
+                `Propuesta con id ${clavePrimaria.id} no encontrada`,
             ]);
         }
 
         if (propuesta.estado === ESTADOS.OPCION_2) {
             throw new ConflictException([
-                `Propuesta con id ${clavePrimaria.id} ya está eliminada`
+                `Propuesta con id ${clavePrimaria.id} ya está eliminada`,
             ]);
         }
 
         try {
             await PropuestasDeServicios.update(
                 { estado: ESTADOS.OPCION_2 },
-                { where: { id: clavePrimaria.id } }
+                { where: { id: clavePrimaria.id } },
             );
         } catch (error) {
             await PropuestasDeServicios.sequelize.query(
@@ -233,7 +260,7 @@ export class PropuestasDeServiciosService {
                         id: clavePrimaria.id,
                     },
                     type: QueryTypes.UPDATE,
-                }
+                },
             );
         }
 
@@ -252,12 +279,14 @@ export class PropuestasDeServiciosService {
                     as: 'sub_servicios',
                     attributes: ['nombre', 'pago_neto'],
                     through: { attributes: [] },
-                    include: [{
-                        model: GruposDeServicios,
-                        as: 'grupoDeServicio',
-                        attributes: ['nombre'],
-                        through: { attributes: [] }
-                    }]
+                    include: [
+                        {
+                            model: GruposDeServicios,
+                            as: 'grupoDeServicio',
+                            attributes: ['nombre'],
+                            through: { attributes: [] },
+                        },
+                    ],
                 },
             ],
         })) as RetornoPropuestaDeServicio;
@@ -280,20 +309,20 @@ export class PropuestasDeServiciosService {
                     as: 'sub_servicios',
                     attributes: ['nombre', 'pago_neto'],
                     through: { attributes: [] },
-                    include: [{
-                        model: GruposDeServicios,
-                        as: 'grupoDeServicio',
-                        attributes: ['nombre'],
-                        through: { attributes: [] }
-                    }]
+                    include: [
+                        {
+                            model: GruposDeServicios,
+                            as: 'grupoDeServicio',
+                            attributes: ['nombre'],
+                            through: { attributes: [] },
+                        },
+                    ],
                 },
             ],
         })) as PropuestasDeServicios[];
 
-        if(propuestasRetorno.length === 0) {
-            throw new NotFoundException(
-                ['No hay propuestas de servicios'],
-            );
+        if (propuestasRetorno.length === 0) {
+            throw new NotFoundException(['No hay propuestas de servicios']);
         }
 
         return propuestasRetorno;
@@ -314,26 +343,30 @@ export class PropuestasDeServiciosService {
                     as: 'sub_servicios',
                     attributes: ['nombre', 'pago_neto'],
                     through: { attributes: [] },
-                    include: [{
-                        model: GruposDeServicios,
-                        as: 'grupoDeServicio',
-                        attributes: ['nombre'],
-                        through: { attributes: [] }
-                    }]
+                    include: [
+                        {
+                            model: GruposDeServicios,
+                            as: 'grupoDeServicio',
+                            attributes: ['nombre'],
+                            through: { attributes: [] },
+                        },
+                    ],
                 },
             ],
         })) as PropuestasDeServicios[];
 
         if (propuestasRetorno.length === 0) {
-            throw new NotFoundException(
-                ['No hay propuestas de servicios eliminadas'],
-            );
+            throw new NotFoundException([
+                'No hay propuestas de servicios eliminadas',
+            ]);
         }
 
         return propuestasRetorno;
     }
 
-    async obtenerPorId(clavePrimaria: ObtenerPorIdPropuestasDeServiciosDto): Promise<RetornoPropuestaDeServicio> {
+    async obtenerPorId(
+        clavePrimaria: ObtenerPorIdPropuestasDeServiciosDto,
+    ): Promise<RetornoPropuestaDeServicio> {
         const propuestaRetorno = (await PropuestasDeServicios.findOne({
             where: { id: clavePrimaria.id },
             attributes: ['id', 'año', 'pago', 'fecha', 'estado', 'adjudicado'],
@@ -348,24 +381,24 @@ export class PropuestasDeServiciosService {
                     as: 'sub_servicios',
                     attributes: ['nombre', 'pago_neto'],
                     through: { attributes: [] },
-                    include: [{
-                        model: GruposDeServicios,
-                        as: 'grupoDeServicio',
-                        attributes: ['nombre'],
-                        through: { attributes: [] }
-                    }]
+                    include: [
+                        {
+                            model: GruposDeServicios,
+                            as: 'grupoDeServicio',
+                            attributes: ['nombre'],
+                            through: { attributes: [] },
+                        },
+                    ],
                 },
             ],
         })) as RetornoPropuestaDeServicio;
 
         if (!propuestaRetorno) {
             throw new NotFoundException([
-                `Propuesta con id ${clavePrimaria.id} no encontrada`
+                `Propuesta con id ${clavePrimaria.id} no encontrada`,
             ]);
         }
 
         return propuestaRetorno;
     }
-
 }
-

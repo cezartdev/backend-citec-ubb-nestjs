@@ -74,7 +74,6 @@ export class OrdenesDeTrabajosService {
 
         await fs.promises.mkdir(uploadPath, { recursive: true });
         await fs.promises.writeFile(fullPath, ordenDeTrabajo.imagen);
-        
 
         //ordenDeTrabajoCreada.$add('pagos', ordenDeTrabajo.imagen)
 

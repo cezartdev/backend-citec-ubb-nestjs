@@ -15,7 +15,9 @@ export class ComunasService extends BaseServicesSimple {
         const comuna = await Comunas.findByPk(clavePrimaria.id);
 
         if (!comuna) {
-            throw new NotFoundException([`No se encontró la comuna con id ${clavePrimaria.id}`]);
+            throw new NotFoundException([
+                `No se encontró la comuna con id ${clavePrimaria.id}`,
+            ]);
         }
 
         return comuna;

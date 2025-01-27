@@ -26,7 +26,6 @@ export class GruposDeServiciosSeeder {
         }
 
         const archivoGiros = fs.readFileSync(archivoPath, 'utf-8');
-       
 
         const propuestas = parse(archivoGiros, {
             columns: true,
@@ -38,8 +37,6 @@ export class GruposDeServiciosSeeder {
             returning: false,
         });
 
-        console.log(
-            'Grupos de servicios importados desde CSV exitosamente.',
-        );
+        console.log('Grupos de servicios importados desde CSV exitosamente.');
     }
 }

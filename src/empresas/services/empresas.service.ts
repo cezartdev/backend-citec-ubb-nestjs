@@ -48,21 +48,19 @@ export class EmpresasService extends BaseServices {
 
         // Validar que los giros existan en la base de datos
         const girosNoExistentes = empresa.giros.filter(
-            giro => !giros.some(g => g.codigo === giro)
+            (giro) => !giros.some((g) => g.codigo === giro),
         );
 
         if (girosNoExistentes.length > 0) {
             throw new NotFoundException([
-                `Los siguientes códigos de giros no existen: ${girosNoExistentes.join(', ')}`
+                `Los siguientes códigos de giros no existen: ${girosNoExistentes.join(', ')}`,
             ]);
         }
 
         // Validar que no haya giros duplicados
         const girosUnicos = new Set(empresa.giros);
         if (girosUnicos.size !== empresa.giros.length) {
-            throw new ConflictException([
-                'No pueden existir giros duplicados'
-            ]);
+            throw new ConflictException(['No pueden existir giros duplicados']);
         }
 
         // Validar contactos antes de crear la empresa
@@ -219,7 +217,9 @@ export class EmpresasService extends BaseServices {
         return empresasRetorno;
     }
 
-    async obtenerPorId(clavePrimaria: ObtenerPorIdEmpresasDto): Promise<RetornoEmpresasDto> {
+    async obtenerPorId(
+        clavePrimaria: ObtenerPorIdEmpresasDto,
+    ): Promise<RetornoEmpresasDto> {
         const empresa = (await Empresas.findOne({
             where: { rut: clavePrimaria.rut },
             attributes: { exclude: ['id_comunas'] },
@@ -267,27 +267,31 @@ export class EmpresasService extends BaseServices {
         empresa: ActualizarEmpresasDto,
     ): Promise<RetornoEmpresasDto> {
         // Ejecutar consultas en paralelo para optimizar rendimiento
-        const [empresaExistente, empresaExistenteNuevo, contactosExistentes, giros] =
-            await Promise.all([
-                Empresas.findOne({
-                    where: { rut: empresa.rut },
-                    attributes: ['rut', 'estado'], // Solo traer campos necesarios
-                }),
-                empresa.nuevo_rut !== empresa.rut
-                    ? Empresas.findOne({
-                          where: { rut: empresa.nuevo_rut },
-                          attributes: ['rut'],
-                      })
-                    : null,
-                Contactos.findAll({
-                    where: { rut_empresas: empresa.rut },
-                    attributes: ['email'], // Solo necesitamos saber si existen
-                }),
-                Giros.findAll({
-                    where: { codigo: empresa.giros },
-                    attributes: ['codigo'],
-                }),
-            ]);
+        const [
+            empresaExistente,
+            empresaExistenteNuevo,
+            contactosExistentes,
+            giros,
+        ] = await Promise.all([
+            Empresas.findOne({
+                where: { rut: empresa.rut },
+                attributes: ['rut', 'estado'], // Solo traer campos necesarios
+            }),
+            empresa.nuevo_rut !== empresa.rut
+                ? Empresas.findOne({
+                      where: { rut: empresa.nuevo_rut },
+                      attributes: ['rut'],
+                  })
+                : null,
+            Contactos.findAll({
+                where: { rut_empresas: empresa.rut },
+                attributes: ['email'], // Solo necesitamos saber si existen
+            }),
+            Giros.findAll({
+                where: { codigo: empresa.giros },
+                attributes: ['codigo'],
+            }),
+        ]);
 
         if (!empresaExistente) {
             throw new NotFoundException([
@@ -309,31 +313,29 @@ export class EmpresasService extends BaseServices {
 
         // Validar que los giros existan en la base de datos
         const girosNoExistentes = empresa.giros.filter(
-            giro => !giros.some(g => g.codigo === giro)
+            (giro) => !giros.some((g) => g.codigo === giro),
         );
 
         if (girosNoExistentes.length > 0) {
             throw new NotFoundException([
-                `Los siguientes códigos de giros no existen: ${girosNoExistentes.join(', ')}`
+                `Los siguientes códigos de giros no existen: ${girosNoExistentes.join(', ')}`,
             ]);
         }
 
         // Validar que no haya giros duplicados
         const girosUnicos = new Set(empresa.giros);
         if (girosUnicos.size !== empresa.giros.length) {
-            throw new ConflictException([
-                'No pueden existir giros duplicados'
-            ]);
+            throw new ConflictException(['No pueden existir giros duplicados']);
         }
 
         // Verificar emails duplicados en los contactos
         if (empresa.contactos?.length > 0) {
-            const emails = empresa.contactos.map(contacto => contacto.email);
+            const emails = empresa.contactos.map((contacto) => contacto.email);
             const emailsUnicos = new Set(emails);
-            
+
             if (emails.length !== emailsUnicos.size) {
                 throw new ConflictException([
-                    'No pueden existir contactos con el mismo email'
+                    'No pueden existir contactos con el mismo email',
                 ]);
             }
         }

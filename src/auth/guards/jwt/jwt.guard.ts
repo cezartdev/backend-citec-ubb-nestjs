@@ -8,7 +8,6 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import Usuarios from '../../../database/models/usuarios.model';
 
-
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
     constructor(

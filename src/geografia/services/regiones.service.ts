@@ -9,15 +9,17 @@ export class RegionesService extends BaseServicesSimple {
         return await Regiones.findAll();
     }
 
-    async obtenerPorId(clavePrimaria: ObtenerPorIdRegionesDto): Promise<Regiones> {
-
+    async obtenerPorId(
+        clavePrimaria: ObtenerPorIdRegionesDto,
+    ): Promise<Regiones> {
         const region = await Regiones.findByPk(clavePrimaria.id);
 
         if (!region) {
-            throw new NotFoundException([`No se encontró la region con id ${clavePrimaria.id}`]);
+            throw new NotFoundException([
+                `No se encontró la region con id ${clavePrimaria.id}`,
+            ]);
         }
 
         return region;
     }
-
 }

@@ -1,10 +1,23 @@
-import { Controller, Get, Post, Body, Put, Delete, Param } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Put,
+    Delete,
+    Param,
+} from '@nestjs/common';
 import { EmpresasService } from '../services/empresas.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BaseControllers } from '../../common/base/base-controllers.class';
 import { ApiRespuestaError, Tipo } from '../../common/utils/decorators';
 import { TIPOS_DE_USUARIO } from '../../common/constants/tipos-usuarios.constants';
-import { ActualizarEmpresasDto, CrearEmpresasDto, EliminarEmpresasDto, ObtenerPorIdEmpresasDto } from '../dtos/empresas.dto';
+import {
+    ActualizarEmpresasDto,
+    CrearEmpresasDto,
+    EliminarEmpresasDto,
+    ObtenerPorIdEmpresasDto,
+} from '../dtos/empresas.dto';
 
 @ApiTags('Empresas')
 @Controller('empresas')

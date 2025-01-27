@@ -35,7 +35,6 @@ import { GrupoDeServiciosSubServiciosSeeder } from './seeders/seed/grupo-de-serv
                         idle: 10000,
                         evict: 10000,
                     },
-                    
                 });
 
                 await sequelize.sync();
@@ -57,7 +56,7 @@ import { GrupoDeServiciosSubServiciosSeeder } from './seeders/seed/grupo-de-serv
         SubServiciosSeeder,
         PropuestasDeServiciosSubServicioSeeder,
         GruposDeServiciosSeeder,
-        GrupoDeServiciosSubServiciosSeeder
+        GrupoDeServiciosSubServiciosSeeder,
     ],
     exports: [Sequelize],
 })

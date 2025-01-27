@@ -26,7 +26,6 @@ export class TiposController extends BaseControllersSimple {
     @Tipo(TIPOS_DE_USUARIO.OPCION_1, TIPOS_DE_USUARIO.OPCION_3)
     @Get('obtener-por-id/:nombre')
     obtenerPorId(@Param() nombre: ObtenerPorIdTiposDto) {
-
         return this.tiposServicio.obtenerPorId(nombre);
     }
 }

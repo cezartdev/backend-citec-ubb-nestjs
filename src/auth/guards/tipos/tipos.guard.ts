@@ -6,13 +6,10 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { TIPOS_DE_USUARIO_KEY } from '../../../common/utils/decorators';
-import {
-    TiposDeUsuario,
-} from '../../../common/constants/tipos-usuarios.constants';
+import { TiposDeUsuario } from '../../../common/constants/tipos-usuarios.constants';
 import { JwtService } from '@nestjs/jwt';
 import { Usuarios } from '../../../database/models/usuarios.model';
 import { ESTADOS } from '../../../common/constants/estados.constants';
-
 
 @Injectable()
 export class TiposGuard implements CanActivate {
@@ -30,7 +27,6 @@ export class TiposGuard implements CanActivate {
             return true;
         }
 
-
         const request = context.switchToHttp().getRequest();
         const authHeader = request.headers['authorization'];
         if (!authHeader) {
@@ -44,7 +40,7 @@ export class TiposGuard implements CanActivate {
 
         try {
             const usuarioToken: Usuarios = this.jwtService.verify(token);
-            
+
             const usuario = await Usuarios.findOne({
                 where: { email: usuarioToken.email },
             });
@@ -57,7 +53,7 @@ export class TiposGuard implements CanActivate {
                 throw new ForbiddenException('Acceso denegado');
             }
             // console.log(usuario.nombre_tipos);
-            
+
             return requiredRoles.includes(
                 usuario.nombre_tipos as TiposDeUsuario,
             );

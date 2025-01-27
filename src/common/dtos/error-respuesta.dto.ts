@@ -1,5 +1,4 @@
-import { ApiProperty} from '@nestjs/swagger';
-
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ErrorRespuestaDto {
     @ApiProperty({
@@ -8,7 +7,8 @@ export class ErrorRespuestaDto {
     readonly message: string[];
 
     @ApiProperty({
-        example: 'Bad Request | Forbidden | Conflict | Not Found | Internal Server Error',
+        example:
+            'Bad Request | Forbidden | Conflict | Not Found | Internal Server Error',
     })
     readonly error: string;
 
@@ -17,5 +17,3 @@ export class ErrorRespuestaDto {
     })
     readonly statusCode: number;
 }
-
-

@@ -11,7 +11,7 @@ export class CategoriasSeeder {
             __dirname,
             '../archives/categorias.csv',
         );
-        
+
         if (!fs.existsSync(archivoCategoriasPath)) {
             throw new Error(`Archivo no encontrado: ${archivoCategoriasPath}`);
         }
@@ -19,11 +19,16 @@ export class CategoriasSeeder {
         const categoriasExistentes = await Categorias.count();
 
         if (categoriasExistentes > 0) {
-            console.log('Las categorías ya están cargadas en la base de datos.');
+            console.log(
+                'Las categorías ya están cargadas en la base de datos.',
+            );
             return;
         }
 
-        const archivoCategorias = fs.readFileSync(archivoCategoriasPath, 'utf-8');
+        const archivoCategorias = fs.readFileSync(
+            archivoCategoriasPath,
+            'utf-8',
+        );
 
         const categorias = parse(archivoCategorias, {
             columns: true,
@@ -32,7 +37,7 @@ export class CategoriasSeeder {
 
         await Categorias.bulkCreate(categorias, {
             validate: true,
-            returning: false
+            returning: false,
         });
 
         console.log('Categorías importadas desde CSV exitosamente.');

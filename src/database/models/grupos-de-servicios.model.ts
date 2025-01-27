@@ -10,7 +10,6 @@ import {
 
 import { ApiProperty } from '@nestjs/swagger';
 
-
 @Table({
     tableName: 'grupos_de_servicios',
     timestamps: true,
@@ -42,7 +41,6 @@ export class GruposDeServicios extends Model<GruposDeServicios> {
         allowNull: false,
     })
     declare updatedAt: Date;
-
 }
 
 export default GruposDeServicios;

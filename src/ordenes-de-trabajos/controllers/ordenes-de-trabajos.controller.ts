@@ -17,9 +17,7 @@ import { CrearOrdenesDeTrabajoDto } from '../dtos/ordenes-de-trabajo.dto';
 @ApiTags('Ordenes de trabajos')
 @Controller('ordenes-de-trabajos')
 export class OrdenesDeTrabajosController {
-    constructor(private ordenesDeTrabajoServicios: OrdenesDeTrabajosService) {
-        
-    }
+    constructor(private ordenesDeTrabajoServicios: OrdenesDeTrabajosService) {}
 
     @ApiOperation({ summary: 'Crear orden de trabajo' })
     @ApiRespuestaError()

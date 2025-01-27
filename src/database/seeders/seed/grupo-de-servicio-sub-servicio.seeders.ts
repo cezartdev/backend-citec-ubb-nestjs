@@ -11,7 +11,7 @@ export class GrupoDeServiciosSubServiciosSeeder {
             __dirname,
             '../archives/grupo_de_servicio_sub_servicios.csv',
         );
-        
+
         if (!fs.existsSync(archivoGirosPath)) {
             throw new Error(`Archivo no encontrado: ${archivoGirosPath}`);
         }
@@ -19,7 +19,9 @@ export class GrupoDeServiciosSubServiciosSeeder {
         const girosExistentes = await GrupoDeServicioSubServicios.count();
 
         if (girosExistentes > 0) {
-            console.log('Los GrupoDeServicioSubServicios ya están cargados en la base de datos.');
+            console.log(
+                'Los GrupoDeServicioSubServicios ya están cargados en la base de datos.',
+            );
             return;
         }
 
@@ -32,9 +34,11 @@ export class GrupoDeServiciosSubServiciosSeeder {
 
         await GrupoDeServicioSubServicios.bulkCreate(giros, {
             validate: true,
-            returning: false
+            returning: false,
         });
 
-        console.log('GrupoDeServicioSubServicios importados desde CSV exitosamente.');
+        console.log(
+            'GrupoDeServicioSubServicios importados desde CSV exitosamente.',
+        );
     }
 }

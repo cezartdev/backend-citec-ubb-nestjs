@@ -11,26 +11,23 @@ import {
     AutoIncrement,
     BelongsToMany,
     BeforeCreate,
-    HasOne
+    HasOne,
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
 import { ESTADOS } from '../../common/constants/estados.constants';
-import { ADJUDICADO } from '../../common/constants/adjudicados.constants';   
-import {Empresas} from './empresas.model';
+import { ADJUDICADO } from '../../common/constants/adjudicados.constants';
+import { Empresas } from './empresas.model';
 import { PropuestaDeServicioSubServicios } from './propuesta-de-servicio-sub-servicios.model';
 import { SubServicios } from './sub-servicios.model';
 import { Transaction } from 'sequelize';
 import OrdenesDeTrabajos from './ordenes-de-trabajos.model';
 
-
-
 @Table({
     tableName: 'propuestas_de_servicios',
-    timestamps: true
+    timestamps: true,
 })
 export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
-
     @ApiProperty({ type: 'number', default: 1 })
     @PrimaryKey
     @AutoIncrement
@@ -47,9 +44,9 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
     })
     declare año: number;
 
-    @ApiProperty({ type: 'number', default: 10.00 })
+    @ApiProperty({ type: 'number', default: 10.0 })
     @Column({
-        type: DataType.DECIMAL(6,2),
+        type: DataType.DECIMAL(6, 2),
         allowNull: false,
     })
     declare pago: number;
@@ -102,11 +99,7 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
     })
     declare updatedAt: Date;
 
-    @BelongsToMany(
-        () => SubServicios,
-        () => PropuestaDeServicioSubServicios,
-        
-    )
+    @BelongsToMany(() => SubServicios, () => PropuestaDeServicioSubServicios)
     declare sub_servicios: SubServicios[];
 
     @HasOne(() => OrdenesDeTrabajos)
@@ -116,17 +109,16 @@ export class PropuestasDeServicios extends Model<PropuestasDeServicios> {
     static async asignarID(instance: PropuestasDeServicios, options: any) {
         const añoActual = instance.año;
         // Uso de transacción para evitar condiciones de carrera
-        await PropuestasDeServicios.sequelize?.transaction(async (t: Transaction) => {
-            const ultimoId = (await PropuestasDeServicios.max('id', {
-                where: { año: añoActual },
-                transaction: t,
-            }) || 0) as number;
-            instance.id = ultimoId + 1;
-        });
+        await PropuestasDeServicios.sequelize?.transaction(
+            async (t: Transaction) => {
+                const ultimoId = ((await PropuestasDeServicios.max('id', {
+                    where: { año: añoActual },
+                    transaction: t,
+                })) || 0) as number;
+                instance.id = ultimoId + 1;
+            },
+        );
     }
-
-
-
 }
 
 export default PropuestasDeServicios;

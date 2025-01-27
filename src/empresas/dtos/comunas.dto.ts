@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-
 export class ComunasRetornoDto {
     @ApiProperty({ description: 'ID de la comuna', example: 1101 })
     @Expose()
@@ -11,4 +10,3 @@ export class ComunasRetornoDto {
     @Expose()
     readonly nombre: string;
 }
-

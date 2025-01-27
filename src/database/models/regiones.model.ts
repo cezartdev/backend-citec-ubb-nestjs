@@ -6,12 +6,11 @@ import {
     PrimaryKey,
     CreatedAt,
     UpdatedAt,
-    HasMany
+    HasMany,
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
-import {Provincias} from './provincias.model';
-
+import { Provincias } from './provincias.model';
 
 @Table({
     tableName: 'regiones',

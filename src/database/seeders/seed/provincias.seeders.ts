@@ -16,15 +16,19 @@ export class ProvinciasSeeder {
             throw new Error(`Archivo no encontrado: ${archivoProvinciasPath}`);
         }
 
-        
         const provinciasExistentes = await Provincias.count();
 
         if (provinciasExistentes > 0) {
-            console.log('Las provincias ya están cargadas en la base de datos.');
+            console.log(
+                'Las provincias ya están cargadas en la base de datos.',
+            );
             return;
         }
 
-        const archivoProvincias = fs.readFileSync(archivoProvinciasPath, 'utf-8');
+        const archivoProvincias = fs.readFileSync(
+            archivoProvinciasPath,
+            'utf-8',
+        );
 
         const provincias = parse(archivoProvincias, {
             columns: true,
@@ -33,7 +37,7 @@ export class ProvinciasSeeder {
 
         await Provincias.bulkCreate(provincias, {
             validate: true,
-            returning: false
+            returning: false,
         });
         console.log('Provincias importadas desde CSV exitosamente.');
     }

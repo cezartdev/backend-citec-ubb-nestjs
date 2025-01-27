@@ -13,7 +13,7 @@ import {
     AutoIncrement,
     HasOne,
     HasMany,
-    BelongsToMany
+    BelongsToMany,
 } from 'sequelize-typescript';
 
 import { GruposDeServicios } from './grupos-de-servicios.model';
@@ -25,9 +25,7 @@ import { PropuestaDeServicioSubServicios } from './propuesta-de-servicio-sub-ser
     tableName: 'sub_servicios',
     timestamps: true,
 })
-
 export class SubServicios extends Model<SubServicios> {
-
     @ApiProperty({ type: 'string', default: 'Estanqueidad al aire - NCH 892' })
     @PrimaryKey
     @Column({
@@ -59,10 +57,7 @@ export class SubServicios extends Model<SubServicios> {
     })
     declare updatedAt: Date;
 
-    @BelongsToMany(
-        () => GruposDeServicios,
-        () => GrupoDeServicioSubServicios,
-    )
+    @BelongsToMany(() => GruposDeServicios, () => GrupoDeServicioSubServicios)
     declare grupoDeServicio: GruposDeServicios[];
 
     @BelongsToMany(
@@ -70,7 +65,6 @@ export class SubServicios extends Model<SubServicios> {
         () => PropuestaDeServicioSubServicios,
     )
     declare propuestasDeServicios: PropuestasDeServicios[];
-
 }
 
 export default SubServicios;

@@ -38,7 +38,6 @@ async function bootstrap() {
         }),
     );
 
-
     app.useGlobalGuards(
         new JwtAuthGuard(app.get(JwtService), app.get(Reflector)),
     );
@@ -78,12 +77,11 @@ async function bootstrap() {
     const expressApp = app.getHttpAdapter().getInstance();
     expressApp.set('trust proxy', true); // Configurar trust proxy
 
-
     /**
      * Middleware para log de las peticiones
      * Loggea la ip, la ruta y la fecha y hora de la peticion
      * Formateada en español
-     */ 
+     */
     if (process.env.NODE_ENV !== 'render') {
         app.use(new LogsMiddleware().use);
     }

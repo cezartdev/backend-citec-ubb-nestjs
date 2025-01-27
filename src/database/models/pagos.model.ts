@@ -62,7 +62,6 @@ export class Pagos extends Model<Pagos> {
     })
     declare imagen: string;
 
-
     @BelongsToMany(() => OrdenesDeTrabajos, () => OrdenesDeTrabajosPagos)
     declare ordenes_de_trabajo: OrdenesDeTrabajos[];
 

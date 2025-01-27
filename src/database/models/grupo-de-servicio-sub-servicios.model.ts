@@ -13,22 +13,23 @@ import {
     AutoIncrement,
     HasOne,
     HasMany,
-    BelongsToMany
+    BelongsToMany,
 } from 'sequelize-typescript';
 
 import { GruposDeServicios } from './grupos-de-servicios.model';
-import {SubServicios} from './sub-servicios.model';
+import { SubServicios } from './sub-servicios.model';
 
 @Table({
     tableName: 'grupo_de_servicio_sub_servicios',
-    timestamps: true, 
+    timestamps: true,
 })
-
 export class GrupoDeServicioSubServicios extends Model<GrupoDeServicioSubServicios> {
-
-    @ApiProperty({ type: 'string', default: 'EVALUACIÓN TÉCNICA PRESTACIONAL DE VENTANAS' })
+    @ApiProperty({
+        type: 'string',
+        default: 'EVALUACIÓN TÉCNICA PRESTACIONAL DE VENTANAS',
+    })
     @PrimaryKey
-    @ForeignKey(() => GruposDeServicios) 
+    @ForeignKey(() => GruposDeServicios)
     @Column({
         type: DataType.STRING(150),
         allowNull: false,
@@ -59,7 +60,6 @@ export class GrupoDeServicioSubServicios extends Model<GrupoDeServicioSubServici
         allowNull: false,
     })
     declare updatedAt: Date;
-    
 }
 
 export default GrupoDeServicioSubServicios;

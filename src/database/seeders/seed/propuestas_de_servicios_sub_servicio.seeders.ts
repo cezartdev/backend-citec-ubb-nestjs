@@ -26,7 +26,6 @@ export class PropuestasDeServiciosSubServicioSeeder {
         }
 
         const archivoGiros = fs.readFileSync(archivoPath, 'utf-8');
-       
 
         const propuestas = parse(archivoGiros, {
             columns: true,

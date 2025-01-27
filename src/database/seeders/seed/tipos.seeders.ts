@@ -7,13 +7,15 @@ import * as path from 'path';
 @Injectable()
 export class TiposSeeder {
     async run() {
-        const archivoTiposPath = path.resolve(__dirname, '../archives/tipos.csv');
+        const archivoTiposPath = path.resolve(
+            __dirname,
+            '../archives/tipos.csv',
+        );
 
         if (!fs.existsSync(archivoTiposPath)) {
             throw new Error(`Archivo no encontrado: ${archivoTiposPath}`);
         }
 
-        
         const tiposExistentes = await Tipos.count();
 
         if (tiposExistentes > 0) {
@@ -25,12 +27,12 @@ export class TiposSeeder {
 
         const tipos = parse(archivoTipos, {
             columns: true,
-            skip_empty_lines: true
+            skip_empty_lines: true,
         });
 
         await Tipos.bulkCreate(tipos, {
             validate: true,
-            returning: false
+            returning: false,
         });
 
         console.log('Tipos importados desde CSV exitosamente.');

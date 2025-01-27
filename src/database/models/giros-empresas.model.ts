@@ -7,7 +7,6 @@ import {
     ForeignKey,
     CreatedAt,
     UpdatedAt,
-
 } from 'sequelize-typescript';
 
 import { ApiProperty } from '@nestjs/swagger';
@@ -15,13 +14,11 @@ import Giros from './giros.model';
 import Empresas from './empresas.model';
 import { DATE, Sequelize } from 'sequelize';
 
-
 @Table({
     tableName: 'giros_empresas',
     timestamps: true,
 })
 export class GirosEmpresas extends Model<GirosEmpresas> {
-    
     @ApiProperty({ type: 'number', default: '11.111.111-1' })
     @PrimaryKey
     @ForeignKey(() => Empresas)
@@ -39,7 +36,6 @@ export class GirosEmpresas extends Model<GirosEmpresas> {
         allowNull: false,
     })
     declare codigo_giros: number;
-
 
     @ApiProperty()
     @CreatedAt

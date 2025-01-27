@@ -50,5 +50,4 @@ export class ContactoDto {
     })
     @ApiProperty({ description: 'Este es el cargo del contacto' })
     readonly cargo: string;
-
 }

@@ -1,6 +1,5 @@
 import { registerAs } from '@nestjs/config';
 
-
 export default registerAs('config', () => {
     return {
         database: {
@@ -12,8 +11,8 @@ export default registerAs('config', () => {
         desarrollador: {
             contraseña: process.env.DESARROLLADOR_PASS,
         },
-        node: { 
-            env: process.env.NODE_ENV
+        node: {
+            env: process.env.NODE_ENV,
         },
     };
 });

@@ -20,7 +20,6 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsuariosService extends BaseServices {
     async crear(usuario: CrearUsuariosDto): Promise<Usuarios> {
-
         const existeUsuario = await Usuarios.findOne({
             where: { email: usuario.email },
         });
@@ -76,7 +75,7 @@ export class UsuariosService extends BaseServices {
             ]);
         }
 
-        if (usuarioExistenteNuevo) {
+        if (usuarioExistenteNuevo && usuario.email !== usuario.nuevo_email) {
             throw new ConflictException([
                 `Ya existe un usuario con el email ${usuario.nuevo_email}`,
             ]);
